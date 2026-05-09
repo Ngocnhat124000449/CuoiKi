@@ -1,0 +1,123 @@
+@use '../../../styles/abstracts/variables' as v;
+@use '../../../styles/abstracts/mixins' as m;
+
+.pageHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: v.$space-6;
+  gap: v.$space-4;
+}
+
+.title { font-size: v.$font-size-2xl; font-weight: v.$font-weight-bold; color: v.$color-text; margin: 0 0 v.$space-1; }
+.desc  { color: v.$color-text-muted; font-size: v.$font-size-sm; margin: 0; }
+
+.addBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: v.$space-2;
+  padding: v.$space-2 v.$space-4;
+  background: v.$color-primary;
+  color: v.$color-footer-text;
+  border-radius: v.$radius-md;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  text-decoration: none;
+  transition: v.$transition-fast;
+  white-space: nowrap;
+  &:hover { background: v.$color-footer-bg; }
+}
+
+.tableCard { background: v.$color-bg-card; border-radius: v.$radius-lg; box-shadow: v.$shadow-card; overflow: hidden; }
+.tableWrap { overflow-x: auto; }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: v.$font-size-sm;
+
+  th {
+    text-align: left;
+    padding: v.$space-3 v.$space-4;
+    border-bottom: 2px solid v.$color-border;
+    font-weight: v.$font-weight-semibold;
+    color: v.$color-text-muted;
+    white-space: nowrap;
+    background: v.$color-bg;
+  }
+
+  td {
+    padding: v.$space-3 v.$space-4;
+    border-bottom: 1px solid v.$color-border-light;
+    color: v.$color-text;
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: v.$color-bg; }
+}
+
+.tdMuted  { color: v.$color-text-muted; }
+.tdCenter { text-align: center; }
+.tdMono   { font-family: monospace; font-size: v.$font-size-xs; color: v.$color-text-muted; }
+
+.badge {
+  display: inline-flex;
+  padding: 3px 10px;
+  border-radius: v.$radius-full;
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-semibold;
+  &.active   { background: v.$color-badge-success-bg; color: v.$color-success; }
+  &.inactive { background: v.$color-bg-section;       color: v.$color-text-muted; }
+}
+
+.logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  border-radius: v.$radius-sm;
+  border: 1px solid v.$color-border-light;
+  background: v.$color-bg;
+}
+
+.noLogo {
+  width: 36px;
+  height: 36px;
+  border-radius: v.$radius-sm;
+  border: 1px dashed v.$color-border;
+  background: v.$color-bg-section;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: v.$font-size-xs;
+  color: v.$color-text-muted;
+}
+
+.actions { display: flex; align-items: center; gap: v.$space-2; }
+
+.editBtn {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px v.$space-3;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-md;
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-medium;
+  color: v.$color-text-secondary;
+  text-decoration: none;
+  transition: v.$transition-fast;
+  &:hover { border-color: v.$color-info; color: v.$color-info; }
+}
+
+.deleteBtn {
+  @include m.button-reset;
+  padding: 4px v.$space-3;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-md;
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-medium;
+  color: v.$color-text-secondary;
+  cursor: pointer;
+  transition: v.$transition-fast;
+  &:hover { border-color: v.$color-error; color: v.$color-error; }
+}

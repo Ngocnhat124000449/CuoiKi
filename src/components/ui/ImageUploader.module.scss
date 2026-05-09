@@ -1,0 +1,98 @@
+@use '../../styles/abstracts/variables' as v;
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-3;
+}
+
+.dropzone {
+  position: relative;
+  border: 2px dashed v.$color-border;
+  border-radius: v.$radius-md;
+  padding: v.$space-6;
+  text-align: center;
+  cursor: pointer;
+  transition: v.$transition-fast;
+  background: v.$color-bg-card;
+  overflow: hidden;
+
+  &:hover {
+    border-color: v.$color-brand;
+    background: v.$color-bg-hover;
+  }
+}
+
+.uploading {
+  border-color: v.$color-warning;
+  background: v.$color-warning-soft;
+}
+
+.preview {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  margin-inline: auto;
+  border-radius: v.$radius-md;
+  overflow: hidden;
+}
+
+.previewImg {
+  object-fit: cover;
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-2;
+}
+
+.icon {
+  font-size: 40px;
+  line-height: 1;
+}
+
+.label {
+  color: v.$color-dark;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-medium;
+}
+
+.hint {
+  color: v.$color-light-muted;
+  font-size: v.$font-size-xs;
+}
+
+.progressTrack {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  background: v.$color-border;
+}
+
+.progressBar {
+  height: 100%;
+  background: v.$color-warning;
+  transition: width 0.3s ease;
+}
+
+.input {
+  display: none;
+}
+
+.status,
+.error {
+  text-align: center;
+  font-size: v.$font-size-sm;
+}
+
+.status {
+  color: v.$color-warning;
+  animation: blink 1.4s ease-in-out infinite;
+}
+
+.error {
+  color: v.$color-danger;
+}

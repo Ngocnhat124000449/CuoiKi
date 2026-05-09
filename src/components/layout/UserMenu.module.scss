@@ -1,0 +1,155 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/mixins' as m;
+
+.wrap {
+  position: relative;
+}
+
+.trigger {
+  @include m.button-reset;
+  display: flex;
+  align-items: center;
+  gap: v.$space-2;
+  padding: v.$space-1 v.$space-2;
+  border-radius: v.$radius-md;
+  cursor: pointer;
+  transition: v.$transition-fast;
+  color: v.$color-dark;
+
+  &:hover {
+    background: v.$color-brand-soft;
+    color: v.$color-brand;
+  }
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: v.$radius-full;
+  background: v.$color-brand;
+  color: v.$color-footer-text;
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.name {
+  font-size: v.$font-size-sm;
+  color: v.$color-dark;
+  font-weight: v.$font-weight-medium;
+  max-width: 80px;
+  @include m.truncate;
+
+  @include m.max-md { display: none; }
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + v.$space-2);
+  right: 0;
+  min-width: 220px;
+  background: v.$color-bg-card;
+  border-radius: v.$radius-lg;
+  box-shadow: v.$shadow-xl;
+  border: 1px solid v.$color-border-light;
+  z-index: v.$z-dropdown;
+  overflow: hidden;
+  animation: scaleIn 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dropHead {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  padding: v.$space-4;
+  border-bottom: 1px solid v.$color-border-light;
+  background: v.$color-bg-section;
+}
+
+.dropAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: v.$radius-full;
+  background: v.$color-primary;
+  color: v.$color-footer-text;
+  font-size: v.$font-size-lg;
+  font-weight: v.$font-weight-bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dropInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.dropName {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-text;
+  @include m.truncate;
+}
+
+.dropEmail {
+  font-size: v.$font-size-xs;
+  color: v.$color-text-muted;
+  @include m.truncate;
+}
+
+.dropBody {
+  padding: v.$space-2 0;
+}
+
+.dropItem {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  padding: 10px v.$space-4;
+  text-decoration: none;
+  font-size: v.$font-size-sm;
+  color: v.$color-text;
+  transition: v.$transition-fast;
+
+  &:hover {
+    background: v.$color-brand-soft;
+    color: v.$color-brand;
+  }
+}
+
+.adminItem {
+  color: v.$color-brand;
+  font-weight: v.$font-weight-semibold;
+  border-top: 1px solid v.$color-border-light;
+  margin-top: v.$space-1;
+  padding-top: 12px;
+}
+
+.dropFoot {
+  padding: v.$space-2 0 v.$space-1;
+  border-top: 1px solid v.$color-border-light;
+}
+
+.logoutBtn {
+  @include m.button-reset;
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  padding: 10px v.$space-4;
+  width: 100%;
+  font-size: v.$font-size-sm;
+  color: v.$color-text-muted;
+  transition: v.$transition-fast;
+  cursor: pointer;
+
+  &:hover {
+    background: v.$color-badge-danger-bg;
+    color: v.$color-danger;
+  }
+}

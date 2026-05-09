@@ -1,0 +1,31 @@
+@use '../../styles/abstracts/variables' as v;
+
+.timer {
+  display: flex;
+  align-items: center;
+  gap: v.$space-1;
+}
+
+.block {
+  background: v.$color-bg-hover;
+  color: v.$color-dark;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  width: 34px;
+  height: 34px;
+  border-radius: v.$radius-sm;
+  border: 1px solid v.$color-border;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  animation: blink 2s step-end infinite;
+}
+
+.sep {
+  color: v.$color-brand;
+  font-size: v.$font-size-xl;
+  font-weight: v.$font-weight-extrabold;
+  margin-bottom: 2px;
+}

@@ -1,0 +1,72 @@
+@use '../../styles/abstracts/variables' as v;
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: v.$space-2;
+  padding: v.$space-2 v.$space-3;
+  border-radius: v.$radius-md;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: v.$color-dark;
+  transition: v.$transition-fast;
+  flex-direction: column;
+  align-items: center;
+
+  &:hover {
+    background: v.$color-brand-soft;
+    color: v.$color-brand;
+  }
+}
+
+// Toggle track (pill-shaped switch)
+.track {
+  display: block;
+  width: 36px;
+  height: 20px;
+  border-radius: v.$radius-full;
+  background: v.$color-border;
+  position: relative;
+  transition: background 0.25s ease;
+  flex-shrink: 0;
+}
+
+:global([data-theme='dark']) .track {
+  background: v.$color-brand;
+}
+
+.thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: v.$color-footer-text;
+  transition: transform 0.25s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.30);
+}
+
+:global([data-theme='dark']) .track .thumb {
+  transform: translateX(16px);
+}
+
+// Icon below the toggle — CSS controls which icon is visible
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: currentColor;
+  line-height: 1;
+  height: 16px;
+}
+
+.sunIcon  { display: none; }
+.moonIcon { display: block; }
+
+:global([data-theme='dark']) {
+  .sunIcon  { display: block; }
+  .moonIcon { display: none; }
+}

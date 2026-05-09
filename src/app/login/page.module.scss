@@ -1,0 +1,109 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/mixins' as m;
+
+.page {
+  min-height: calc(100vh - v.$topbar-height - v.$header-height - v.$category-height - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: v.$color-bg;
+  padding: v.$space-6 v.$space-4;
+}
+
+.card {
+  @include m.card;
+  width: 100%;
+  max-width: 440px;
+  padding: v.$space-10;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: v.$space-2;
+  justify-content: center;
+  margin-bottom: v.$space-6;
+}
+
+.logoIcon { font-size: 28px; }
+
+.logoText {
+  font-size: v.$font-size-xl;
+  font-weight: v.$font-weight-extrabold;
+  color: v.$color-dark;
+}
+
+.title {
+  font-size: v.$font-size-2xl;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-text;
+  text-align: center;
+  margin: 0 0 v.$space-1;
+}
+
+.subtitle {
+  color: v.$color-text-muted;
+  text-align: center;
+  margin: 0 0 v.$space-6;
+  font-size: v.$font-size-base;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-4;
+}
+
+.error {
+  background: v.$color-badge-danger-bg;
+  color: v.$color-error;
+  padding: v.$space-3 v.$space-4;
+  border-radius: v.$radius-md;
+  font-size: v.$font-size-sm;
+  border: 1px solid v.$color-primary-border;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-1;
+}
+
+.label {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-text;
+}
+
+.input {
+  @include m.input-base;
+}
+
+.btn {
+  @include m.button-primary;
+  width: 100%;
+  padding: v.$space-3 v.$space-4;
+  font-size: v.$font-size-md;
+  margin-top: v.$space-2;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+}
+
+.footer {
+  text-align: center;
+  margin-top: v.$space-5;
+  font-size: v.$font-size-sm;
+  color: v.$color-text-muted;
+}
+
+.link {
+  color: v.$color-primary;
+  font-weight: v.$font-weight-semibold;
+  text-decoration: none;
+
+  &:hover { text-decoration: underline; }
+}

@@ -1,0 +1,877 @@
+// prisma/schema.prisma
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider  = "postgresql"
+ 
+  
+  
+}
+
+// ─────────────────────────────────────────
+// USERS & AUTH
+// ─────────────────────────────────────────
+
+model User {
+  id              BigInt    @id @default(autoincrement())
+  email           String    @unique @db.VarChar(255)
+  phone           String?   @unique @db.VarChar(20)
+  passwordHash    String    @db.VarChar(255)
+  fullName        String    @db.VarChar(150)
+  avatarUrl       String?   @db.VarChar(500)
+  gender          Gender?
+  dateOfBirth     DateTime? @db.Date
+  isActive        Boolean   @default(true)
+  emailVerifiedAt DateTime?
+  lastLoginAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  addresses            UserAddress[]
+  userRoles            UserRole[]
+  orders               Order[]
+  reviews              Review[]
+  reviewVotes          ReviewVote[]
+  wishlists            Wishlist[]
+  notifications        Notification[]
+  carts                Cart[]
+  assignedRolesBy      UserRole[]           @relation("AssignedBy")
+  inventoryChanges     InventoryTransaction[]
+  createdProducts      Product[]            @relation("CreatedBy")
+  orderStatusChanges   OrderStatusHistory[]
+  refundsProcessed     Refund[]
+    productViews         ProductView[]
+  searchLogs           SearchLog[]
+
+  @@map("users")
+}
+
+model UserAddress {
+  id            BigInt   @id @default(autoincrement())
+  userId        BigInt
+  label         String?  @db.VarChar(50)
+  recipientName String   @db.VarChar(150)
+  phone         String   @db.VarChar(20)
+  streetAddress String   @db.VarChar(500)
+  ward          String?  @db.VarChar(100)
+  district      String   @db.VarChar(100)
+  province      String   @db.VarChar(100)
+  countryCode   String   @default("VN") @db.Char(2)
+  postalCode    String?  @db.VarChar(20)
+  latitude      Decimal? @db.Decimal(10, 8)
+  longitude     Decimal? @db.Decimal(11, 8)
+  isDefault     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_addresses")
+}
+
+model Role {
+  id          Int      @id @default(autoincrement())
+  roleName    String   @unique @db.VarChar(50)
+  description String?  @db.VarChar(255)
+  createdAt   DateTime @default(now())
+
+  userRoles       UserRole[]
+  rolePermissions RolePermission[]
+
+  @@map("roles")
+}
+
+model UserRole {
+  userId     BigInt
+  roleId     Int
+  assignedAt DateTime @default(now())
+  assignedBy BigInt?
+
+  user       User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role       Role  @relation(fields: [roleId], references: [id])
+  assignedByUser User? @relation("AssignedBy", fields: [assignedBy], references: [id])
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+model Permission {
+  id          Int    @id @default(autoincrement())
+  module      String @db.VarChar(80)
+  action      String @db.VarChar(80)
+  description String? @db.VarChar(255)
+
+  rolePermissions RolePermission[]
+
+  @@unique([module, action])
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       Int
+  permissionId Int
+
+  role       Role       @relation(fields: [roleId], references: [id])
+  permission Permission @relation(fields: [permissionId], references: [id])
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+// ─────────────────────────────────────────
+// CATALOG
+// ─────────────────────────────────────────
+
+model Category {
+  id              Int       @id @default(autoincrement())
+  parentId        Int?
+  name            String    @db.VarChar(150)
+  slug            String    @unique @db.VarChar(160)
+  description     String?   @db.Text
+  imageUrl        String?   @db.VarChar(500)
+  metaTitle       String?   @db.VarChar(160)
+  metaDescription String?   @db.VarChar(320)
+  displayOrder    Int       @default(0) @db.SmallInt
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  parent             Category?           @relation("CategoryTree", fields: [parentId], references: [id])
+  children           Category[]          @relation("CategoryTree")
+  products           Product[]
+  couponCategories   CouponCategory[]
+  categoryAttributes CategoryAttribute[]
+
+  @@map("categories")
+}
+
+// Định nghĩa bộ thông số của từng danh mục
+// VD: "Điện thoại" → [Màn hình, RAM, Pin, Camera…], "Laptop" → [CPU, RAM, Ổ cứng, Card đồ họa…]
+model CategoryAttribute {
+  categoryId   Int
+  attributeId  Int
+  groupName    String?  @db.VarChar(100) // nhóm hiển thị: "Màn hình", "Hiệu năng", "Camera"...
+  displayOrder Int      @default(0) @db.SmallInt
+  isRequired   Boolean  @default(false)  // bắt buộc nhập khi tạo sản phẩm thuộc danh mục này
+  showInSpec   Boolean  @default(true)   // hiển thị trong bảng thông số trên trang chi tiết
+
+  category  Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  attribute Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+
+  @@id([categoryId, attributeId])
+  @@map("category_attributes")
+}
+
+model Brand {
+  id              Int      @id @default(autoincrement())
+  name            String   @db.VarChar(100)
+  slug            String   @unique @db.VarChar(110)
+  logoUrl         String?  @db.VarChar(500)
+  description     String?  @db.Text
+  websiteUrl      String?  @db.VarChar(255)
+  countryOfOrigin String?  @db.VarChar(80)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+
+  products Product[]
+
+  @@map("brands")
+}
+
+model Product {
+  id              BigInt   @id @default(autoincrement())
+  categoryId      Int
+  brandId         Int?
+  name            String   @db.VarChar(255)
+  slug            String   @unique @db.VarChar(270)
+  shortDescription String? @db.VarChar(500)
+  description     String?  @db.Text
+  basePrice       Decimal  @db.Decimal(18, 2)
+  isActive        Boolean  @default(true)
+  isFeatured      Boolean  @default(false)
+  metaTitle       String?  @db.VarChar(160)
+  metaDescription String?  @db.VarChar(320)
+  createdBy       BigInt?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  category       Category               @relation(fields: [categoryId], references: [id])
+  brand          Brand?                 @relation(fields: [brandId], references: [id])
+  createdByUser  User?                  @relation("CreatedBy", fields: [createdBy], references: [id])
+  images         ProductImage[]
+  variants       ProductVariant[]
+  productTags    ProductTag[]
+  attributeValues ProductAttributeValue[]
+  discounts      ProductDiscount[]
+  couponProducts CouponProduct[]
+  reviews        Review[]
+  productViews   ProductView[]
+  searchLogs     SearchLog[]
+
+  @@map("products")
+}
+
+model ProductImage {
+  id           BigInt   @id @default(autoincrement())
+  productId    BigInt
+  variantId    BigInt?
+  url          String   @db.VarChar(500)
+  altText      String?  @db.VarChar(255)
+  displayOrder Int      @default(0) @db.SmallInt
+  isPrimary    Boolean  @default(false)
+  widthPx      Int?     @db.SmallInt
+  heightPx     Int?     @db.SmallInt
+  createdAt    DateTime @default(now())
+
+  product Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  variant ProductVariant? @relation(fields: [variantId], references: [id])
+
+  @@map("product_images")
+}
+
+model Tag {
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(80)
+  slug String @unique @db.VarChar(90)
+
+  productTags ProductTag[]
+
+  @@map("tags")
+}
+
+model ProductTag {
+  productId BigInt
+  tagId     Int
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  tag     Tag     @relation(fields: [tagId], references: [id])
+
+  @@id([productId, tagId])
+  @@map("product_tags")
+}
+
+// ─────────────────────────────────────────
+// ATTRIBUTES & VARIANTS
+// ─────────────────────────────────────────
+
+model Attribute {
+  id           Int           @id @default(autoincrement())
+  name         String        @unique @db.VarChar(80)
+  displayName  String        @db.VarChar(100)
+  inputType    AttributeInputType
+  unit         String?       @db.VarChar(20)
+  isFilterable Boolean       @default(false)
+  isComparable Boolean       @default(false)
+  isRequired   Boolean       @default(false)
+  displayOrder Int           @default(0) @db.SmallInt
+
+  values                 AttributeValue[]
+  productAttributeValues ProductAttributeValue[]
+  variantOptions         VariantOption[]
+  categoryAttributes     CategoryAttribute[]
+
+  @@map("attributes")
+}
+
+model AttributeValue {
+  id            BigInt  @id @default(autoincrement())
+  attributeId   Int
+  value         String  @db.VarChar(255)
+  displayValue  String  @db.VarChar(255)
+  colorHex      String? @db.Char(7)
+  swatchImageUrl String? @db.VarChar(500)
+  displayOrder  Int     @default(0) @db.SmallInt
+
+  attribute            Attribute              @relation(fields: [attributeId], references: [id])
+  productAttributeValues ProductAttributeValue[]
+  variantOptions       VariantOption[]
+
+  @@map("attribute_values")
+}
+
+// Lưu giá trị thông số của sản phẩm
+// - valueId: dùng cho giá trị có sẵn (màu sắc, dung lượng...)
+// - textValue: dùng cho thông số tự do (tên CPU, độ phân giải màn hình...)
+// Một sản phẩm chỉ có một giá trị cho mỗi thuộc tính (unique productId+attributeId)
+model ProductAttributeValue {
+  id          BigInt  @id @default(autoincrement())
+  productId   BigInt
+  attributeId Int
+  valueId     BigInt? // null khi dùng textValue
+  textValue   String? @db.VarChar(500) // null khi dùng valueId
+
+  product   Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  attribute Attribute       @relation(fields: [attributeId], references: [id])
+  value     AttributeValue? @relation(fields: [valueId], references: [id])
+
+  @@unique([productId, attributeId])
+  @@map("product_attribute_values")
+}
+
+model ProductVariant {
+  id             BigInt   @id @default(autoincrement())
+  productId      BigInt
+  sku            String   @unique @db.VarChar(100)
+  name           String?  @db.VarChar(255)
+  price          Decimal  @db.Decimal(18, 2)
+  compareAtPrice Decimal? @db.Decimal(18, 2)
+  costPrice      Decimal? @db.Decimal(18, 2)
+  weightGrams    Int?
+  barcode        String?  @db.VarChar(100)
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  product       Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  variantOptions VariantOption[]
+  images        ProductImage[]
+  inventory     Inventory[]
+  cartItems     CartItem[]
+  orderItems    OrderItem[]
+  discounts     ProductDiscount[]
+  wishlistItems WishlistItem[]
+
+  @@map("product_variants")
+}
+
+model VariantOption {
+  variantId   BigInt
+  attributeId Int
+  valueId     BigInt
+
+  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  attribute Attribute      @relation(fields: [attributeId], references: [id])
+  value     AttributeValue @relation(fields: [valueId], references: [id])
+
+  @@id([variantId, attributeId, valueId])
+  @@map("variant_options")
+}
+
+// ─────────────────────────────────────────
+// INVENTORY
+// ─────────────────────────────────────────
+
+model Warehouse {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(100)
+  code      String   @unique @db.VarChar(20)
+  address   String   @db.VarChar(255)
+  city      String   @db.VarChar(80)
+  province  String   @db.VarChar(80)
+  phone     String?  @db.VarChar(20)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  inventory Inventory[]
+
+  @@map("warehouses")
+}
+
+model Inventory {
+  id                BigInt   @id @default(autoincrement())
+  variantId         BigInt
+  warehouseId       Int
+  quantityOnHand    Int      @default(0)
+  quantityReserved  Int      @default(0)
+  reorderPoint      Int      @default(5)
+  updatedAt         DateTime @updatedAt
+
+  variant      ProductVariant         @relation(fields: [variantId], references: [id])
+  warehouse    Warehouse              @relation(fields: [warehouseId], references: [id])
+  transactions InventoryTransaction[]
+
+  @@unique([variantId, warehouseId])
+  @@map("inventory")
+}
+
+model InventoryTransaction {
+  id              BigInt                  @id @default(autoincrement())
+  inventoryId     BigInt
+  transactionType InventoryTransactionType
+  quantityChange  Int
+  quantityAfter   Int
+  referenceId     BigInt?
+  referenceType   String?                 @db.VarChar(50)
+  note            String?                 @db.VarChar(500)
+  createdBy       BigInt?
+  createdAt       DateTime                @default(now())
+
+  inventory     Inventory @relation(fields: [inventoryId], references: [id])
+  createdByUser User?     @relation(fields: [createdBy], references: [id])
+
+  @@map("inventory_transactions")
+}
+
+// ─────────────────────────────────────────
+// CART
+// ─────────────────────────────────────────
+
+model Cart {
+  id        BigInt    @id @default(autoincrement())
+  userId    BigInt?
+  sessionId String?   @db.VarChar(128)
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user      User?      @relation(fields: [userId], references: [id])
+  cartItems CartItem[]
+
+  @@map("carts")
+}
+
+model CartItem {
+  id        BigInt   @id @default(autoincrement())
+  cartId    BigInt
+  variantId BigInt
+  quantity  Int
+  addedAt   DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cart    Cart           @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  variant ProductVariant @relation(fields: [variantId], references: [id])
+
+  @@map("cart_items")
+}
+
+// ─────────────────────────────────────────
+// ORDERS
+// ─────────────────────────────────────────
+
+model Order {
+  id               BigInt        @id @default(autoincrement())
+  orderNumber      String        @unique @db.VarChar(30)
+  userId           BigInt
+  couponId         Int?
+  recipientName    String        @db.VarChar(150)
+  recipientPhone   String        @db.VarChar(20)
+  shippingAddress  String        @db.VarChar(500)
+  shippingWard     String?       @db.VarChar(100)
+  shippingDistrict String        @db.VarChar(100)
+  shippingProvince String        @db.VarChar(100)
+  subtotal         Decimal       @db.Decimal(18, 2)
+  discountAmount   Decimal       @default(0) @db.Decimal(18, 2)
+  shippingFee      Decimal       @default(0) @db.Decimal(18, 2)
+  taxAmount        Decimal       @default(0) @db.Decimal(18, 2)
+  totalAmount      Decimal       @db.Decimal(18, 2)
+  orderStatus      OrderStatus   @default(PENDING)
+  paymentStatus    PaymentStatus @default(UNPAID)
+  note             String?       @db.Text
+  ipAddress        String?       @db.VarChar(45)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  user          User                 @relation(fields: [userId], references: [id])
+  coupon        Coupon?              @relation(fields: [couponId], references: [id])
+  orderItems    OrderItem[]
+  statusHistory OrderStatusHistory[]
+  shippingInfo  ShippingInfo?
+  payments      Payment[]
+  refunds       Refund[]
+  couponUsages  CouponUsage[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id                   BigInt   @id @default(autoincrement())
+  orderId              BigInt
+  variantId            BigInt
+  productNameSnapshot  String   @db.VarChar(255)
+  variantNameSnapshot  String?  @db.VarChar(255)
+  skuSnapshot          String   @db.VarChar(100)
+  imageUrlSnapshot     String?  @db.VarChar(500)
+  unitPrice            Decimal  @db.Decimal(18, 2)
+  quantity             Int
+  discountAmount       Decimal  @default(0) @db.Decimal(18, 2)
+  subtotal             Decimal  @db.Decimal(18, 2)
+  createdAt            DateTime @default(now())
+
+  order   Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  variant ProductVariant @relation(fields: [variantId], references: [id])
+  reviews Review[]
+
+  @@map("order_items")
+}
+
+model OrderStatusHistory {
+  id        BigInt      @id @default(autoincrement())
+  orderId   BigInt
+  status    OrderStatus
+  note      String?     @db.VarChar(500)
+  changedBy BigInt?
+  createdAt DateTime    @default(now())
+
+  order         Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  changedByUser User? @relation(fields: [changedBy], references: [id])
+
+  @@map("order_status_history")
+}
+
+model ShippingInfo {
+  id                   BigInt    @id @default(autoincrement())
+  orderId              BigInt    @unique
+  carrierName          String    @db.VarChar(100)
+  carrierCode          String?   @db.VarChar(30)
+  trackingNumber       String?   @db.VarChar(100)
+  trackingUrl          String?   @db.VarChar(500)
+  estimatedDeliveryDate DateTime? @db.Date
+  shippedAt            DateTime?
+  deliveredAt          DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@map("shipping_info")
+}
+
+// ─────────────────────────────────────────
+// PAYMENTS
+// ─────────────────────────────────────────
+
+model PaymentMethod {
+  id           Int      @id @default(autoincrement())
+  name         String   @db.VarChar(80)
+  code         String   @unique @db.VarChar(30)
+  iconUrl      String?  @db.VarChar(500)
+  description  String?  @db.VarChar(255)
+  isActive     Boolean  @default(true)
+  displayOrder Int      @default(0) @db.SmallInt
+
+  payments Payment[]
+
+  @@map("payment_methods")
+}
+
+model Payment {
+  id              BigInt        @id @default(autoincrement())
+  orderId         BigInt
+  methodId        Int
+  transactionId   String?       @unique @db.VarChar(200)
+  amount          Decimal       @db.Decimal(18, 2)
+  currency        String        @default("VND") @db.Char(3)
+  status          PaymentStatus2
+  gatewayName     String?       @db.VarChar(50)
+  gatewayResponse Json?
+  paidAt          DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  order   Order         @relation(fields: [orderId], references: [id])
+  method  PaymentMethod @relation(fields: [methodId], references: [id])
+  refunds Refund[]
+
+  @@map("payments")
+}
+
+model Refund {
+  id          BigInt       @id @default(autoincrement())
+  paymentId   BigInt
+  orderId     BigInt
+  amount      Decimal      @db.Decimal(18, 2)
+  reason      String       @db.VarChar(500)
+  status      RefundStatus @default(PENDING)
+  processedBy BigInt?
+  processedAt DateTime?
+  createdAt   DateTime     @default(now())
+
+  payment      Payment @relation(fields: [paymentId], references: [id])
+  order        Order   @relation(fields: [orderId], references: [id])
+  processedByUser User? @relation(fields: [processedBy], references: [id])
+
+  @@map("refunds")
+}
+
+// ─────────────────────────────────────────
+// PROMOTIONS
+// ─────────────────────────────────────────
+
+model Coupon {
+  id                Int            @id @default(autoincrement())
+  code              String         @unique @db.VarChar(50)
+  name              String         @db.VarChar(100)
+  description       String?        @db.VarChar(500)
+  discountType      DiscountType
+  discountValue     Decimal        @db.Decimal(10, 2)
+  minOrderAmount    Decimal        @default(0) @db.Decimal(18, 2)
+  maxDiscountAmount Decimal?       @db.Decimal(18, 2)
+  usageLimit        Int?
+  usedCount         Int            @default(0)
+  perUserLimit      Int            @default(1)
+  applicableTo      ApplicableTo   @default(ALL)
+  startDate         DateTime
+  endDate           DateTime
+  isActive          Boolean        @default(true)
+  createdAt         DateTime       @default(now())
+
+  orders           Order[]
+  couponCategories CouponCategory[]
+  couponProducts   CouponProduct[]
+  couponUsages     CouponUsage[]
+
+  @@map("coupons")
+}
+
+model CouponUsage {
+  id             BigInt   @id @default(autoincrement())
+  couponId       Int
+  userId         BigInt
+  orderId        BigInt
+  discountAmount Decimal  @db.Decimal(18, 2)
+  usedAt         DateTime @default(now())
+
+  coupon Coupon @relation(fields: [couponId], references: [id])
+  order  Order  @relation(fields: [orderId], references: [id])
+
+  @@map("coupon_usage")
+}
+
+model CouponCategory {
+  couponId   Int
+  categoryId Int
+
+  coupon   Coupon   @relation(fields: [couponId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
+
+  @@id([couponId, categoryId])
+  @@map("coupon_categories")
+}
+
+model CouponProduct {
+  couponId  Int
+  productId BigInt
+
+  coupon  Coupon  @relation(fields: [couponId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@id([couponId, productId])
+  @@map("coupon_products")
+}
+
+model ProductDiscount {
+  id            Int          @id @default(autoincrement())
+  productId     BigInt
+  variantId     BigInt?
+  discountType  DiscountType
+  discountValue Decimal      @db.Decimal(10, 2)
+  minQuantity   Int          @default(1)
+  startDate     DateTime
+  endDate       DateTime
+  isActive      Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+
+  product Product         @relation(fields: [productId], references: [id])
+  variant ProductVariant? @relation(fields: [variantId], references: [id])
+
+  @@map("product_discounts")
+}
+
+// ─────────────────────────────────────────
+// REVIEWS
+// ─────────────────────────────────────────
+
+model Review {
+  id                BigInt   @id @default(autoincrement())
+  productId         BigInt
+  userId            BigInt
+  orderItemId       BigInt?
+  rating            Int      @db.SmallInt
+  title             String?  @db.VarChar(255)
+  content           String?  @db.Text
+  isVerifiedPurchase Boolean @default(false)
+  isApproved        Boolean  @default(false)
+  helpfulCount      Int      @default(0)
+  adminReply        String?  @db.Text
+  repliedAt         DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  product   Product    @relation(fields: [productId], references: [id])
+  user      User       @relation(fields: [userId], references: [id])
+  orderItem OrderItem? @relation(fields: [orderItemId], references: [id])
+  images    ReviewImage[]
+  votes     ReviewVote[]
+
+  @@map("reviews")
+}
+
+model ReviewImage {
+  id           BigInt @id @default(autoincrement())
+  reviewId     BigInt
+  url          String @db.VarChar(500)
+  displayOrder Int    @default(0) @db.SmallInt
+
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@map("review_images")
+}
+
+model ReviewVote {
+  userId    BigInt
+  reviewId  BigInt
+  voteType  VoteType
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@id([userId, reviewId])
+  @@map("review_votes")
+}
+
+// ─────────────────────────────────────────
+// WISHLIST & ANALYTICS
+// ─────────────────────────────────────────
+
+model Wishlist {
+  id        BigInt   @id @default(autoincrement())
+  userId    BigInt
+  name      String   @default("Danh sách yêu thích") @db.VarChar(100)
+  isPublic  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user  User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items WishlistItem[]
+
+  @@map("wishlists")
+}
+
+model WishlistItem {
+  id         BigInt   @id @default(autoincrement())
+  wishlistId BigInt
+  variantId  BigInt
+  addedAt    DateTime @default(now())
+
+  wishlist Wishlist       @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
+  variant  ProductVariant @relation(fields: [variantId], references: [id])
+
+  @@unique([wishlistId, variantId])
+  @@map("wishlist_items")
+}
+
+model Notification {
+  id            BigInt   @id @default(autoincrement())
+  userId        BigInt
+  type          String   @db.VarChar(80)
+  title         String   @db.VarChar(255)
+  message       String   @db.Text
+  isRead        Boolean  @default(false)
+  readAt        DateTime?
+  referenceId   BigInt?
+  referenceType String?  @db.VarChar(50)
+  createdAt     DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model ProductView {
+  id        BigInt   @id @default(autoincrement())
+  productId BigInt
+  userId    BigInt?
+  sessionId String?  @db.VarChar(128)
+  source    String?  @db.VarChar(80)
+  createdAt DateTime @default(now())
+
+  product Product @relation(fields: [productId], references: [id])
+  user    User?   @relation(fields: [userId], references: [id])
+
+  @@map("product_views")
+}
+
+model SearchLog {
+  id               BigInt   @id @default(autoincrement())
+  userId           BigInt?
+  sessionId        String?  @db.VarChar(128)
+  query            String   @db.VarChar(255)
+  resultsCount     Int
+  clickedProductId BigInt?
+  createdAt        DateTime @default(now())
+
+  user           User?    @relation(fields: [userId], references: [id])
+  clickedProduct Product? @relation(fields: [clickedProductId], references: [id])
+
+  @@map("search_logs")
+}
+
+// ─────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum AttributeInputType {
+  TEXT
+  NUMBER
+  SELECT
+  MULTI_SELECT
+  BOOLEAN
+  COLOR
+}
+
+enum InventoryTransactionType {
+  PURCHASE
+  SALE
+  ADJUSTMENT
+  RETURN
+  TRANSFER
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  PARTIALLY_REFUNDED
+  REFUNDED
+}
+
+enum PaymentStatus2 {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum RefundStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  COMPLETED
+}
+
+enum DiscountType {
+  PERCENT
+  FIXED_AMOUNT
+  FREE_SHIPPING
+}
+
+enum ApplicableTo {
+  ALL
+  CATEGORY
+  PRODUCT
+}
+
+enum VoteType {
+  HELPFUL
+  NOT_HELPFUL
+}

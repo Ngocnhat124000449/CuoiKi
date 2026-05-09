@@ -1,0 +1,155 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/mixins' as m;
+
+.groupCurrentValue {
+  font-weight: v.$font-weight-regular;
+  text-transform: none;
+  color: v.$color-text;
+}
+
+.priceOriginalText {
+  font-size: v.$font-size-sm;
+  color: v.$color-text-muted;
+  text-decoration: line-through;
+  margin-top: 2px;
+}
+
+.colorDot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid v.$color-dot-border;
+  flex-shrink: 0;
+}
+
+.priceBox {
+  background: v.$color-brand-soft;
+  border: 1px solid v.$color-primary-border;
+  border-radius: v.$radius-md;
+  padding: v.$space-4 v.$space-5;
+  margin-bottom: v.$space-5;
+}
+
+.priceLabel {
+  font-size: v.$font-size-sm;
+  color: v.$color-text-muted;
+  margin-bottom: v.$space-1;
+}
+
+.price {
+  font-size: v.$font-size-3xl;
+  font-weight: v.$font-weight-extrabold;
+  color: v.$color-brand;
+  line-height: 1.1;
+}
+
+.stock {
+  font-size: v.$font-size-sm;
+  color: v.$color-success;
+  font-weight: v.$font-weight-medium;
+  margin-top: v.$space-1;
+  display: flex;
+  align-items: center;
+  gap: v.$space-1;
+}
+
+.stockOut {
+  @extend .stock;
+  color: v.$color-text-muted;
+}
+
+// Variant groups
+.group {
+  margin-bottom: v.$space-4;
+}
+
+.groupLabel {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-text-secondary;
+  margin-bottom: v.$space-2;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: v.$space-2;
+}
+
+.optionBtn {
+  @include m.button-reset;
+  padding: v.$space-1 + 2 v.$space-4;
+  border: 1.5px solid v.$color-border;
+  border-radius: v.$radius-sm;
+  font-size: v.$font-size-sm;
+  color: v.$color-text;
+  background: v.$color-bg-card;
+  transition: v.$transition-fast;
+  cursor: pointer;
+
+  &:hover {
+    border-color: v.$color-brand;
+    color: v.$color-brand;
+  }
+
+  &.selected {
+    background: v.$color-brand;
+    border-color: v.$color-brand;
+    color: v.$color-footer-text;
+    font-weight: v.$font-weight-semibold;
+  }
+
+  &.disabled {
+    opacity: 0.40;
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+}
+
+// Action buttons
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-3;
+  margin-top: v.$space-5;
+}
+
+.buyBtn {
+  @include m.button-primary;
+  width: 100%;
+  justify-content: center;
+  padding: v.$space-3 + 2 v.$space-4;
+  font-size: v.$font-size-md;
+  border-radius: v.$radius-sm;
+}
+
+.cartBtn {
+  @include m.button-outline;
+  width: 100%;
+  justify-content: center;
+  padding: v.$space-3 v.$space-4;
+  font-size: v.$font-size-md;
+  border-radius: v.$radius-sm;
+}
+
+// Promotions
+.promos {
+  margin-top: v.$space-5;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-2;
+}
+
+.promoItem {
+  display: flex;
+  align-items: flex-start;
+  gap: v.$space-2;
+  font-size: v.$font-size-sm;
+  color: v.$color-text-secondary;
+  line-height: v.$line-height-snug;
+
+  .icon { flex-shrink: 0; font-size: 15px; }
+}

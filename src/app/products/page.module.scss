@@ -1,0 +1,46 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/mixins' as m;
+
+.page {
+  @include m.container;
+  padding-block: v.$space-6;
+}
+
+.pageHeader {
+  margin-bottom: v.$space-6;
+  padding-bottom: v.$space-3;
+  border-bottom: 1px solid v.$color-border;
+}
+
+.pageTitle {
+  font-size: v.$fs-section-title;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-dark;
+  display: flex;
+  align-items: center;
+  gap: v.$space-2;
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-5;
+
+  @include m.md {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: v.$space-6;
+  }
+}
+
+.sidebar {
+  width: 100%;
+  flex-shrink: 0;
+
+  @include m.md { width: v.$sidebar-width; }
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}

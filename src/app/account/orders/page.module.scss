@@ -1,0 +1,124 @@
+@use '../../../styles/abstracts/variables' as v;
+@use '../../../styles/abstracts/mixins' as m;
+
+.pageHead {
+  margin-bottom: v.$space-6;
+  padding-bottom: v.$space-5;
+  border-bottom: 1px solid v.$color-border;
+}
+
+.title {
+  font-size: v.$font-size-xl;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-dark;
+  margin: 0 0 v.$space-1;
+}
+
+.desc {
+  color: v.$color-muted;
+  font-size: v.$font-size-base;
+  margin: 0;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: v.$space-4;
+  padding: v.$space-12 0;
+  color: v.$color-muted;
+}
+
+.emptyIcon { font-size: 48px; }
+
+.shopBtn {
+  @include m.button-primary;
+  text-decoration: none;
+  padding: v.$space-3 v.$space-6;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-4;
+}
+
+.card {
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-md;
+  padding: v.$space-5;
+  background: v.$color-bg-card;
+  transition: v.$transition-fast, background-color 0.25s ease, border-color 0.25s ease;
+
+  &:hover { box-shadow: v.$shadow-md; }
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: v.$space-3;
+  gap: v.$space-3;
+}
+
+.orderNum {
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-dark;
+}
+
+.orderDate {
+  font-size: v.$font-size-sm;
+  color: v.$color-muted;
+  margin-left: v.$space-3;
+}
+
+.cardMid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: v.$space-3;
+}
+
+.itemCount {
+  font-size: v.$font-size-sm;
+  color: v.$color-muted;
+}
+
+.total {
+  font-size: v.$font-size-lg;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-brand;
+}
+
+.cardFoot {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px v.$space-3;
+  border-radius: v.$radius-sm;
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-semibold;
+  white-space: nowrap;
+
+  &.pending    { background: v.$color-badge-pending-bg;  color: v.$color-badge-pending-text; }
+  &.confirmed  { background: v.$color-badge-info-bg;     color: v.$color-info; }
+  &.processing { background: v.$color-badge-info-bg;     color: v.$color-info; }
+  &.shipped    { background: v.$color-badge-info-bg;     color: v.$color-info; }
+  &.delivered  { background: v.$color-badge-success-bg;  color: v.$color-success; }
+  &.cancelled  { background: v.$color-badge-danger-bg;   color: v.$color-error; }
+  &.refunded   { background: v.$color-bg-section;        color: v.$color-text-muted; }
+}
+
+.payBadge {
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-medium;
+
+  &.paid   { color: v.$color-success; }
+  &.unpaid { color: v.$color-text-muted; }
+}

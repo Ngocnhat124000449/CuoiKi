@@ -1,0 +1,41 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/mixins' as m;
+
+.topbar {
+  background: v.$color-topbar;
+  color: v.$color-topbar-text;
+  height: v.$topbar-height;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  gap: v.$space-12;
+  white-space: nowrap;
+  animation: marquee 32s linear infinite;
+  will-change: transform;
+
+  &:hover { animation-play-state: paused; }
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: v.$space-2;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-medium;
+  flex-shrink: 0;
+  opacity: 0.88;
+
+  &:hover { opacity: 1; }
+}
+
+.sep {
+  color: hsla(0, 100%, 100%, 0.30);
+  font-size: v.$font-size-lg;
+  -webkit-user-select: none;
+  user-select: none;
+}

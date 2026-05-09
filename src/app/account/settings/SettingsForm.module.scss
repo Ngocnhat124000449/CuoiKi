@@ -1,0 +1,55 @@
+@use '../../../styles/abstracts/variables' as v;
+@use '../../../styles/abstracts/mixins' as m;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-5;
+}
+
+.success {
+  background: v.$color-verified-bg;
+  color: v.$color-success;
+  border: 1px solid v.$color-success-border;
+  padding: v.$space-3 v.$space-4;
+  border-radius: v.$radius-md;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-medium;
+}
+
+.error {
+  background: v.$color-badge-danger-bg;
+  color: v.$color-error;
+  border: 1px solid v.$color-primary-border;
+  padding: v.$space-3 v.$space-4;
+  border-radius: v.$radius-md;
+  font-size: v.$font-size-sm;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-1;
+}
+
+.label {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-text;
+}
+
+.input {
+  @include m.input-base;
+}
+
+.btn {
+  @include m.button-primary;
+  padding: v.$space-3 v.$space-6;
+  align-self: flex-start;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+}

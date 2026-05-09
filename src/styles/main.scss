@@ -1,0 +1,13 @@
+// Abstracts — no CSS output (variables, mixins, functions)
+@use 'abstracts/variables';
+@use 'abstracts/mixins';
+@use 'abstracts/functions';
+
+// Base styles
+@use 'base/reset';
+@use 'base/typography';
+
+// Global animations
+@use 'animations/keyframes';
+
+// Template SCSS is kept as reference only; active styles are component-scoped.

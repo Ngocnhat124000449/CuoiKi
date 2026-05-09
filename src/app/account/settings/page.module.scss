@@ -1,0 +1,24 @@
+@use '../../../styles/abstracts/variables' as v;
+
+.pageHead {
+  margin-bottom: v.$space-6;
+  padding-bottom: v.$space-5;
+  border-bottom: 1px solid v.$color-border;
+}
+
+.title {
+  font-size: v.$font-size-xl;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-dark;
+  margin: 0 0 v.$space-1;
+}
+
+.desc {
+  color: v.$color-muted;
+  font-size: v.$font-size-base;
+  margin: 0;
+}
+
+.section {
+  max-width: 480px;
+}

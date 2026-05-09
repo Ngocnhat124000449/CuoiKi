@@ -1,0 +1,61 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/mixins' as m;
+
+.pageHead {
+  margin-bottom: v.$space-6;
+  padding-bottom: v.$space-5;
+  border-bottom: 1px solid v.$color-border;
+}
+
+.title {
+  font-size: v.$font-size-xl;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-dark;
+  margin: 0 0 v.$space-1;
+}
+
+.desc {
+  color: v.$color-muted;
+  font-size: v.$font-size-base;
+  margin: 0;
+}
+
+.stats {
+  display: flex;
+  gap: v.$space-4;
+  margin-bottom: v.$space-8;
+}
+
+.stat {
+  background: v.$color-bg-hover;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-md;
+  padding: v.$space-4 v.$space-6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 120px;
+}
+
+.statValue {
+  font-size: v.$font-size-lg;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-brand;
+}
+
+.statLabel {
+  font-size: v.$font-size-sm;
+  color: v.$color-muted;
+}
+
+.section {
+  margin-top: v.$space-4;
+}
+
+.sectionTitle {
+  font-size: v.$font-size-lg;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-dark;
+  margin: 0 0 v.$space-5;
+}

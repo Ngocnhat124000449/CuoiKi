@@ -1,8 +1,17 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  reactCompiler: true,
-};
+  turbopack: {
+    root: process.cwd(),
+  },
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'res.cloudinary.com' },
+    ],
+  },
+  sassOptions: {
+    includePaths: ['./src/styles'],
+  },
+}
 
-export default nextConfig;
+export default nextConfig

@@ -1,0 +1,54 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/mixins' as m;
+
+// Base shimmer block
+.shimmer {
+  @include m.skeleton-shimmer;
+  border-radius: v.$radius-md;
+}
+
+// Card skeleton
+.card {
+  @include m.card;
+  overflow: hidden;
+}
+
+.cardImg {
+  @extend .shimmer;
+  aspect-ratio: 1;
+  border-radius: 0;
+}
+
+.cardBody {
+  padding: v.$space-3;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-2;
+}
+
+.line {
+  @extend .shimmer;
+  height: 14px;
+  border-radius: v.$radius-sm;
+
+  &.w75 { width: 75%; }
+  &.w50 { width: 50%; }
+  &.w33 { width: 33%; }
+}
+
+.btnBlock {
+  @extend .shimmer;
+  height: 32px;
+  border-radius: v.$radius-sm;
+  margin-top: v.$space-1;
+}
+
+// Grid skeleton
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: v.$space-3;
+
+  @include m.md { grid-template-columns: repeat(3, 1fr); gap: v.$space-4; }
+  @include m.lg { grid-template-columns: repeat(4, 1fr); }
+}

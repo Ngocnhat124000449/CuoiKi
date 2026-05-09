@@ -1,0 +1,210 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/mixins' as m;
+
+.footer {
+  background: v.$color-footer-bg;
+  color: v.$color-footer-muted;
+  margin-top: v.$space-16;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.top {
+  @include m.container;
+  padding-top: v.$space-12;
+  padding-bottom: v.$space-8;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: v.$space-8;
+
+  @include m.md {
+    grid-template-columns: 2fr 1fr 1fr 1.4fr;
+    gap: v.$space-10;
+  }
+}
+
+// Brand column
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-4;
+}
+
+.brandLogo {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  text-decoration: none;
+
+  .icon {
+    width: 40px;
+    height: 40px;
+    background: v.$color-brand;
+    border-radius: v.$radius-md;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .name {
+    font-size: v.$font-size-xl;
+    font-weight: v.$font-weight-extrabold;
+    color: v.$color-footer-text;
+  }
+}
+
+.brandDesc {
+  font-size: v.$font-size-sm;
+  line-height: v.$line-height-relaxed;
+  max-width: 280px;
+}
+
+.certBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: v.$space-2;
+  margin-top: v.$space-2;
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    gap: v.$space-1;
+    font-size: v.$font-size-xs;
+    font-weight: v.$font-weight-medium;
+    padding: v.$space-1 + 1 v.$space-3;
+    border: 1px solid v.$color-footer-badge;
+    border-radius: v.$radius-md;
+    color: v.$color-footer-dim;
+  }
+}
+
+// Column
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-3;
+}
+
+.colTitle {
+  font-size: v.$font-size-md;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-footer-text;
+  margin-bottom: v.$space-1;
+  position: relative;
+  padding-bottom: v.$space-2;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 28px;
+    height: 2px;
+    background: v.$color-brand;
+    border-radius: v.$radius-full;
+  }
+}
+
+.colLinks {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-2;
+}
+
+.link {
+  font-size: v.$font-size-sm;
+  color: v.$color-footer-link;
+  text-decoration: none;
+  transition: v.$transition-fast;
+  display: flex;
+  align-items: center;
+  gap: v.$space-2;
+
+  &:hover {
+    color: v.$color-brand;
+    padding-left: v.$space-1;
+  }
+}
+
+// Contact column
+.contactItem {
+  display: flex;
+  align-items: flex-start;
+  gap: v.$space-3;
+  font-size: v.$font-size-sm;
+
+  .icon { flex-shrink: 0; font-size: 16px; margin-top: 1px; opacity: 0.70; }
+
+  a {
+    color: v.$color-footer-link;
+    transition: v.$transition-fast;
+    &:hover { color: v.$color-brand; }
+  }
+}
+
+.socialRow {
+  display: flex;
+  gap: v.$space-2;
+  margin-top: v.$space-2;
+}
+
+.socialBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: v.$radius-md;
+  background: v.$color-footer-social;
+  border: 1px solid v.$color-footer-badge;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  text-decoration: none;
+  transition: v.$transition-base;
+
+  &:hover {
+    background: v.$color-brand;
+    border-color: v.$color-brand;
+    transform: translateY(-2px);
+  }
+}
+
+// Bottom bar
+.bottom {
+  border-top: 1px solid v.$color-footer-border;
+}
+
+.bottomInner {
+  @include m.container;
+  padding-block: v.$space-5;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-2;
+  align-items: center;
+  text-align: center;
+  font-size: v.$font-size-sm;
+
+  @include m.md {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+.copyright {
+  color: v.$color-footer-dim;
+}
+
+.policies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: v.$space-4;
+  justify-content: center;
+
+  a {
+    color: v.$color-footer-link;
+    text-decoration: none;
+    transition: v.$transition-fast;
+    &:hover { color: v.$color-brand; }
+  }
+}

@@ -1,0 +1,69 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/mixins' as m;
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-4;
+}
+
+.title {
+  color: v.$color-dark;
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-semibold;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: v.$space-3;
+}
+
+.item {
+  position: relative;
+
+  &:hover .deleteBtn {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.imageWrap {
+  position: relative;
+  aspect-ratio: 1;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-md;
+  overflow: hidden;
+  background: v.$color-bg-hover;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.primaryBadge {
+  position: absolute;
+  top: v.$space-1;
+  left: v.$space-1;
+  @include m.badge(v.$color-warning, v.$color-dark);
+}
+
+.deleteBtn {
+  position: absolute;
+  top: v.$space-1;
+  right: v.$space-1;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: v.$radius-full;
+  background: v.$color-danger;
+  color: v.$color-footer-text;
+  font-size: v.$font-size-xs;
+  opacity: 0;
+  pointer-events: none;
+  transition: v.$transition-fast;
+
+  &:hover { background: v.$color-footer-bg; }
+}

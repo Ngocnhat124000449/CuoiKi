@@ -1,0 +1,56 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/mixins' as m;
+
+.wrap {
+  display: flex;
+  align-items: stretch;
+  min-height: 42px;
+  background: v.$color-input-bg;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-md;
+  overflow: hidden;
+  transition: v.$transition-fast;
+
+  &:focus-within {
+    border-color: v.$color-brand;
+    box-shadow: 0 0 0 3px v.$color-primary-10;
+  }
+}
+
+.input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 0 v.$space-4;
+  font-size: v.$font-size-sm;
+  color: v.$color-text;
+  background: transparent;
+  min-width: 0;
+
+  &::placeholder { color: v.$color-text-muted; }
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: v.$space-2;
+  padding: 0 v.$space-5;
+  background: v.$color-brand;
+  color: v.$color-footer-text;
+  border: none;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  cursor: pointer;
+  transition: v.$transition-fast;
+  white-space: nowrap;
+
+  &:hover { background: v.$color-footer-bg; }
+
+  svg { flex-shrink: 0; }
+}
+
+// Mobile
+.mobileWrap {
+  padding: 0 v.$container-pad v.$space-3;
+}

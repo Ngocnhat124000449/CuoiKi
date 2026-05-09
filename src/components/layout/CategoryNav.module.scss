@@ -1,0 +1,65 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/mixins' as m;
+
+.nav {
+  background: v.$color-nav-bar;
+  border-bottom: 1px solid v.$color-border;
+  position: sticky;
+  top: v.$header-height;
+  z-index: v.$z-sticky - 10;
+}
+
+.inner {
+  @include m.container;
+  @include m.scrollbar-hide;
+  display: flex;
+  align-items: stretch;
+  overflow-x: auto;
+  height: v.$category-height;
+  gap: 2px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: v.$space-2;
+  padding: 0 v.$space-3 + 2;
+  text-decoration: none;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-dark;
+  white-space: nowrap;
+  transition: v.$transition-fast;
+  border-bottom: 2px solid transparent;
+  flex-shrink: 0;
+
+  &:hover {
+    color: v.$color-brand;
+    background: v.$color-brand-soft;
+    border-bottom-color: v.$color-brand;
+  }
+
+  &.active {
+    color: v.$color-brand;
+    border-bottom-color: v.$color-brand;
+    background: v.$color-brand-soft;
+  }
+}
+
+.itemIcon {
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.itemLabel {
+  font-size: v.$font-size-sm;
+}
+
+// "Hot" badge on item
+.hotBadge {
+  @include m.badge(v.$color-danger, v.$color-footer-text);
+  font-size: 9px;
+  padding: 1px 4px;
+  animation: pulseSoft 2s ease-in-out infinite;
+}

@@ -1,0 +1,256 @@
+// ==========================================================================
+// Design Tokens - Anon ecommerce palette
+// ==========================================================================
+
+// Brand / accents from assets/css/style.css
+$color-brand:       hsl(353, 100%, 78%);
+$color-brand-dark:  hsl(0, 0%, 13%);
+$color-brand-hover: hsl(0, 0%, 13%);
+$color-brand-soft:  hsla(353, 100%, 78%, 0.12);
+
+$color-dark:        hsl(0, 0%, 13%);
+$color-text:        hsl(0, 0%, 33%);
+$color-muted:       hsl(0, 0%, 47%);
+$color-light-muted: hsl(0, 0%, 60%);
+$color-border:      hsl(0, 0%, 93%);
+$color-white:       hsl(0, 100%, 100%);
+$color-black:       hsl(0, 0%, 0%);
+
+$color-danger:      hsl(0, 100%, 70%);
+$color-success:     hsl(152, 51%, 52%);
+$color-warning:     hsl(29, 90%, 65%);
+$color-info:        hsl(210, 100%, 42%);
+
+// Compatibility aliases used across existing modules
+$color-primary:       $color-brand;
+$color-primary-dark:  $color-dark;
+$color-primary-hover: $color-dark;
+$color-primary-bg:    $color-brand-soft;
+$color-primary-10:    hsla(353, 100%, 78%, 0.18);
+$color-accent:        $color-warning;
+$color-accent-bg:     hsla(29, 90%, 65%, 0.14);
+$color-error:         $color-danger;
+
+// Neutral scale
+$color-gray-50:  hsl(0, 0%, 98%);
+$color-gray-100: hsl(0, 0%, 96%);
+$color-gray-200: hsl(0, 0%, 93%);
+$color-gray-300: hsl(0, 0%, 86%);
+$color-gray-400: hsl(0, 0%, 76%);
+$color-gray-500: hsl(0, 0%, 60%);
+$color-gray-600: hsl(0, 0%, 47%);
+$color-gray-700: hsl(0, 0%, 33%);
+$color-gray-800: hsl(0, 0%, 27%);
+$color-gray-900: hsl(0, 0%, 13%);
+
+// Text aliases
+$color-text-secondary: $color-muted;
+$color-text-muted:     $color-light-muted;
+$color-text-disabled:  hsl(0, 0%, 75%);
+$color-text-inverse:   $color-white;
+
+// Backgrounds / borders
+$color-bg:           hsl(0, 0%, 98%);
+$color-bg-card:      $color-white;
+$color-bg-hover:     hsl(0, 0%, 96%);
+$color-bg-section:   hsl(0, 0%, 97%);
+$color-border-light: $color-border;
+$color-border-focus: $color-brand;
+
+// Layout-specific colors
+$color-header:      $color-white;
+$color-header-dark: $color-dark;
+$color-nav-bar:     $color-white;
+$color-topbar:      $color-dark;
+$color-topbar-text: $color-white;
+$color-flash-bg:    $color-dark;
+$color-flash-timer: $color-warning;
+
+// ==========================================================================
+// Typography
+// ==========================================================================
+$font-family-base: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+$fs-hero:          2.625rem;
+$fs-section-title: 1.25rem;
+$fs-card-title:    0.875rem;
+$fs-body:          0.875rem;
+$fs-small:         0.813rem;
+$fs-meta:          0.75rem;
+
+$font-size-xs:   0.688rem;
+$font-size-sm:   $fs-meta;
+$font-size-base: $fs-body;
+$font-size-md:   0.938rem;
+$font-size-lg:   1rem;
+$font-size-xl:   1.125rem;
+$font-size-2xl:  1.375rem;
+$font-size-3xl:  1.875rem;
+$font-size-4xl:  $fs-hero;
+
+$font-weight-light:     300;
+$font-weight-regular:   400;
+$font-weight-medium:    500;
+$font-weight-semibold:  600;
+$font-weight-bold:      700;
+$font-weight-extrabold: 700;
+
+$line-height-tight:   1.2;
+$line-height-snug:    1.4;
+$line-height-base:    1.6;
+$line-height-relaxed: 1.75;
+
+// ==========================================================================
+// Spacing
+// ==========================================================================
+$space-1:  4px;
+$space-2:  8px;
+$space-3:  12px;
+$space-4:  16px;
+$space-5:  20px;
+$space-6:  24px;
+$space-7:  28px;
+$space-8:  32px;
+$space-10: 40px;
+$space-12: 48px;
+$space-16: 64px;
+$space-20: 80px;
+
+// ==========================================================================
+// Radius / shadows / transitions
+// ==========================================================================
+$radius-xs:   3px;
+$radius-sm:   5px;
+$radius-md:   10px;
+$radius-lg:   16px;
+$radius-xl:   18px;
+$radius-2xl:  24px;
+$radius-full: 9999px;
+
+$shadow-xs:    0 1px 2px hsla(0, 0%, 0%, 0.04);
+$shadow-sm:    0 2px 6px hsla(0, 0%, 0%, 0.06);
+$shadow-md:    0 4px 14px hsla(0, 0%, 0%, 0.08);
+$shadow-lg:    0 8px 24px hsla(0, 0%, 0%, 0.10);
+$shadow-xl:    0 12px 32px hsla(0, 0%, 0%, 0.14);
+$shadow-card:  0 0 10px hsla(0, 0%, 0%, 0.05);
+$shadow-hover: 0 0 10px hsla(0, 0%, 0%, 0.10);
+
+$transition-fast:   all 0.2s ease;
+$transition-normal: all 0.3s ease;
+$transition-base:   $transition-fast;
+$transition-slow:   all 0.5s ease;
+$transition-bounce: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+$animation-duration-fast:   0.2s;
+$animation-duration-normal: 0.4s;
+$animation-duration-slow:   0.6s;
+$ease-smooth:    cubic-bezier(0.25, 0.46, 0.45, 0.94);
+$hover-scale-sm: scale(1.05);
+$hover-scale-md: scale(1.08);
+
+// ==========================================================================
+// Layout
+// ==========================================================================
+$container-max:    1200px;
+$container-pad:    15px;
+$container-pad-md: 20px;
+
+$topbar-height:   32px;
+$header-height:   72px;
+$category-height: 46px;
+$sidebar-width:   260px;
+
+// ==========================================================================
+// Z-index / breakpoints
+// ==========================================================================
+$z-base:     1;
+$z-dropdown: 100;
+$z-sticky:   200;
+$z-overlay:  300;
+$z-modal:    400;
+$z-toast:    500;
+
+$bp-xs: 375px;
+$bp-sm: 480px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+$bp-xl: 1280px;
+
+// ==========================================================================
+// Runtime theme-aware tokens
+// ==========================================================================
+
+$color-brand:       var(--color-brand);
+$color-brand-dark:  var(--color-dark);
+$color-brand-hover: var(--color-dark);
+$color-brand-soft:  var(--color-brand-soft);
+
+$color-primary:       var(--color-brand);
+$color-primary-dark:  var(--color-dark);
+$color-primary-hover: var(--color-dark);
+$color-primary-bg:    var(--color-brand-soft);
+$color-primary-10:    var(--color-brand-ring);
+$color-accent:        var(--color-warning);
+$color-accent-bg:     var(--color-warning-soft);
+$color-error:         var(--color-danger);
+
+$color-dark:        var(--color-dark);
+$color-text:        var(--color-text);
+$color-muted:       var(--color-muted);
+$color-light-muted: var(--color-light-muted);
+$color-white:       var(--color-white);
+$color-black:       var(--color-black);
+
+$color-text-secondary: var(--color-muted);
+$color-text-muted:     var(--color-light-muted);
+$color-text-disabled:  var(--color-light-muted);
+
+$color-bg:             var(--color-bg);
+$color-bg-card:        var(--color-bg-card);
+$color-bg-hover:       var(--color-bg-hover);
+$color-bg-section:     var(--color-bg-section);
+$color-input-bg:       var(--color-input-bg);
+
+$color-border:         var(--color-border);
+$color-border-light:   var(--color-border-lt);
+$color-border-focus:   var(--color-brand);
+
+$color-header:      var(--color-header);
+$color-header-dark: var(--color-dark);
+$color-nav-bar:     var(--color-nav-bar);
+$color-topbar:      var(--color-topbar);
+$color-topbar-text: var(--color-topbar-text);
+$color-flash-bg:    var(--color-flash-bg);
+$color-flash-timer: var(--color-warning);
+
+$color-danger:  var(--color-danger);
+$color-success: var(--color-success);
+$color-warning: var(--color-warning);
+$color-info:    var(--color-info);
+
+$color-rating-star:        var(--color-warning);
+$color-primary-border:     var(--color-brand-border);
+$color-primary-shadow:     var(--color-brand-shadow);
+$color-dot-border:         var(--color-dot-border);
+
+$color-badge-pending-bg:   var(--color-warning-soft);
+$color-badge-pending-text: var(--color-warning-text);
+$color-badge-info-bg:      var(--color-info-soft);
+$color-badge-success-bg:   var(--color-success-soft);
+$color-badge-danger-bg:    var(--color-danger-soft);
+$color-badge-accent-bg:    var(--color-warning-soft);
+$color-verified-bg:        var(--color-success-soft);
+$color-success-border:     var(--color-success-border);
+
+$color-skeleton-base: var(--color-skeleton-base);
+$color-skeleton-hi:   var(--color-skeleton-hi);
+
+// Footer / admin sidebar — dark in both modes, shade shifts with theme
+$color-footer-bg:     var(--color-footer-bg);
+$color-footer-text:   var(--color-footer-text);
+$color-footer-muted:  var(--color-footer-muted);
+$color-footer-dim:    var(--color-footer-dim);
+$color-footer-link:   var(--color-footer-link);
+$color-footer-border: var(--color-footer-border);
+$color-footer-social: var(--color-footer-social);
+$color-footer-badge:  var(--color-footer-badge);

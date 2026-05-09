@@ -1,0 +1,262 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/mixins' as m;
+
+// ── Shell ────────────────────────────────────────────────────────────────────
+
+.shell {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: flex;
+  background: v.$color-bg;
+}
+
+// ── Sidebar ──────────────────────────────────────────────────────────────────
+
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: v.$color-footer-bg;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  @include m.scrollbar-hide;
+  transition: background 0.25s ease;
+
+  @include m.max-md {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 902;
+    transform: translateX(-100%);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+.sidebarOpen {
+  @include m.max-md {
+    transform: translateX(0);
+  }
+}
+
+// ── Brand header ─────────────────────────────────────────────────────────────
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  padding: v.$space-5 v.$space-5 v.$space-4;
+  border-bottom: 1px solid v.$color-footer-border;
+  margin-bottom: v.$space-3;
+}
+
+.brandIcon { font-size: 24px; flex-shrink: 0; }
+
+.brandName {
+  display: block;
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-footer-text;
+  line-height: 1.2;
+}
+
+.brandSub {
+  display: block;
+  font-size: v.$font-size-xs;
+  color: v.$color-footer-dim;
+  font-weight: v.$font-weight-medium;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.closeBtn {
+  @include m.button-reset;
+  margin-left: auto;
+  color: v.$color-footer-dim;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: none;
+  padding: v.$space-1;
+
+  @include m.max-md { display: flex; }
+
+  &:hover { color: v.$color-footer-text; }
+}
+
+// ── Nav ───────────────────────────────────────────────────────────────────────
+
+.nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 v.$space-3;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  padding: 10px v.$space-3;
+  border-radius: v.$radius-md;
+  text-decoration: none;
+  font-size: v.$font-size-base;
+  color: v.$color-footer-dim;
+  transition: v.$transition-fast;
+
+  &:hover {
+    background: v.$color-footer-social;
+    color: v.$color-brand;
+  }
+}
+
+.navItemActive {
+  background: v.$color-footer-social;
+  color: v.$color-brand;
+  font-weight: v.$font-weight-semibold;
+  border-left: 3px solid v.$color-brand;
+  padding-left: calc(#{v.$space-3} - 3px);
+}
+
+.navIcon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+// ── Sidebar bottom ────────────────────────────────────────────────────────────
+
+.sideBottom {
+  padding: v.$space-4 v.$space-3;
+  border-top: 1px solid v.$color-footer-border;
+  margin-top: auto;
+}
+
+.adminUser {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  padding: v.$space-3;
+  margin-bottom: v.$space-3;
+}
+
+.adminAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: v.$radius-full;
+  background: v.$color-primary;
+  color: v.$color-footer-text;
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.adminInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  overflow: hidden;
+}
+
+.adminName {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-footer-text;
+  @include m.truncate;
+}
+
+.adminBadge {
+  font-size: v.$font-size-xs;
+  color: v.$color-brand;
+  font-weight: v.$font-weight-medium;
+}
+
+.bottomLinks {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: v.$space-2;
+}
+
+.backLink {
+  font-size: v.$font-size-sm;
+  color: v.$color-footer-link;
+  text-decoration: none;
+  transition: v.$transition-fast;
+
+  &:hover { color: v.$color-footer-text; }
+}
+
+.logoutBtn {
+  @include m.button-reset;
+  font-size: v.$font-size-sm;
+  color: v.$color-footer-link;
+  cursor: pointer;
+  transition: v.$transition-fast;
+
+  &:hover { color: v.$color-error; }
+}
+
+// ── Main content ──────────────────────────────────────────────────────────────
+
+.main {
+  flex: 1;
+  background: v.$color-bg;
+  padding: v.$space-6;
+  min-width: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+// ── Mobile overlay + hamburger ────────────────────────────────────────────────
+
+.overlay {
+  display: none;
+
+  @include m.max-md {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 901;
+    animation: fadeIn 0.2s ease;
+  }
+}
+
+.menuBtn {
+  display: none;
+
+  @include m.max-md {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    position: fixed;
+    top: v.$space-4;
+    left: v.$space-4;
+    z-index: 903;
+    width: 40px;
+    height: 40px;
+    padding: v.$space-2;
+    border-radius: v.$radius-md;
+    background: v.$color-footer-bg;
+    border: 1px solid v.$color-footer-border;
+    cursor: pointer;
+
+    span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: v.$color-footer-text;
+      border-radius: 2px;
+    }
+  }
+}

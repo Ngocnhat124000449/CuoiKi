@@ -1,0 +1,142 @@
+@use '../styles/main';
+
+// ==========================================================================
+// Theme tokens - Anon ecommerce palette
+// ==========================================================================
+
+:root {
+  --color-brand:       hsl(353, 100%, 78%);
+  --color-dark:        hsl(0, 0%, 13%);
+  --color-text:        hsl(0, 0%, 33%);
+  --color-muted:       hsl(0, 0%, 47%);
+  --color-light-muted: hsl(0, 0%, 60%);
+  --color-border:      hsl(0, 0%, 93%);
+  --color-border-lt:   hsl(0, 0%, 93%);
+  --color-white:       hsl(0, 100%, 100%);
+  --color-black:       hsl(0, 0%, 0%);
+
+  --color-danger:  hsl(0, 100%, 70%);
+  --color-success: hsl(152, 51%, 52%);
+  --color-warning: hsl(29, 90%, 65%);
+  --color-info:    hsl(210, 100%, 42%);
+
+  --color-bg:         hsl(0, 0%, 98%);
+  --color-bg-card:    hsl(0, 100%, 100%);
+  --color-bg-hover:   hsl(0, 0%, 96%);
+  --color-bg-section: hsl(0, 0%, 97%);
+  --color-input-bg:   hsl(0, 100%, 100%);
+
+  --color-header:      hsl(0, 100%, 100%);
+  --color-nav-bar:     hsl(0, 100%, 100%);
+  --color-topbar:      hsl(0, 0%, 13%);
+  --color-topbar-text: hsl(0, 100%, 100%);
+  --color-flash-bg:    hsl(0, 0%, 13%);
+
+  --color-brand-soft:   hsla(353, 100%, 78%, 0.12);
+  --color-brand-ring:   hsla(353, 100%, 78%, 0.24);
+  --color-brand-border: hsla(353, 100%, 78%, 0.35);
+  --color-brand-shadow: hsla(353, 100%, 78%, 0.28);
+  --color-dot-border:   hsla(0, 0%, 0%, 0.15);
+
+  --color-danger-soft:  hsla(0, 100%, 70%, 0.12);
+  --color-success-soft: hsla(152, 51%, 52%, 0.14);
+  --color-warning-soft: hsla(29, 90%, 65%, 0.16);
+  --color-warning-text: hsl(29, 70%, 40%);
+  --color-info-soft:    hsla(210, 100%, 42%, 0.10);
+  --color-success-border: hsla(152, 51%, 52%, 0.28);
+
+  --color-skeleton-base: hsl(0, 0%, 93%);
+  --color-skeleton-hi:   hsl(0, 0%, 98%);
+
+  --color-footer-bg:     hsl(220, 10%, 96%);
+  --color-footer-text:   hsl(220, 20%, 10%);
+  --color-footer-muted:  hsl(220, 10%, 35%);
+  --color-footer-dim:    hsl(220, 10%, 48%);
+  --color-footer-link:   hsl(220, 12%, 42%);
+  --color-footer-border: hsl(220, 10%, 86%);
+  --color-footer-social: hsl(220, 10%, 89%);
+  --color-footer-badge:  hsl(220, 10%, 83%);
+
+  --container-max:    1200px;
+  --header-height:    72px;
+  --topbar-height:    32px;
+  --category-height:  46px;
+}
+
+[data-theme='dark'] {
+  --color-dark:        hsl(0, 0%, 90%);
+  --color-text:        hsl(0, 0%, 78%);
+  --color-muted:       hsl(0, 0%, 62%);
+  --color-light-muted: hsl(0, 0%, 50%);
+  --color-border:      hsl(0, 0%, 24%);
+  --color-border-lt:   hsl(0, 0%, 20%);
+  --color-white:       hsl(0, 0%, 13%);
+
+  --color-bg:         hsl(0, 0%, 9%);
+  --color-bg-card:    hsl(0, 0%, 13%);
+  --color-bg-hover:   hsl(0, 0%, 17%);
+  --color-bg-section: hsl(0, 0%, 12%);
+  --color-input-bg:   hsl(0, 0%, 15%);
+
+  --color-header:      hsl(0, 0%, 13%);
+  --color-nav-bar:     hsl(0, 0%, 13%);
+  --color-topbar:      hsl(0, 0%, 8%);
+  --color-topbar-text: hsl(0, 0%, 90%);
+  --color-flash-bg:    hsl(0, 0%, 8%);
+
+  --color-brand-soft:   hsla(353, 100%, 78%, 0.16);
+  --color-brand-ring:   hsla(353, 100%, 78%, 0.22);
+  --color-brand-border: hsla(353, 100%, 78%, 0.28);
+  --color-brand-shadow: hsla(353, 100%, 78%, 0.18);
+  --color-dot-border:   hsla(0, 0%, 100%, 0.22);
+
+  --color-danger-soft:  hsla(0, 100%, 70%, 0.16);
+  --color-success-soft: hsla(152, 51%, 52%, 0.16);
+  --color-warning-soft: hsla(29, 90%, 65%, 0.18);
+  --color-warning-text: hsl(29, 90%, 72%);
+  --color-info-soft:    hsla(210, 100%, 62%, 0.16);
+  --color-success-border: hsla(152, 51%, 52%, 0.32);
+
+  --color-skeleton-base: hsl(0, 0%, 18%);
+  --color-skeleton-hi:   hsl(0, 0%, 23%);
+
+  --color-footer-bg:     hsl(220, 15%, 7%);
+  --color-footer-text:   hsl(0, 0%, 88%);
+  --color-footer-muted:  hsla(0, 0%, 100%, 0.50);
+  --color-footer-dim:    hsla(0, 0%, 100%, 0.42);
+  --color-footer-link:   hsla(0, 0%, 100%, 0.46);
+  --color-footer-border: hsla(0, 0%, 100%, 0.07);
+  --color-footer-social: hsla(0, 0%, 100%, 0.05);
+  --color-footer-badge:  rgba(255, 255, 255, 0.13);
+}
+
+// ==========================================================================
+// Global utility classes
+// ==========================================================================
+
+.site-main {
+  min-height: calc(100vh - var(--topbar-height) - var(--header-height) - var(--category-height));
+  background: var(--color-bg);
+}
+
+.line-clamp-1,
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-1 { -webkit-line-clamp: 1; }
+.line-clamp-2 { -webkit-line-clamp: 2; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

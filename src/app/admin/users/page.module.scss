@@ -1,0 +1,103 @@
+@use '../../../styles/abstracts/variables' as v;
+@use '../../../styles/abstracts/mixins' as m;
+
+.pageHead {
+  margin-bottom: v.$space-6;
+}
+
+.title {
+  font-size: v.$font-size-2xl;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-text;
+  margin: 0 0 v.$space-1;
+}
+
+.desc {
+  color: v.$color-text-muted;
+  font-size: v.$font-size-sm;
+  margin: 0;
+}
+
+.tableCard {
+  background: v.$color-bg-card;
+  border-radius: v.$radius-lg;
+  box-shadow: v.$shadow-card;
+  overflow: hidden;
+}
+
+.tableWrap { overflow-x: auto; }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: v.$font-size-sm;
+
+  th {
+    text-align: left;
+    padding: v.$space-3 v.$space-4;
+    border-bottom: 2px solid v.$color-border;
+    font-weight: v.$font-weight-semibold;
+    color: v.$color-text-muted;
+    white-space: nowrap;
+    background: v.$color-bg;
+  }
+
+  td {
+    padding: v.$space-3 v.$space-4;
+    border-bottom: 1px solid v.$color-border-light;
+    color: v.$color-text;
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: v.$color-bg; }
+}
+
+.tdName { font-weight: v.$font-weight-medium; }
+.tdMuted { color: v.$color-text-muted; font-size: v.$font-size-sm; }
+.tdCenter { text-align: center; }
+
+.roleBadge {
+  display: inline-flex;
+  padding: 3px 10px;
+  border-radius: v.$radius-full;
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-semibold;
+  background: v.$color-bg-section;
+  color: v.$color-text-secondary;
+  margin-right: 4px;
+
+  &.roleAdmin {
+    background: v.$color-badge-danger-bg;
+    color: v.$color-primary;
+  }
+}
+
+.badge {
+  display: inline-flex;
+  padding: 3px 10px;
+  border-radius: v.$radius-full;
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-semibold;
+
+  &.active   { background: v.$color-badge-success-bg; color: v.$color-success; }
+  &.inactive { background: v.$color-badge-danger-bg;  color: v.$color-error; }
+}
+
+.toggleBtn {
+  @include m.button-reset;
+  padding: 4px v.$space-3;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-md;
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-medium;
+  color: v.$color-text-secondary;
+  cursor: pointer;
+  transition: v.$transition-fast;
+  white-space: nowrap;
+
+  &:hover {
+    border-color: v.$color-primary;
+    color: v.$color-primary;
+  }
+}

@@ -1,0 +1,139 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/mixins' as m;
+
+.page {
+  background: v.$color-bg;
+  min-height: calc(100vh - v.$topbar-height - v.$header-height - v.$category-height - 40px);
+  padding: v.$space-6 0 v.$space-10;
+}
+
+.container {
+  @include m.container;
+  display: flex;
+  gap: v.$space-6;
+  align-items: flex-start;
+}
+
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  @include m.card;
+  padding: v.$space-5;
+  position: sticky;
+  top: calc(v.$topbar-height + v.$header-height + v.$category-height + v.$space-4);
+
+  @include m.max-md { display: none; }
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  padding-bottom: v.$space-5;
+  border-bottom: 1px solid v.$color-border;
+  margin-bottom: v.$space-4;
+}
+
+.avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: v.$radius-full;
+  background: v.$color-brand;
+  color: v.$color-footer-text;
+  font-size: v.$font-size-xl;
+  font-weight: v.$font-weight-bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.userMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.userName {
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-dark;
+  @include m.truncate;
+}
+
+.userEmail {
+  font-size: v.$font-size-sm;
+  color: v.$color-muted;
+  @include m.truncate;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  padding: 10px v.$space-3;
+  border-radius: v.$radius-md;
+  text-decoration: none;
+  font-size: v.$font-size-base;
+  color: v.$color-text;
+  transition: v.$transition-fast;
+
+  &:hover {
+    background: v.$color-brand-soft;
+    color: v.$color-brand;
+  }
+}
+
+.navItemAdmin {
+  @extend .navItem;
+  color: v.$color-brand;
+  font-weight: v.$font-weight-semibold;
+  margin-top: v.$space-2;
+  border-top: 1px solid v.$color-border;
+  padding-top: v.$space-3;
+}
+
+.navIcon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.logoutWrap {
+  margin-top: v.$space-5;
+  padding-top: v.$space-4;
+  border-top: 1px solid v.$color-border;
+}
+
+.logoutBtn {
+  @include m.button-reset;
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  padding: 10px v.$space-3;
+  border-radius: v.$radius-md;
+  width: 100%;
+  font-size: v.$font-size-base;
+  color: v.$color-muted;
+  transition: v.$transition-fast;
+  cursor: pointer;
+
+  &:hover {
+    background: v.$color-badge-danger-bg;
+    color: v.$color-danger;
+  }
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  @include m.card;
+  padding: v.$space-8;
+}

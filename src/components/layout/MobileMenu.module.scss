@@ -1,0 +1,116 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/mixins' as m;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: v.$z-overlay;
+  animation: fadeIn 0.2s ease;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: min(320px, 85vw);
+  background: v.$color-bg-card;
+  z-index: v.$z-modal;
+  display: flex;
+  flex-direction: column;
+  animation: slideLeft 0.25s cubic-bezier(0.22, 1, 0.36, 1) reverse;
+
+  &.open { animation: slideLeft 0.25s cubic-bezier(0.22, 1, 0.36, 1); }
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: v.$space-4 v.$space-5;
+  border-bottom: 1px solid v.$color-border;
+}
+
+.logoText {
+  font-size: v.$font-size-xl;
+  font-weight: v.$font-weight-extrabold;
+  color: v.$color-dark;
+}
+
+.closeBtn {
+  @include m.button-reset;
+  width: 32px;
+  height: 32px;
+  border-radius: v.$radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: v.$color-muted;
+  font-size: v.$font-size-xl;
+  transition: v.$transition-fast;
+
+  &:hover {
+    background: v.$color-brand-soft;
+    color: v.$color-brand;
+  }
+}
+
+.nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: v.$space-3 0;
+  @include m.scrollbar-hide;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  padding: v.$space-3 + 2 v.$space-5;
+  text-decoration: none;
+  font-size: v.$font-size-md;
+  font-weight: v.$font-weight-medium;
+  color: v.$color-text;
+  transition: v.$transition-fast;
+  border-left: 3px solid transparent;
+
+  &:hover {
+    color: v.$color-brand;
+    background: v.$color-brand-soft;
+    border-left-color: v.$color-brand;
+  }
+
+  .icon { font-size: 18px; width: 24px; text-align: center; }
+}
+
+.divider {
+  height: 1px;
+  background: v.$color-border;
+  margin: v.$space-2 v.$space-5;
+}
+
+.foot {
+  padding: v.$space-5;
+  border-top: 1px solid v.$color-border;
+}
+
+.hotlineBtn {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  width: 100%;
+  padding: v.$space-3 v.$space-4;
+  background: v.$color-brand;
+  border-radius: v.$radius-lg;
+  color: v.$color-footer-text;
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-semibold;
+  text-decoration: none;
+  transition: v.$transition-fast;
+
+  &:hover { background: v.$color-footer-bg; }
+  span { font-size: 18px; }
+}

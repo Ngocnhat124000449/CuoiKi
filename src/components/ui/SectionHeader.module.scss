@@ -1,0 +1,71 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/mixins' as m;
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: v.$space-5;
+  gap: v.$space-4;
+  padding-bottom: 10px;
+  border-bottom: 1px solid v.$color-border;
+}
+
+.titleWrap {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+}
+
+.bar {
+  width: 3px;
+  height: 20px;
+  background: v.$color-brand;
+  border-radius: v.$radius-sm;
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: v.$fs-section-title;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-dark;
+  line-height: v.$line-height-tight;
+  margin: 0;
+}
+
+.icon {
+  font-size: v.$font-size-xl;
+  line-height: 1;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: v.$space-1;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-brand;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: v.$transition-fast;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+
+  &:hover {
+    color: v.$color-dark;
+    &::after { transform: scaleX(1); }
+  }
+}

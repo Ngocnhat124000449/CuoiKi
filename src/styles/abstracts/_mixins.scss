@@ -1,0 +1,206 @@
+@use 'variables' as v;
+
+// ==========================================================================
+// Responsive Breakpoints
+// ==========================================================================
+@mixin sm  { @media (min-width: #{v.$bp-sm})  { @content; } }
+@mixin md  { @media (min-width: #{v.$bp-md})  { @content; } }
+@mixin lg  { @media (min-width: #{v.$bp-lg})  { @content; } }
+@mixin xl  { @media (min-width: #{v.$bp-xl})  { @content; } }
+@mixin max-md { @media (max-width: #{v.$bp-md - 1})  { @content; } }
+@mixin max-lg { @media (max-width: #{v.$bp-lg - 1})  { @content; } }
+
+// ==========================================================================
+// Layout
+// ==========================================================================
+@mixin container {
+  max-width: v.$container-max;
+  margin-inline: auto;
+  padding-inline: v.$container-pad;
+  @include md { padding-inline: v.$container-pad-md; }
+}
+
+@mixin flex($align: center, $justify: flex-start, $gap: 0) {
+  display: flex;
+  align-items: $align;
+  justify-content: $justify;
+  @if $gap != 0 { gap: $gap; }
+}
+
+@mixin flex-center($gap: 0) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @if $gap != 0 { gap: $gap; }
+}
+
+@mixin flex-between($gap: 0) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  @if $gap != 0 { gap: $gap; }
+}
+
+@mixin grid($cols: 1, $gap: v.$space-4) {
+  display: grid;
+  grid-template-columns: repeat($cols, 1fr);
+  gap: $gap;
+}
+
+// ==========================================================================
+// Text
+// ==========================================================================
+@mixin line-clamp($n: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $n;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ==========================================================================
+// UI Elements
+// ==========================================================================
+@mixin card($radius: v.$radius-md) {
+  background: v.$color-bg-card;
+  border: 1px solid v.$color-border;
+  border-radius: $radius;
+  box-shadow: v.$shadow-card;
+  transition: v.$transition-fast;
+}
+
+@mixin button-reset {
+  appearance: none;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: none;
+  line-height: 1;
+}
+
+@mixin button-base {
+  @include button-reset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: v.$space-2;
+  border-radius: v.$radius-sm;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: v.$transition-fast;
+
+  &:active { transform: scale(0.98); }
+}
+
+@mixin button-primary {
+  @include button-base;
+  background: v.$color-brand;
+  color: v.$color-white;
+  padding: 10px v.$space-5;
+
+  &:hover {
+    background: v.$color-dark;
+    color: v.$color-white;
+    box-shadow: v.$shadow-sm;
+    transform: translateY(-1px);
+  }
+}
+
+@mixin button-outline {
+  @include button-base;
+  background: v.$color-white;
+  border: 1px solid v.$color-border;
+  color: v.$color-dark;
+  padding: 9px v.$space-5;
+  text-transform: none;
+
+  &:hover {
+    border-color: v.$color-brand;
+    color: v.$color-brand;
+    background: v.$color-bg-card;
+    transform: translateY(-1px);
+  }
+}
+
+@mixin button-ghost {
+  @include button-base;
+  background: transparent;
+  color: v.$color-muted;
+  padding: v.$space-2 v.$space-3;
+  text-transform: none;
+
+  &:hover {
+    background: v.$color-bg-hover;
+    color: v.$color-brand;
+  }
+}
+
+@mixin badge($bg: v.$color-brand, $color: v.$color-white) {
+  display: inline-flex;
+  align-items: center;
+  width: max-content;
+  padding: 2px v.$space-2;
+  background: $bg;
+  color: $color;
+  border-radius: v.$radius-sm;
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-semibold;
+  line-height: 1.4;
+}
+
+@mixin input-base {
+  width: 100%;
+  appearance: none;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-md;
+  font-family: inherit;
+  font-size: v.$font-size-sm;
+  color: v.$color-text;
+  background: v.$color-input-bg;
+  outline: none;
+  transition: v.$transition-fast;
+
+  &:focus {
+    border-color: v.$color-brand;
+    box-shadow: 0 0 0 3px v.$color-primary-10;
+  }
+
+  &::placeholder { color: v.$color-light-muted; }
+}
+
+@mixin scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+@mixin skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    v.$color-skeleton-base 25%,
+    v.$color-skeleton-hi 50%,
+    v.$color-skeleton-base 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@mixin section-title {
+  color: v.$color-dark;
+  font-size: v.$fs-section-title;
+  font-weight: v.$font-weight-semibold;
+  line-height: v.$line-height-tight;
+  padding-bottom: 10px;
+  border-bottom: 1px solid v.$color-border;
+}

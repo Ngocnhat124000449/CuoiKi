@@ -1,65 +1,221 @@
-import Image from "next/image";
+import { Suspense } from 'react'
+import Link from 'next/link'
+import ProductCard from '@/components/product/ProductCard'
+import { ProductGridSkeleton } from '@/components/ui/Skeleton'
+import SectionHeader from '@/components/ui/SectionHeader'
+import FlashTimer from '@/components/ui/FlashTimer'
+import { getProducts } from '@/lib/queries/product'
+import { getCategories } from '@/lib/queries/category'
+import styles from './page.module.scss'
 
-export default function Home() {
+// ─── Static data ──────────────────────────────────────────────────────────────
+
+const BRANDS = [
+  { emoji: '🍎', name: 'Apple',   href: '/products?search=iPhone'  },
+  { emoji: '🌟', name: 'Samsung', href: '/products?search=Samsung' },
+  { emoji: '⚡', name: 'Xiaomi',  href: '/products?search=Xiaomi'  },
+  { emoji: '🔵', name: 'OPPO',    href: '/products?search=OPPO'    },
+  { emoji: '🟢', name: 'Vivo',    href: '/products?search=Vivo'    },
+  { emoji: '🔴', name: 'Realme',  href: '/products?search=Realme'  },
+  { emoji: '🟡', name: 'Nokia',   href: '/products?search=Nokia'   },
+  { emoji: '🟠', name: 'Sony',    href: '/products?search=Sony'    },
+]
+
+const PROMOS = [
+  {
+    icon: '💳',
+    title: 'Trả góp 0% lãi suất',
+    sub: 'Duyệt nhanh trong 5 phút',
+    variant: 'red',
+    href: '#',
+  },
+  {
+    icon: '🔄',
+    title: 'Thu cũ đổi mới',
+    sub: 'Lên đời tiết kiệm hơn',
+    variant: 'navy',
+    href: '/about',
+  },
+  {
+    icon: '🚚',
+    title: 'Giao hàng trong 2 giờ',
+    sub: 'Miễn phí từ 500.000đ',
+    variant: 'orange',
+    href: '#',
+  },
+]
+
+// ─── Sections ─────────────────────────────────────────────────────────────────
+
+function HeroSection() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <section className={styles.hero}>
+      <div className={styles.heroInner}>
+        <div className={styles.heroContent}>
+          <span className={styles.heroTag}>🔥 Ưu đãi đặc biệt hôm nay</span>
+          <h1 className={styles.heroTitle}>
+            Điện thoại<br />
+            <em>chính hãng</em><br />
+            giá tốt nhất
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className={styles.heroSub}>
+            Hơn 500+ mẫu sản phẩm từ Apple, Samsung, Xiaomi và nhiều thương hiệu lớn.
+            Cam kết hàng thật, bảo hành chính hãng.
           </p>
+          <div className={styles.heroCtas}>
+            <Link href="/products" className={styles.heroBtnPrimary}>
+              Mua ngay →
+            </Link>
+            <Link href="/about" className={styles.heroBtnOutline}>
+              Tìm hiểu thêm
+            </Link>
+          </div>
+          <div className={styles.heroStats}>
+            <div className={styles.heroStat}>
+              <strong>500+</strong>
+              <span>Sản phẩm</span>
+            </div>
+            <div className={styles.heroStat}>
+              <strong>50K+</strong>
+              <span>Khách hàng</span>
+            </div>
+            <div className={styles.heroStat}>
+              <strong>4.9★</strong>
+              <span>Đánh giá</span>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className={styles.heroImage}>📱</div>
+      </div>
+    </section>
+  )
+}
+
+async function FlashSaleSection() {
+  const { data } = await getProducts({ limit: 5, sortBy: 'price_asc' })
+  if (!data.length) return null
+  return (
+    <section className={styles.flashSale}>
+      <div className={styles.flashInner}>
+        <div className={styles.flashHead}>
+          <div className={styles.flashTitle}>
+            <span className={styles.flashLabel}>⚡ Flash Sale</span>
+            <FlashTimer />
+          </div>
+          <Link href="/products?sortBy=price_asc" className={styles.flashLink}>
+            Xem tất cả →
+          </Link>
         </div>
-      </main>
+        <div className={styles.flashGrid}>
+          {data.map(p => <ProductCard key={p.id} product={p} />)}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+async function FeaturedSection() {
+  const { data } = await getProducts({ limit: 8, sortBy: 'newest' })
+  if (!data.length) return null
+  return (
+    <section className={styles.section}>
+      <SectionHeader title="Sản phẩm nổi bật" icon="🏆" href="/products" />
+      <div className={styles.featuredGrid}>
+        {data.map(p => <ProductCard key={p.id} product={p} />)}
+      </div>
+    </section>
+  )
+}
+
+async function CategorySection() {
+  const categories = await getCategories()
+  if (!categories.length) return null
+  return (
+    <section className={styles.sectionNoTop}>
+      <SectionHeader title="Danh mục sản phẩm" icon="📂" href="/products" />
+      <div className={styles.catGrid}>
+        {categories.map(cat => (
+          <Link
+            key={cat.id}
+            href={`/products?categoryId=${cat.id}`}
+            className={styles.catCard}
+          >
+            <span className={styles.catIcon}>📱</span>
+            <span className={styles.catLabel}>{cat.name}</span>
+            <span className={styles.catCount}>{cat.productCount} sp</span>
+          </Link>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function BrandSection() {
+  return (
+    <section className={styles.sectionNoTop}>
+      <SectionHeader title="Thương hiệu nổi bật" icon="🌐" />
+      <div className={styles.brandRow}>
+        {BRANDS.map(b => (
+          <Link key={b.name} href={b.href} className={styles.brandCard}>
+            <span className={styles.brandEmoji}>{b.emoji}</span>
+            <span className={styles.brandName}>{b.name}</span>
+          </Link>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function PromoBanners() {
+  return (
+    <section className={styles.sectionNoTop}>
+      <div className={styles.promoBanners}>
+        {PROMOS.map(p => (
+          <Link
+            key={p.title}
+            href={p.href}
+            className={`${styles.promoBanner} ${styles[p.variant as keyof typeof styles]}`}
+          >
+            <span className={styles.promoBannerIcon}>{p.icon}</span>
+            <div className={styles.promoBannerText}>
+              <strong>{p.title}</strong>
+              <span>{p.sub}</span>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
+export default function HomePage() {
+  return (
+    <div>
+      <HeroSection />
+
+      <Suspense fallback={null}>
+        <FlashSaleSection />
+      </Suspense>
+
+      <Suspense
+        fallback={
+          <section className={styles.section}>
+            <SectionHeader title="Sản phẩm nổi bật" icon="🏆" href="/products" />
+            <ProductGridSkeleton count={8} />
+          </section>
+        }
+      >
+        <FeaturedSection />
+      </Suspense>
+
+      <Suspense fallback={null}>
+        <CategorySection />
+      </Suspense>
+
+      <BrandSection />
+      <PromoBanners />
     </div>
-  );
+  )
 }
