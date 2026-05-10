@@ -4,12 +4,13 @@ import { usePathname } from 'next/navigation';
 import styles from '../layout.module.scss';
 
 const NAV_ITEMS = [
-  { href: '/admin',            label: 'Tổng quan',  icon: '📊', exact: true },
-  { href: '/admin/products',   label: 'Sản phẩm',   icon: '📱' },
-  { href: '/admin/categories', label: 'Danh mục',   icon: '🗂️' },
-  { href: '/admin/brands',     label: 'Nhãn hàng',  icon: '🏷️' },
-  { href: '/admin/orders',     label: 'Đơn hàng',   icon: '🛒' },
-  { href: '/admin/users',      label: 'Người dùng', icon: '👥' },
+  { href: '/admin',            label: 'Tổng quan',   icon: '📊', exact: true },
+  { href: '/admin/products',   label: 'Sản phẩm',    icon: '📱' },
+  { href: '/admin/categories', label: 'Danh mục',    icon: '🗂️' },
+  { href: '/admin/brands',     label: 'Nhãn hàng',   icon: '🏷️' },
+  { href: '/admin/orders',     label: 'Đơn hàng',    icon: '🛒' },
+  { href: '/admin/coupons',    label: 'Khuyến mãi',  icon: '🎟️' },
+  { href: '/admin/users',      label: 'Người dùng',  icon: '👥' },
 ];
 
 interface Props {

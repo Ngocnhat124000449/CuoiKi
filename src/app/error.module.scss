@@ -1,0 +1,69 @@
+@use '../styles/abstracts/variables' as v;
+@use '../styles/abstracts/mixins' as m;
+
+.wrap {
+  @include m.container;
+  padding-block: v.$space-20;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: v.$space-4;
+}
+
+.icon {
+  font-size: 3rem;
+  margin: 0;
+  line-height: 1;
+}
+
+.title {
+  font-size: v.$font-size-2xl;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-dark;
+  margin: 0;
+}
+
+.desc {
+  font-size: v.$font-size-base;
+  color: v.$color-text-secondary;
+  max-width: 400px;
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  gap: v.$space-3;
+  margin-top: v.$space-4;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btnPrimary {
+  @include m.button-reset;
+  background: v.$color-brand;
+  color: #fff;
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-semibold;
+  padding: v.$space-3 v.$space-6;
+  border-radius: v.$radius-full;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+
+  &:hover { filter: brightness(1.1); }
+}
+
+.btnSecondary {
+  display: inline-block;
+  background: v.$color-bg-card;
+  color: v.$color-text;
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-semibold;
+  padding: v.$space-3 v.$space-6;
+  border-radius: v.$radius-full;
+  border: 1px solid v.$color-border;
+  text-decoration: none;
+  transition: border-color 0.15s ease;
+
+  &:hover { border-color: v.$color-brand; }
+}

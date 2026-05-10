@@ -1,0 +1,246 @@
+@use '../../../styles/abstracts/variables' as v;
+@use '../../../styles/abstracts/mixins' as m;
+
+// ── Section header with count badge ─────────────────────────────────────────
+
+.attrSectionHead {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  margin-bottom: v.$space-1;
+}
+
+.attrCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 v.$space-2;
+  background: v.$color-primary;
+  color: #fff;
+  border-radius: v.$radius-full;
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-bold;
+}
+
+.attrHint {
+  font-size: v.$font-size-sm;
+  color: v.$color-text-muted;
+  margin: 0 0 v.$space-4;
+}
+
+// ── Attribute selection table ────────────────────────────────────────────────
+
+.attrTable {
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-md;
+  overflow: hidden;
+  overflow-x: auto;
+}
+
+.attrHeader {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  padding: v.$space-2 v.$space-4;
+  background: v.$color-bg;
+  border-bottom: 2px solid v.$color-border;
+  min-width: 600px;
+
+  span {
+    font-size: v.$font-size-xs;
+    font-weight: v.$font-weight-semibold;
+    color: v.$color-text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+}
+
+.attrRow {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  padding: v.$space-3 v.$space-4;
+  border-bottom: 1px solid v.$color-border-light;
+  transition: background v.$transition-fast;
+  min-width: 600px;
+
+  &:last-child { border-bottom: none; }
+  &:hover { background: v.$color-bg-hover; }
+}
+
+.attrRowActive {
+  background: v.$color-brand-soft;
+  &:hover { background: v.$color-brand-soft; filter: brightness(0.97); }
+}
+
+.attrRowDim {
+  opacity: 0.55;
+}
+
+// ── Column widths ────────────────────────────────────────────────────────────
+
+.colCheck { flex: 0 0 28px; display: flex; align-items: center; }
+.colName  { flex: 2; min-width: 130px; }
+.colType  { flex: 0 0 90px; }
+.colGroup { flex: 2; min-width: 110px; }
+.colOrder { flex: 0 0 68px; }
+.colReq   { flex: 0 0 64px; display: flex; align-items: center; justify-content: center; }
+
+// ── Attribute name display ────────────────────────────────────────────────────
+
+.attrName {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-medium;
+  color: v.$color-text;
+  display: block;
+}
+
+.attrKey {
+  font-size: v.$font-size-xs;
+  color: v.$color-text-muted;
+  font-family: monospace;
+  display: block;
+  margin-top: 1px;
+}
+
+// ── Type badge ────────────────────────────────────────────────────────────────
+
+.typeBadge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: v.$radius-sm;
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-medium;
+  background: v.$color-bg-section;
+  color: v.$color-text-secondary;
+  white-space: nowrap;
+}
+
+.typeBadge_COLOR  { background: v.$color-badge-danger-bg;   color: v.$color-danger; }
+.typeBadge_SELECT { background: v.$color-badge-info-bg;     color: v.$color-info; }
+.typeBadge_BOOLEAN { background: v.$color-badge-success-bg; color: v.$color-success; }
+
+// ── Compact checkbox (isRequired column) ─────────────────────────────────────
+
+.reqCheck {
+  width: 16px;
+  height: 16px;
+  accent-color: v.$color-primary;
+  cursor: pointer;
+
+  &:disabled { cursor: not-allowed; }
+}
+
+// ── Section title inside flex row ─────────────────────────────────────────────
+
+.attrSectionTitle {
+  margin: 0;
+}
+
+// ── Empty state row ───────────────────────────────────────────────────────────
+
+.attrEmptyRow {
+  display: flex;
+  justify-content: center;
+  padding: v.$space-6;
+  color: v.$color-text-muted;
+  font-size: v.$font-size-sm;
+}
+
+// ── Quick-add attribute panel ─────────────────────────────────────────────────
+
+.addAttrToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: v.$space-2;
+  margin-top: v.$space-3;
+  padding: v.$space-2 v.$space-3;
+  background: none;
+  border: 1px dashed v.$color-border;
+  border-radius: v.$radius-sm;
+  color: v.$color-primary;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-medium;
+  cursor: pointer;
+  transition: border-color v.$transition-fast, background v.$transition-fast;
+
+  &:hover {
+    border-color: v.$color-primary;
+    background: v.$color-brand-soft;
+  }
+}
+
+.addAttrPanel {
+  margin-top: v.$space-3;
+  padding: v.$space-4;
+  background: v.$color-bg;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-md;
+}
+
+.addAttrTitle {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-text;
+  margin: 0 0 v.$space-3;
+}
+
+.addAttrGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: v.$space-3;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.addAttrFull {
+  grid-column: 1 / -1;
+}
+
+.addAttrError {
+  margin-top: v.$space-2;
+  padding: v.$space-2 v.$space-3;
+  background: v.$color-badge-danger-bg;
+  color: v.$color-danger;
+  border-radius: v.$radius-sm;
+  font-size: v.$font-size-sm;
+}
+
+.addAttrActions {
+  display: flex;
+  align-items: center;
+  gap: v.$space-2;
+  margin-top: v.$space-3;
+}
+
+.addAttrSubmit {
+  padding: v.$space-2 v.$space-4;
+  background: v.$color-primary;
+  color: #fff;
+  border: none;
+  border-radius: v.$radius-sm;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-medium;
+  cursor: pointer;
+  transition: opacity v.$transition-fast;
+
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+  &:not(:disabled):hover { opacity: 0.88; }
+}
+
+.addAttrCancel {
+  padding: v.$space-2 v.$space-3;
+  background: none;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-sm;
+  color: v.$color-text-secondary;
+  font-size: v.$font-size-sm;
+  cursor: pointer;
+  transition: border-color v.$transition-fast;
+
+  &:hover { border-color: v.$color-text-muted; }
+}

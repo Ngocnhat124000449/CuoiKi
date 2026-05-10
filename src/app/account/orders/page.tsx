@@ -61,7 +61,7 @@ export default async function OrdersPage() {
             }).format(order.createdAt);
 
             return (
-              <div key={order.id.toString()} className={styles.card}>
+              <Link key={order.id.toString()} href={`/account/orders/${order.id}`} className={styles.card}>
                 <div className={styles.cardTop}>
                   <div>
                     <span className={styles.orderNum}>#{order.orderNumber}</span>
@@ -79,8 +79,9 @@ export default async function OrdersPage() {
                   <span className={`${styles.payBadge} ${order.paymentStatus === 'PAID' ? styles.paid : styles.unpaid}`}>
                     {order.paymentStatus === 'PAID' ? '✓ Đã thanh toán' : '⏳ Chưa thanh toán'}
                   </span>
+                  <span className={styles.detailLink}>Xem chi tiết →</span>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>

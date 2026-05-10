@@ -1,0 +1,158 @@
+@use '../../../styles/abstracts/variables' as v;
+@use '../../../styles/abstracts/mixins' as m;
+
+// ── Empty hint ──────────────────────────────────────────────────────────────
+
+.emptyHint {
+  color: v.$color-text-muted;
+  font-size: v.$font-size-sm;
+  font-style: italic;
+  padding: v.$space-4 0 v.$space-2;
+  margin: 0;
+}
+
+// ── Variant section header ───────────────────────────────────────────────────
+
+.variantHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: v.$space-4;
+  padding-bottom: v.$space-3;
+  border-bottom: 1px solid v.$color-border-light;
+  gap: v.$space-4;
+}
+
+.variantCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 v.$space-2;
+  background: v.$color-primary;
+  color: #fff;
+  border-radius: v.$radius-full;
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-bold;
+  margin-left: v.$space-2;
+  vertical-align: middle;
+}
+
+.addVariantBtn {
+  @include m.button-reset;
+  display: inline-flex;
+  align-items: center;
+  gap: v.$space-1;
+  padding: v.$space-2 v.$space-4;
+  border: 1px dashed v.$color-primary;
+  border-radius: v.$radius-md;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-primary;
+  cursor: pointer;
+  transition: v.$transition-fast;
+  white-space: nowrap;
+
+  &:hover { background: v.$color-brand-soft; }
+}
+
+// ── Variant table ─────────────────────────────────────────────────────────────
+
+.variantTable {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-2;
+  overflow-x: auto;
+}
+
+.variantHeader,
+.variantRow {
+  display: flex;
+  align-items: center;
+  gap: v.$space-2;
+  min-width: 640px;
+}
+
+.variantHeader {
+  padding-bottom: v.$space-2;
+  border-bottom: 1px solid v.$color-border;
+}
+
+.variantRow {
+  padding: v.$space-2 0;
+  border-bottom: 1px solid v.$color-border-light;
+
+  &:last-child { border-bottom: none; }
+}
+
+// Column widths
+.colSku    { flex: 2; min-width: 140px; }
+.colPrice  { flex: 1.5; min-width: 110px; }
+.colOpt    { flex: 1.5; min-width: 110px; }
+.colRemove { flex: 0 0 32px; }
+
+// Header cell labels
+.variantHeader span {
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+// Remove button
+.removeVariantBtn {
+  @include m.button-reset;
+  width: 28px;
+  height: 28px;
+  border-radius: v.$radius-full;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: v.$font-size-lg;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-text-muted;
+  cursor: pointer;
+  transition: v.$transition-fast;
+  line-height: 1;
+  flex-shrink: 0;
+
+  &:hover { background: v.$color-badge-danger-bg; color: v.$color-danger; }
+}
+
+// ── Utility overrides ─────────────────────────────────────────────────────────
+
+// p.sectionTitle inside variant head (no bottom border / margin reset)
+.variantTitle {
+  margin: 0;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+// textarea with taller min-height for description
+.lgTextarea {
+  min-height: 120px;
+}
+
+// span label inside checkRow (no extra bottom margin)
+.inlineLabel {
+  margin-bottom: 0;
+}
+
+// ── Spec color swatch ─────────────────────────────────────────────────────────
+
+.colorOpt {
+  display: flex;
+  align-items: center;
+  gap: v.$space-2;
+}
+
+.colorSwatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: v.$radius-full;
+  border: 1px solid v.$color-border;
+  flex-shrink: 0;
+}

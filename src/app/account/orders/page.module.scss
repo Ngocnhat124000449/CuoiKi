@@ -48,9 +48,11 @@
   border-radius: v.$radius-md;
   padding: v.$space-5;
   background: v.$color-bg-card;
+  text-decoration: none;
+  display: block;
   transition: v.$transition-fast, background-color 0.25s ease, border-color 0.25s ease;
 
-  &:hover { box-shadow: v.$shadow-md; }
+  &:hover { box-shadow: v.$shadow-md; border-color: v.$color-brand; }
 }
 
 .cardTop {
@@ -121,4 +123,11 @@
 
   &.paid   { color: v.$color-success; }
   &.unpaid { color: v.$color-text-muted; }
+}
+
+.detailLink {
+  margin-left: auto;
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-brand;
 }

@@ -460,6 +460,7 @@ model Order {
   totalAmount      Decimal       @db.Decimal(18, 2)
   orderStatus      OrderStatus   @default(PENDING)
   paymentStatus    PaymentStatus @default(UNPAID)
+  paymentMethod    String        @default("COD") @db.VarChar(50)
   note             String?       @db.Text
   ipAddress        String?       @db.VarChar(45)
   createdAt        DateTime      @default(now())
@@ -798,6 +799,18 @@ model SearchLog {
   clickedProduct Product? @relation(fields: [clickedProductId], references: [id])
 
   @@map("search_logs")
+}
+
+model ContactInquiry {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(150)
+  email     String   @db.VarChar(255)
+  phone     String?  @db.VarChar(20)
+  message   String   @db.Text
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("contact_inquiries")
 }
 
 // ─────────────────────────────────────────

@@ -21,6 +21,7 @@
   border-radius: 50%;
   border: 1px solid v.$color-dot-border;
   flex-shrink: 0;
+  background: var(--dot-color);
 }
 
 .priceBox {

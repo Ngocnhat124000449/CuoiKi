@@ -1,6 +1,8 @@
 'use client'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import type { ProductDetail } from '@/lib/queries/product'
+import { useCart } from '@/lib/cart-context'
 import styles from './VariantSelector.module.scss'
 
 type Variant = ProductDetail['variants'][number]
@@ -10,11 +12,17 @@ function formatVND(n: number) {
 }
 
 export default function VariantSelector({
-  variantGroups, variants,
+  variantGroups, variants, productName, productSlug, productImage,
 }: {
   variantGroups: ProductDetail['variantGroups']
   variants:      ProductDetail['variants']
+  productName:   string
+  productSlug:   string
+  productImage:  string | null
 }) {
+  const { addItem } = useCart()
+  const router = useRouter()
+
   const [selected, setSelected] = useState<Record<string, string>>(() => {
     const d: Record<string, string> = {}
     for (const [k, g] of Object.entries(variantGroups)) {
@@ -26,6 +34,25 @@ export default function VariantSelector({
   const activeVariant: Variant | undefined = variants.find(v =>
     v.options.every(o => selected[o.attribute] === o.value)
   )
+
+  function handleBuy() {
+    if (!activeVariant?.inStock) return
+    const label = activeVariant.options.map(o => o.displayValue).join(' / ')
+    addItem({
+      variantId: activeVariant.id,
+      name: label ? `${productName} — ${label}` : productName,
+      slug: productSlug,
+      price: activeVariant.price,
+      priceText: formatVND(activeVariant.price),
+      image: productImage,
+      options: activeVariant.options.map(o => ({
+        attribute: o.attribute,
+        value: o.value,
+        displayValue: o.displayValue,
+      })),
+    })
+    router.push('/cart')
+  }
 
   return (
     <div>
@@ -65,7 +92,7 @@ export default function VariantSelector({
                 {opt.colorHex && (
                   <span
                     className={styles.colorDot}
-                    style={{ background: opt.colorHex }}
+                    style={{ '--dot-color': opt.colorHex } as React.CSSProperties}
                   />
                 )}
                 {opt.displayValue}
@@ -81,6 +108,7 @@ export default function VariantSelector({
           type="button"
           disabled={!activeVariant?.inStock}
           className={styles.buyBtn}
+          onClick={handleBuy}
         >
           {activeVariant?.inStock ? '🛒 Mua ngay' : 'Hết hàng'}
         </button>

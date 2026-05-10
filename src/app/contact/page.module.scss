@@ -1,0 +1,207 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/mixins' as m;
+
+.page {
+  padding-bottom: v.$space-16;
+}
+
+// ── Hero ──────────────────────────────────────────────────────────────────────
+
+.hero {
+  background: linear-gradient(135deg, v.$color-brand 0%, color-mix(in srgb, v.$color-brand 70%, #000) 100%);
+  color: #fff;
+  text-align: center;
+  padding: v.$space-16 v.$space-4;
+}
+
+.heroTitle {
+  font-size: v.$font-size-3xl;
+  font-weight: v.$font-weight-extrabold;
+  margin-bottom: v.$space-2;
+  animation: slideUp 0.5s ease both;
+}
+
+.heroSub {
+  font-size: v.$font-size-lg;
+  opacity: 0.9;
+  animation: slideUp 0.5s ease 0.1s both;
+}
+
+// ── Content ───────────────────────────────────────────────────────────────────
+
+.content {
+  @include m.container;
+  padding-block: v.$space-10;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-10;
+}
+
+// ── Info cards ────────────────────────────────────────────────────────────────
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: v.$space-4;
+
+  @include m.md { grid-template-columns: repeat(4, 1fr); }
+}
+
+.infoCard {
+  background: v.$color-bg-card;
+  border-radius: v.$radius-xl;
+  box-shadow: v.$shadow-card;
+  padding: v.$space-6;
+  text-align: center;
+  transition: v.$transition-base;
+
+  &:hover { box-shadow: v.$shadow-hover; transform: translateY(-2px); }
+}
+
+.infoIcon {
+  font-size: 36px;
+  display: block;
+  margin-bottom: v.$space-3;
+}
+
+.infoTitle {
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-dark;
+  margin-bottom: v.$space-2;
+}
+
+.infoLine {
+  font-size: v.$font-size-sm;
+  color: v.$color-muted;
+  line-height: 1.5;
+}
+
+// ── Form ──────────────────────────────────────────────────────────────────────
+
+.formWrap {
+  background: v.$color-bg-card;
+  border-radius: v.$radius-xl;
+  box-shadow: v.$shadow-card;
+  padding: v.$space-8;
+  max-width: 720px;
+  margin-inline: auto;
+  width: 100%;
+}
+
+.formTitle {
+  font-size: v.$font-size-xl;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-dark;
+  margin-bottom: v.$space-6;
+  padding-bottom: v.$space-4;
+  border-bottom: 1px solid v.$color-border;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-5;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: v.$space-4;
+
+  @media (max-width: 479px) { grid-template-columns: 1fr; }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-1;
+}
+
+.label {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-text;
+}
+
+.input {
+  @include m.input-base;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.submitBtn {
+  @include m.button-reset;
+  background: v.$color-brand;
+  color: #fff;
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-bold;
+  padding: v.$space-4 v.$space-8;
+  border-radius: v.$radius-full;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.15s ease;
+  align-self: flex-start;
+
+  &:hover:not(:disabled) { filter: brightness(1.08); transform: translateY(-1px); }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+// ── Success ───────────────────────────────────────────────────────────────────
+
+.success {
+  text-align: center;
+  padding: v.$space-10 v.$space-4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: v.$space-3;
+
+  h3 {
+    font-size: v.$font-size-xl;
+    font-weight: v.$font-weight-bold;
+    color: v.$color-dark;
+  }
+
+  p {
+    font-size: v.$font-size-base;
+    color: v.$color-muted;
+    max-width: 360px;
+  }
+}
+
+.successIcon {
+  font-size: 56px;
+  animation: fadeIn 0.4s ease;
+}
+
+.resetBtn {
+  @include m.button-reset;
+  background: v.$color-bg-hover;
+  color: v.$color-text;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  padding: v.$space-3 v.$space-6;
+  border-radius: v.$radius-full;
+  cursor: pointer;
+  transition: v.$transition-fast;
+  margin-top: v.$space-2;
+
+  &:hover { background: v.$color-border; }
+}
+
+.req {
+  color: v.$color-danger;
+  margin-left: 2px;
+}
+
+.error {
+  margin-top: v.$space-2;
+  padding: v.$space-2 v.$space-3;
+  background: v.$color-badge-danger-bg;
+  color: v.$color-danger;
+  border-radius: v.$radius-sm;
+  font-size: v.$font-size-sm;
+}

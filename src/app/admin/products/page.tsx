@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { toggleProductActiveAction, deleteProductAction } from '@/lib/actions/admin';
+import DeleteConfirmBtn from '../_components/DeleteConfirmBtn';
 import styles from './page.module.scss';
 
 export const metadata: Metadata = { title: 'Admin — Quản lý sản phẩm' };
@@ -87,16 +88,12 @@ export default async function AdminProductsPage() {
                           {p.isActive ? 'Ẩn' : 'Hiện'}
                         </button>
                       </form>
-                      <form action={deleteProductAction} className={styles.inlineForm}>
-                        <input type="hidden" name="productId" value={p.id.toString()} />
-                        <button
-                          type="submit"
-                          className={styles.deleteBtn}
-                          onClick={(e) => { if (!confirm(`Xóa "${p.name}"?`)) e.preventDefault(); }}
-                        >
-                          Xóa
-                        </button>
-                      </form>
+                      <DeleteConfirmBtn
+                        action={deleteProductAction}
+                        confirmMessage={`Xóa "${p.name}"?`}
+                        hiddenFields={{ productId: p.id.toString() }}
+                        className={styles.deleteBtn}
+                      />
                     </div>
                   </td>
                 </tr>

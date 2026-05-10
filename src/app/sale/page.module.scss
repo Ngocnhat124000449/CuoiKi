@@ -1,0 +1,171 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/mixins' as m;
+
+// ── Page ──────────────────────────────────────────────────────────────────────
+
+.page {
+  min-height: 60vh;
+}
+
+// ── Hero ──────────────────────────────────────────────────────────────────────
+
+.hero {
+  background: linear-gradient(135deg, #c0001a 0%, #ff4444 60%, #ff7c43 100%);
+  color: #fff;
+  text-align: center;
+  padding: v.$space-12 v.$space-4;
+}
+
+.heroInner {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-2;
+}
+
+.heroEyebrow {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-bold;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.heroTitle {
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: v.$font-weight-bold;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.heroSub {
+  font-size: v.$font-size-base;
+  opacity: 0.85;
+  margin: 0;
+}
+
+// ── Toolbar ───────────────────────────────────────────────────────────────────
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  padding: v.$space-4 v.$space-6;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+
+  @media (max-width: 480px) {
+    padding: v.$space-3 v.$space-4;
+    gap: v.$space-2;
+  }
+}
+
+.toolbarLabel {
+  font-size: v.$font-size-sm;
+  color: v.$color-text-muted;
+  white-space: nowrap;
+}
+
+.sortBtns {
+  display: flex;
+  gap: v.$space-2;
+  flex-wrap: wrap;
+}
+
+.sortBtn {
+  padding: v.$space-1 v.$space-3;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-full;
+  font-size: v.$font-size-sm;
+  color: v.$color-text-secondary;
+  text-decoration: none;
+  transition: border-color v.$transition-fast, background v.$transition-fast, color v.$transition-fast;
+  white-space: nowrap;
+
+  &:hover {
+    border-color: v.$color-primary;
+    color: v.$color-primary;
+  }
+}
+
+.sortBtnActive {
+  background: v.$color-primary;
+  border-color: v.$color-primary;
+  color: #fff;
+
+  &:hover {
+    color: #fff;
+    opacity: 0.9;
+  }
+}
+
+// ── Grid ──────────────────────────────────────────────────────────────────────
+
+.gridWrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 v.$space-6 v.$space-10;
+
+  @media (max-width: 480px) {
+    padding: 0 v.$space-4 v.$space-8;
+  }
+}
+
+.resultCount {
+  font-size: v.$font-size-sm;
+  color: v.$color-text-muted;
+  margin: 0 0 v.$space-4;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: v.$space-5;
+
+  @media (max-width: 1024px) { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 640px)  { grid-template-columns: repeat(2, 1fr); gap: v.$space-3; }
+}
+
+// ── Empty ─────────────────────────────────────────────────────────────────────
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: v.$space-3;
+  padding: v.$space-16 v.$space-4;
+  text-align: center;
+}
+
+.emptyIcon { font-size: 64px; }
+
+.emptyTitle {
+  font-size: v.$font-size-xl;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-text;
+  margin: 0;
+}
+
+.emptyHint {
+  font-size: v.$font-size-base;
+  color: v.$color-text-muted;
+  margin: 0;
+}
+
+.emptyLink {
+  margin-top: v.$space-2;
+  padding: v.$space-3 v.$space-6;
+  background: v.$color-primary;
+  color: #fff;
+  border-radius: v.$radius-sm;
+  text-decoration: none;
+  font-weight: v.$font-weight-semibold;
+  font-size: v.$font-size-sm;
+  transition: opacity v.$transition-fast;
+
+  &:hover { opacity: 0.88; }
+}

@@ -110,6 +110,9 @@ export default async function ProductDetailPage({ params }: Props) {
           <VariantSelector
             variantGroups={product.variantGroups}
             variants={product.variants}
+            productName={product.name}
+            productSlug={product.slug}
+            productImage={product.images[0]?.url ?? null}
           />
         </div>
       </div>

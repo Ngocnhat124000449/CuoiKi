@@ -11,7 +11,7 @@ const CATEGORIES = [
   { icon: '📺', label: 'Tivi',          href: '/products?search=tivi',          hot: false },
   { icon: '🏠', label: 'Gia dụng',      href: '/products?search=gia+dung',      hot: false },
   { icon: '🔌', label: 'Phụ kiện',      href: '/products?search=phu+kien',      hot: false },
-  { icon: '🏷️', label: 'Khuyến mãi',   href: '/products?sortBy=price_asc',     hot: true  },
+  { icon: '🏷️', label: 'Khuyến mãi',   href: '/sale',                          hot: true  },
   { icon: '🔄', label: 'Thu cũ',        href: '/about',                         hot: false },
 ]
 

@@ -9,11 +9,11 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: v.$space-3;
+  grid-template-columns: 1fr;
+  gap: v.$space-4;
 
-  @include m.md { grid-template-columns: repeat(3, 1fr); gap: v.$space-4; }
-  @include m.lg { grid-template-columns: repeat(4, 1fr); }
+  @include m.sm { grid-template-columns: repeat(2, 1fr); }
+  @include m.lg { grid-template-columns: repeat(3, 1fr); }
 
   > * { animation: slideUp 0.45s ease both; }
   > :nth-child(2) { animation-delay: 0.06s; }

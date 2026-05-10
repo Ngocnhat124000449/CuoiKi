@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { deleteBrandAction } from '@/lib/actions/admin';
+import DeleteConfirmBtn from '../_components/DeleteConfirmBtn';
 import styles from './page.module.scss';
 
 export const metadata: Metadata = { title: 'Admin — Nhãn hàng' };
@@ -72,16 +73,12 @@ export default async function AdminBrandsPage() {
                   <td>
                     <div className={styles.actions}>
                       <Link href={`/admin/brands/${brand.id}/edit`} className={styles.editBtn}>Sửa</Link>
-                      <form action={deleteBrandAction}>
-                        <input type="hidden" name="brandId" value={brand.id} />
-                        <button
-                          type="submit"
-                          className={styles.deleteBtn}
-                          onClick={(e) => { if (!confirm(`Xóa nhãn hàng "${brand.name}"?`)) e.preventDefault(); }}
-                        >
-                          Xóa
-                        </button>
-                      </form>
+                      <DeleteConfirmBtn
+                        action={deleteBrandAction}
+                        confirmMessage={`Xóa nhãn hàng "${brand.name}"?`}
+                        hiddenFields={{ brandId: String(brand.id) }}
+                        className={styles.deleteBtn}
+                      />
                     </div>
                   </td>
                 </tr>

@@ -1,0 +1,364 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/mixins' as m;
+
+.page {
+  @include m.container;
+  padding-block: v.$space-8;
+}
+
+.title {
+  font-size: v.$font-size-2xl;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-dark;
+  margin-bottom: v.$space-6;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: v.$space-6;
+
+  @include m.lg { grid-template-columns: 1fr 360px; align-items: start; }
+}
+
+// ── Form ──────────────────────────────────────────────────────────────────────
+
+.form {
+  background: v.$color-bg-card;
+  border-radius: v.$radius-xl;
+  box-shadow: v.$shadow-card;
+  padding: v.$space-6;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-5;
+}
+
+.sectionTitle {
+  font-size: v.$font-size-lg;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-dark;
+  padding-bottom: v.$space-3;
+  border-bottom: 1px solid v.$color-border;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: v.$space-4;
+
+  @media (max-width: 479px) { grid-template-columns: 1fr; }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-1;
+}
+
+.label {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-text;
+}
+
+.input {
+  @include m.input-base;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.paySection {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-4;
+}
+
+// ── Payment method grid ───────────────────────────────────────────────────────
+
+.payGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: v.$space-3;
+
+  @media (max-width: 640px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 400px) { grid-template-columns: 1fr; }
+}
+
+.payCard {
+  @include m.button-reset;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: v.$space-1;
+  padding: v.$space-3;
+  border: 2px solid v.$color-border;
+  border-radius: v.$radius-lg;
+  background: v.$color-bg-card;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color v.$transition-fast, background v.$transition-fast, box-shadow v.$transition-fast;
+
+  &:hover { border-color: v.$color-primary; }
+
+  // Per-method accent color when active
+  &[data-method="COD"]     { --pay-accent: #16a34a; }
+  &[data-method="MOMO"]    { --pay-accent: #ae2d68; }
+  &[data-method="ZALOPAY"] { --pay-accent: #0068ff; }
+  &[data-method="VNPAY"]   { --pay-accent: #e30019; }
+  &[data-method="BANKING"] { --pay-accent: #0369a1; }
+  &[data-method="CARD"]    { --pay-accent: #7c3aed; }
+}
+
+.payCardActive {
+  border-color: var(--pay-accent, v.$color-primary);
+  background: v.$color-bg;
+  box-shadow: 0 0 0 1px var(--pay-accent, v.$color-primary);
+}
+
+.payIcon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.payLabel {
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-text;
+  line-height: 1.35;
+}
+
+.payTag {
+  display: inline-block;
+  padding: 1px 6px;
+  background: v.$color-badge-danger-bg;
+  color: v.$color-danger;
+  border-radius: v.$radius-full;
+  font-size: 10px;
+  font-weight: v.$font-weight-bold;
+}
+
+.payRadio {
+  position: absolute;
+  top: v.$space-2;
+  right: v.$space-2;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid v.$color-border;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color v.$transition-fast;
+
+  .payCardActive & {
+    border-color: var(--pay-accent, v.$color-primary);
+  }
+}
+
+.payRadioInner {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--pay-accent, v.$color-primary);
+}
+
+// ── Selected method info box ──────────────────────────────────────────────────
+
+.payInfo {
+  display: flex;
+  align-items: flex-start;
+  gap: v.$space-3;
+  padding: v.$space-3 v.$space-4;
+  background: v.$color-bg;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-md;
+}
+
+.payInfoIcon { font-size: 24px; flex-shrink: 0; }
+
+.payInfoName {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-text;
+  margin: 0 0 2px;
+}
+
+.payInfoDesc {
+  font-size: v.$font-size-xs;
+  color: v.$color-text-muted;
+  margin: 0;
+}
+
+.payInfoNote {
+  font-size: v.$font-size-xs;
+  color: v.$color-info;
+  margin: v.$space-1 0 0;
+  font-style: italic;
+}
+
+.error {
+  padding: v.$space-3 v.$space-4;
+  background: v.$color-badge-danger-bg;
+  color: v.$color-danger;
+  border-radius: v.$radius-md;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-medium;
+}
+
+.submitBtn {
+  @include m.button-reset;
+  background: v.$color-brand;
+  color: #fff;
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-bold;
+  padding: v.$space-4;
+  border-radius: v.$radius-full;
+  text-align: center;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.15s ease;
+
+  &:hover:not(:disabled) { filter: brightness(1.08); transform: translateY(-1px); }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+// ── Summary ───────────────────────────────────────────────────────────────────
+
+.summary {
+  background: v.$color-bg-card;
+  border-radius: v.$radius-xl;
+  box-shadow: v.$shadow-card;
+  padding: v.$space-6;
+  position: sticky;
+  top: calc(v.$header-height + v.$space-4);
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-4;
+}
+
+.itemList {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-3;
+}
+
+.summaryItem {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+}
+
+.summaryImgWrap {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: v.$radius-md;
+  background: v.$color-bg-hover;
+  overflow: hidden;
+}
+
+.summaryImg {
+  object-fit: contain;
+  padding: v.$space-1;
+}
+
+.summaryImgPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.qtyBadge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  background: v.$color-brand;
+  color: #fff;
+  font-size: 11px;
+  font-weight: v.$font-weight-bold;
+  border-radius: v.$radius-full;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.summaryItemInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.summaryItemName {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-dark;
+  @include m.line-clamp(2);
+}
+
+.summaryItemOpts {
+  font-size: v.$font-size-xs;
+  color: v.$color-muted;
+  margin-top: 2px;
+}
+
+.summaryItemPrice {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-dark;
+  white-space: nowrap;
+}
+
+.summaryTotals {
+  border-top: 1px solid v.$color-border;
+  padding-top: v.$space-3;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-2;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: v.$font-size-sm;
+  color: v.$color-text;
+}
+
+.free { color: v.$color-success; font-weight: v.$font-weight-semibold; }
+
+.totalRow {
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-dark;
+  padding-top: v.$space-2;
+  border-top: 1px solid v.$color-border;
+}
+
+.payMethodSelected {
+  display: flex;
+  align-items: center;
+  gap: v.$space-2;
+  padding: v.$space-2 v.$space-3;
+  background: v.$color-bg;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-md;
+  font-size: v.$font-size-sm;
+  color: v.$color-text-secondary;
+}
+
+.emptyWrap {
+  @include m.container;
+  padding-block: v.$space-16;
+  text-align: center;
+  font-size: v.$font-size-base;
+  color: v.$color-muted;
+
+  a { color: v.$color-brand; text-decoration: none; &:hover { text-decoration: underline; } }
+}

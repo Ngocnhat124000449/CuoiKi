@@ -5,6 +5,7 @@ import Footer from '@/components/layout/Footer'
 import TopBar from '@/components/layout/TopBar'
 import CategoryNav from '@/components/layout/CategoryNav'
 import ThemeProvider from '@/components/ui/ThemeProvider'
+import { CartProvider } from '@/lib/cart-context'
 import './globals.scss'
 
 export const metadata: Metadata = {
@@ -26,13 +27,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="vi" suppressHydrationWarning>
       <body>
         <Script id="theme-init" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: themeScript }} />
-        <ThemeProvider>
-          <TopBar />
-          <Header />
-          <CategoryNav />
-          <main className="site-main">{children}</main>
-          <Footer />
-        </ThemeProvider>
+        <CartProvider>
+          <ThemeProvider>
+            <TopBar />
+            <Header />
+            <CategoryNav />
+            <main className="site-main">{children}</main>
+            <Footer />
+          </ThemeProvider>
+        </CartProvider>
       </body>
     </html>
   )

@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "ts-node --project tsconfig.seed.json prisma/seed.ts",
-    "setup-roles": "ts-node --project tsconfig.seed.json prisma/setup-roles.ts"
+    "setup-roles": "ts-node --project tsconfig.seed.json prisma/setup-roles.ts",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

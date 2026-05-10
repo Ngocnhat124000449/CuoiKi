@@ -15,17 +15,19 @@ function getRemainingSeconds(end: Date): number {
 }
 
 export default function FlashTimer() {
-  const [end]  = useState(getEndOfDay)
-  const [secs, setSecs] = useState(() => getRemainingSeconds(getEndOfDay()))
+  const [secs, setSecs] = useState<number | null>(null)
 
   useEffect(() => {
+    const end = getEndOfDay()
+    setSecs(getRemainingSeconds(end))
     const id = setInterval(() => setSecs(getRemainingSeconds(end)), 1000)
     return () => clearInterval(id)
-  }, [end])
+  }, [])
 
-  const h = Math.floor(secs / 3600)
-  const m = Math.floor((secs % 3600) / 60)
-  const s = secs % 60
+  const total = secs ?? 0
+  const h = Math.floor(total / 3600)
+  const m = Math.floor((total % 3600) / 60)
+  const s = total % 60
 
   return (
     <div className={styles.timer}>

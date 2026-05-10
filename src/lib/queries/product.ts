@@ -81,20 +81,33 @@ export async function getProducts(params: ProductListParams = {}) {
         isFeatured: true,
         brand: { select: { name: true } },
         category: { select: { name: true, slug: true } },
-        // Chỉ lấy ảnh chính — tránh over-fetch
         images: {
           where: { isPrimary: true },
           take: 1,
           select: { url: true, altText: true },
         },
-        // Giá thấp nhất trong các variant
         variants: {
           where: { isActive: true },
           orderBy: { price: "asc" },
-          take: 1,
-          select: { price: true, sku: true },
+          select: {
+            id: true,
+            price: true,
+            variantOptions: {
+              select: {
+                attribute: { select: { name: true, displayName: true } },
+                value: { select: { value: true, displayValue: true, colorHex: true } },
+              },
+            },
+          },
         },
-        // Điểm đánh giá trung bình
+        attributeValues: {
+          take: 10,
+          orderBy: { attribute: { displayOrder: "asc" } },
+          select: {
+            textValue: true,
+            attribute: { select: { name: true, displayName: true, inputType: true } },
+          },
+        },
         reviews: {
           where: { isApproved: true },
           select: { rating: true },
@@ -104,13 +117,32 @@ export async function getProducts(params: ProductListParams = {}) {
     db.product.count({ where }),
   ]);
 
-  // Tính rating trung bình
   const products = items.map((p) => {
     const ratings = p.reviews.map((r) => r.rating);
     const avgRating = ratings.length
       ? +(ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1)
       : null;
     const lowestPrice = p.variants[0]?.price ?? p.basePrice;
+
+    const variantGroups: Record<string, {
+      displayName: string;
+      values: Array<{ value: string; displayValue: string; colorHex: string | null }>;
+    }> = {};
+    for (const variant of p.variants) {
+      for (const opt of variant.variantOptions) {
+        const key = opt.attribute.name;
+        if (!variantGroups[key]) {
+          variantGroups[key] = { displayName: opt.attribute.displayName, values: [] };
+        }
+        if (!variantGroups[key].values.some((v) => v.value === opt.value.value)) {
+          variantGroups[key].values.push({
+            value: opt.value.value,
+            displayValue: opt.value.displayValue,
+            colorHex: opt.value.colorHex,
+          });
+        }
+      }
+    }
 
     return {
       id: Number(p.id),
@@ -124,6 +156,24 @@ export async function getProducts(params: ProductListParams = {}) {
       avgRating,
       isFeatured: p.isFeatured,
       reviewCount: ratings.length,
+      specs: p.attributeValues
+        .filter((av) => av.attribute.inputType === "TEXT" && av.textValue !== null)
+        .slice(0, 5)
+        .map((av) => ({
+          name: av.attribute.name,
+          displayName: av.attribute.displayName,
+          textValue: av.textValue!,
+        })),
+      variantGroups,
+      variants: p.variants.map((v) => ({
+        id: Number(v.id),
+        price: v.price.toNumber(),
+        priceText: formatVND(v.price),
+        options: v.variantOptions.map((o) => ({
+          attribute: o.attribute.name,
+          value: o.value.value,
+        })),
+      })),
     };
   });
 
@@ -252,7 +302,7 @@ export async function getProductBySlug(slug: string) {
     specs: product.attributeValues.map((av) => ({
       name: av.attribute.name,
       displayName: av.attribute.displayName,
-      value: av.value.displayValue,
+      value: av.value?.displayValue ?? av.textValue ?? '',
     })),
     variantGroups,
     variants: product.variants.map((v) => ({

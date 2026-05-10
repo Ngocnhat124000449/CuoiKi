@@ -13,11 +13,17 @@ export default async function NewCategoryPage() {
   const session = await auth();
   if (!(session?.user as { isAdmin?: boolean })?.isAdmin) redirect('/');
 
-  const parents = await db.category.findMany({
-    where: { parentId: null },
-    orderBy: { name: 'asc' },
-    select: { id: true, name: true },
-  });
+  const [parents, allAttributes] = await Promise.all([
+    db.category.findMany({
+      where: { parentId: null },
+      orderBy: { name: 'asc' },
+      select: { id: true, name: true },
+    }),
+    db.attribute.findMany({
+      orderBy: [{ inputType: 'asc' }, { displayName: 'asc' }],
+      select: { id: true, name: true, displayName: true, inputType: true },
+    }),
+  ]);
 
   return (
     <div>
@@ -25,7 +31,7 @@ export default async function NewCategoryPage() {
       <div className={styles.pageHead}>
         <h1 className={styles.title}>Thêm danh mục</h1>
       </div>
-      <CategoryForm action={createCategoryAction} parents={parents} />
+      <CategoryForm action={createCategoryAction} parents={parents} allAttributes={allAttributes} />
     </div>
   );
 }

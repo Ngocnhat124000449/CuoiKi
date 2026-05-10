@@ -20,12 +20,29 @@ export default async function EditCategoryPage({
   const { id } = await params;
   const categoryId = Number(id);
 
-  const [category, parents] = await Promise.all([
-    db.category.findUnique({ where: { id: categoryId } }),
+  const [category, parents, allAttributes] = await Promise.all([
+    db.category.findUnique({
+      where: { id: categoryId },
+      include: {
+        categoryAttributes: {
+          orderBy: { displayOrder: 'asc' },
+          select: {
+            attributeId: true,
+            groupName: true,
+            displayOrder: true,
+            isRequired: true,
+          },
+        },
+      },
+    }),
     db.category.findMany({
       where: { parentId: null, id: { not: categoryId } },
       orderBy: { name: 'asc' },
       select: { id: true, name: true },
+    }),
+    db.attribute.findMany({
+      orderBy: [{ inputType: 'asc' }, { displayName: 'asc' }],
+      select: { id: true, name: true, displayName: true, inputType: true },
     }),
   ]);
 
@@ -40,6 +57,7 @@ export default async function EditCategoryPage({
       <CategoryForm
         action={updateCategoryAction}
         parents={parents}
+        allAttributes={allAttributes}
         defaultValues={{
           id: category.id,
           name: category.name,
@@ -48,6 +66,7 @@ export default async function EditCategoryPage({
           description: category.description,
           displayOrder: category.displayOrder,
           isActive: category.isActive,
+          categoryAttributes: category.categoryAttributes,
         }}
       />
     </div>

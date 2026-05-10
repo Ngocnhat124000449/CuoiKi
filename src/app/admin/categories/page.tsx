@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { deleteCategoryAction } from '@/lib/actions/admin';
+import DeleteConfirmBtn from '../_components/DeleteConfirmBtn';
 import styles from './page.module.scss';
 
 export const metadata: Metadata = { title: 'Admin — Danh mục' };
@@ -68,16 +69,12 @@ export default async function AdminCategoriesPage() {
                   <td>
                     <div className={styles.actions}>
                       <Link href={`/admin/categories/${cat.id}/edit`} className={styles.editBtn}>Sửa</Link>
-                      <form action={deleteCategoryAction}>
-                        <input type="hidden" name="categoryId" value={cat.id} />
-                        <button
-                          type="submit"
-                          className={styles.deleteBtn}
-                          onClick={(e) => { if (!confirm(`Xóa danh mục "${cat.name}"?`)) e.preventDefault(); }}
-                        >
-                          Xóa
-                        </button>
-                      </form>
+                      <DeleteConfirmBtn
+                        action={deleteCategoryAction}
+                        confirmMessage={`Xóa danh mục "${cat.name}"?`}
+                        hiddenFields={{ categoryId: String(cat.id) }}
+                        className={styles.deleteBtn}
+                      />
                     </div>
                   </td>
                 </tr>

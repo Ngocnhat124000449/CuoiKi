@@ -1,34 +1,47 @@
 @use '../../styles/abstracts/variables' as v;
 @use '../../styles/abstracts/mixins' as m;
 
+$buy-yellow: #f5c100;
+
+// ── Card ─────────────────────────────────────────────────────────────────────
+
 .card {
-  @include m.card;
-  display: block;
-  text-decoration: none;
+  background: v.$color-bg-card;
+  border-radius: v.$radius-xl;
+  box-shadow: v.$shadow-card;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   transition: v.$transition-base;
-  position: relative;
 
   &:hover {
     box-shadow: v.$shadow-hover;
     transform: translateY(-2px);
 
-    .img { transform: scale(1.08); }
-    .addBtn { opacity: 1; transform: translateY(0); }
-    .name { color: v.$color-dark; }
+    .img { transform: scale(1.04); }
+    .name { color: v.$color-brand; }
   }
 }
 
-// Image area
+// ── Image ─────────────────────────────────────────────────────────────────────
+
+.imgLink {
+  display: block;
+  padding: v.$space-3 v.$space-3 0;
+  text-decoration: none;
+}
+
 .imgWrap {
   position: relative;
   aspect-ratio: 1;
   background: v.$color-bg-hover;
+  border-radius: v.$radius-lg;
   overflow: hidden;
 }
 
 .img {
-  object-fit: cover;
+  object-fit: contain;
+  padding: v.$space-3;
   transition: transform 0.35s ease;
 }
 
@@ -38,125 +51,175 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 52px;
+  font-size: 56px;
   color: v.$color-light-muted;
 }
 
-// Badges
-.badgeWrap {
+.badge {
   position: absolute;
   top: v.$space-2;
   left: v.$space-2;
-  display: flex;
-  flex-direction: column;
-  gap: v.$space-1;
-  z-index: 1;
-}
-
-.badgeFeatured {
-  @include m.badge(v.$color-danger);
+  background: v.$color-brand;
+  color: #fff;
+  font-size: 11px;
+  font-weight: v.$font-weight-semibold;
+  padding: 3px v.$space-3;
+  border-radius: v.$radius-full;
   animation: pulseSoft 2.5s ease-in-out infinite;
 }
 
-.badgeNew {
-  @include m.badge(v.$color-info);
-}
+// ── Body ─────────────────────────────────────────────────────────────────────
 
-.badgeDiscount {
-  @include m.badge(v.$color-accent, v.$color-footer-text);
-  font-size: 10px;
-  padding: 2px 5px;
-  animation: pulseSoft 3s ease-in-out infinite;
-}
-
-// Body
 .body {
-  padding: v.$space-4;
+  padding: v.$space-3 v.$space-4 v.$space-4;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-3;
+  flex: 1;
 }
 
-.brand {
-  font-size: v.$font-size-xs;
-  font-weight: v.$font-weight-semibold;
-  color: v.$color-brand;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: v.$space-1;
+.nameLink {
+  text-decoration: none;
 }
 
 .name {
-  font-size: v.$font-size-base;
-  font-weight: v.$font-weight-semibold;
-  color: v.$color-muted;
+  font-size: v.$font-size-lg;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-text;
   @include m.line-clamp(2);
   line-height: v.$line-height-snug;
-  margin-bottom: v.$space-2;
   transition: v.$transition-fast;
-}
-
-// Rating
-.rating {
-  display: flex;
-  align-items: center;
-  gap: v.$space-1;
-  margin-bottom: v.$space-2;
-}
-
-.stars {
-  color: v.$color-warning;
-  font-size: v.$font-size-sm;
-  letter-spacing: 0;
-}
-
-.ratingCount {
-  font-size: v.$font-size-xs;
-  color: v.$color-light-muted;
-}
-
-// Pricing
-.priceRow {
-  display: flex;
-  align-items: baseline;
-  gap: v.$space-2;
-  flex-wrap: wrap;
-  margin-bottom: v.$space-2;
 }
 
 .price {
   font-size: v.$font-size-lg;
   font-weight: v.$font-weight-bold;
   color: v.$color-brand;
-  line-height: 1;
+  margin: 0;
+  margin-top: calc(#{v.$space-1} * -1);
 }
 
-.priceOriginal {
+// ── Specs box ────────────────────────────────────────────────────────────────
+
+.specs {
+  background: v.$color-bg-hover;
+  border-radius: v.$radius-md;
+  padding: v.$space-3;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.specRow {
+  display: flex;
+  align-items: flex-start;
+  gap: v.$space-2;
   font-size: v.$font-size-sm;
-  color: v.$color-light-muted;
-  text-decoration: line-through;
-  font-weight: v.$font-weight-regular;
+  line-height: 1.4;
 }
 
-// Installment hint
-.installment {
-  font-size: v.$font-size-xs;
+.specEmoji {
+  width: 18px;
+  flex-shrink: 0;
+  text-align: center;
+  font-size: 13px;
+  margin-top: 1px;
+}
+
+.specText {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.specLabel {
   color: v.$color-muted;
-  margin-bottom: v.$space-2;
+}
+
+.specValue {
+  color: v.$color-text;
   font-weight: v.$font-weight-medium;
 }
 
-// CTA button
-.addBtn {
-  @include m.button-primary;
-  width: 100%;
-  padding: v.$space-2 v.$space-3;
-  font-size: v.$font-size-sm;
-  border-radius: v.$radius-sm;
-  justify-content: center;
-  opacity: 0;
-  transform: translateY(4px);
-  transition: v.$transition-base;
+// ── Variant selectors ────────────────────────────────────────────────────────
 
-  @include m.max-md {
-    opacity: 1;
+.variantGroup {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-2;
+}
+
+.variantLabel {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-text;
+  margin: 0;
+}
+
+.variantOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: v.$space-2;
+}
+
+.variantBtn {
+  @include m.button-reset;
+  border: 1.5px solid v.$color-border;
+  border-radius: v.$radius-full;
+  padding: 4px v.$space-3;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-medium;
+  color: v.$color-text;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: v.$space-1;
+  transition: v.$transition-fast;
+  white-space: nowrap;
+
+  &:hover {
+    border-color: v.$color-text;
+    background: v.$color-bg-hover;
+  }
+}
+
+.variantBtnActive {
+  background: v.$color-text;
+  color: v.$color-bg-card;
+  border-color: v.$color-text;
+}
+
+.colorDot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: v.$radius-full;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
+  background: var(--dot-color);
+}
+
+// ── Buy button ───────────────────────────────────────────────────────────────
+
+.buyBtn {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  background: $buy-yellow;
+  color: #111;
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-bold;
+  padding: v.$space-3 v.$space-4;
+  border-radius: v.$radius-full;
+  margin-top: auto;
+  transition: filter 0.15s ease, transform 0.15s ease;
+
+  &:hover {
+    filter: brightness(0.95);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    filter: brightness(0.9);
     transform: none;
   }
 }

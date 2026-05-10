@@ -1,0 +1,224 @@
+@use '../../../../styles/abstracts/variables' as v;
+@use '../../../../styles/abstracts/mixins' as m;
+
+.pageHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: v.$space-3;
+  margin-bottom: v.$space-6;
+}
+
+.backLink {
+  font-size: v.$font-size-sm;
+  color: v.$color-muted;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: v.$space-2;
+  transition: v.$transition-fast;
+
+  &:hover { color: v.$color-brand; }
+}
+
+.title {
+  font-size: v.$font-size-xl;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-dark;
+  margin: 0;
+}
+
+.date {
+  font-size: v.$font-size-sm;
+  color: v.$color-muted;
+  margin-top: 4px;
+}
+
+// Status badges
+.badge {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  padding: v.$space-1 v.$space-3;
+  border-radius: v.$radius-full;
+}
+.pending    { background: v.$color-badge-pending-bg;  color: v.$color-badge-pending-text; }
+.confirmed  { background: v.$color-badge-info-bg;     color: v.$color-info;              }
+.processing { background: v.$color-badge-info-bg;     color: v.$color-info;              }
+.shipped    { background: v.$color-badge-info-bg;     color: v.$color-info;              }
+.delivered  { background: v.$color-badge-success-bg;  color: v.$color-success;           }
+.cancelled  { background: v.$color-badge-danger-bg;   color: v.$color-danger;            }
+.refunded   { background: v.$color-badge-danger-bg;   color: v.$color-danger;            }
+
+// ── Section ───────────────────────────────────────────────────────────────────
+
+.section {
+  background: v.$color-bg-card;
+  border-radius: v.$radius-xl;
+  box-shadow: v.$shadow-card;
+  padding: v.$space-5;
+  margin-bottom: v.$space-4;
+}
+
+.sectionTitle {
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-dark;
+  margin-bottom: v.$space-4;
+  padding-bottom: v.$space-3;
+  border-bottom: 1px solid v.$color-border;
+}
+
+// ── Items ─────────────────────────────────────────────────────────────────────
+
+.itemList {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-3;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+}
+
+.imgWrap {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  border-radius: v.$radius-md;
+  background: v.$color-bg-hover;
+  overflow: hidden;
+}
+
+.img { object-fit: contain; padding: v.$space-1; }
+
+.imgPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.itemInfo { flex: 1; min-width: 0; }
+
+.itemName {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-dark;
+  @include m.line-clamp(2);
+}
+
+.itemVariant {
+  font-size: v.$font-size-xs;
+  color: v.$color-muted;
+  margin-top: 2px;
+}
+
+.itemMeta {
+  font-size: v.$font-size-xs;
+  color: v.$color-muted;
+  margin-top: 2px;
+}
+
+.itemSubtotal {
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-dark;
+  white-space: nowrap;
+}
+
+// ── Info grid ─────────────────────────────────────────────────────────────────
+
+.infoGrid {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-3;
+}
+
+.infoRow {
+  display: flex;
+  gap: v.$space-4;
+  font-size: v.$font-size-sm;
+}
+
+.infoLabel {
+  width: 120px;
+  flex-shrink: 0;
+  color: v.$color-muted;
+  font-weight: v.$font-weight-medium;
+}
+
+.infoVal {
+  color: v.$color-text;
+  flex: 1;
+}
+
+// ── Totals ────────────────────────────────────────────────────────────────────
+
+.totals {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-2;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: v.$font-size-sm;
+  color: v.$color-text;
+}
+
+.free { color: v.$color-success; font-weight: v.$font-weight-semibold; }
+
+.grandTotal {
+  font-size: v.$font-size-lg;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-dark;
+  border-top: 1px solid v.$color-border;
+  padding-top: v.$space-3;
+  margin-top: v.$space-2;
+}
+
+.payBadge {
+  display: inline-block;
+  margin-top: v.$space-2;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  padding: v.$space-1 v.$space-3;
+  border-radius: v.$radius-full;
+  width: fit-content;
+}
+.paid   { background: v.$color-badge-success-bg; color: v.$color-success; }
+.unpaid { background: v.$color-badge-pending-bg; color: v.$color-badge-pending-text; }
+
+// ── Cancel ────────────────────────────────────────────────────────────────────
+
+.cancelWrap {
+  padding: v.$space-4 0;
+}
+
+.cancelBtn {
+  @include m.button-reset;
+  background: v.$color-badge-danger-bg;
+  color: v.$color-danger;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  padding: v.$space-3 v.$space-6;
+  border-radius: v.$radius-full;
+  cursor: pointer;
+  transition: v.$transition-fast;
+  border: 1.5px solid v.$color-danger;
+
+  &:hover:not(:disabled) { background: v.$color-danger; color: #fff; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.errorMsg {
+  font-size: v.$font-size-sm;
+  color: v.$color-danger;
+  margin-bottom: v.$space-2;
+}

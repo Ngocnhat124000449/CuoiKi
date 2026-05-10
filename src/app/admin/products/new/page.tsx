@@ -13,11 +13,36 @@ export default async function NewProductPage() {
   const session = await auth();
   if (!(session?.user as { isAdmin?: boolean })?.isAdmin) redirect('/');
 
-  const [categories, brands] = await Promise.all([
+  const [categoriesRaw, brands] = await Promise.all([
     db.category.findMany({
       where: { isActive: true },
       orderBy: { name: 'asc' },
-      select: { id: true, name: true },
+      select: {
+        id: true,
+        name: true,
+        categoryAttributes: {
+          orderBy: [{ groupName: 'asc' }, { displayOrder: 'asc' }],
+          select: {
+            attributeId: true,
+            groupName: true,
+            isRequired: true,
+            attribute: {
+              select: {
+                id: true,
+                name: true,
+                displayName: true,
+                inputType: true,
+                unit: true,
+                isFilterable: true,
+                values: {
+                  orderBy: { displayOrder: 'asc' },
+                  select: { id: true, value: true, displayValue: true, colorHex: true },
+                },
+              },
+            },
+          },
+        },
+      },
     }),
     db.brand.findMany({
       where: { isActive: true },
@@ -25,6 +50,19 @@ export default async function NewProductPage() {
       select: { id: true, name: true },
     }),
   ]);
+
+  // Convert BigInt AttributeValue.id → string for client serialization
+  const categories = categoriesRaw.map((cat) => ({
+    ...cat,
+    categoryAttributes: cat.categoryAttributes.map((ca) => ({
+      ...ca,
+      attribute: {
+        ...ca.attribute,
+        inputType: ca.attribute.inputType as string,
+        values: ca.attribute.values.map((v) => ({ ...v, id: v.id.toString() })),
+      },
+    })),
+  }));
 
   return (
     <div>
