@@ -18,12 +18,16 @@ npm install
 Tạo file `.env.local` trong thư mục `my-myapp`.
 
 ```env
-DATABASE_URL=postgresql://...
-AUTH_SECRET=...
+DATABASE_URL="postgresql://neondb_owner:npg_xgDF63oPRXVj@ep-divine-flower-aoyryaf3-pooler.c-2.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+CLOUDINARY_CLOUD_NAME="dkczxprrd"
 
-CLOUDINARY_CLOUD_NAME=...
-CLOUDINARY_API_KEY=...
-CLOUDINARY_API_SECRET=...
+CLOUDINARY_API_KEY="644759851737567"
+
+CLOUDINARY_API_SECRET="4WoskVAzsT7Wc5p9BB6yXhSg6hM"
+
+AUTH_SECRET=BZlUSpX8KEUSDiPdLgKp/XBjdCapK1HaZzRnLQ9DC6o=
+
+
 ```
 
 Dữ liệu demo đã được seed trong quá trình phát triển đồ án.
