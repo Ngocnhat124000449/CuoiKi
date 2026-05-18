@@ -1,36 +1,182 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cách chạy đồ án PhoneShop
 
-## Getting Started
+## 1. Clone source code
 
-First, run the development server:
+```bash
+git clone https://github.com/Ngocnhat124000449/CuoiKi.git
+cd CuoiKi/my-myapp
+```
+
+## 2. Cài package
+
+```bash
+npm install
+```
+
+## 3. Tạo file môi trường
+
+Tạo file `.env.local` trong thư mục `my-myapp`.
+
+```env
+DATABASE_URL=postgresql://...
+AUTH_SECRET=...
+
+CLOUDINARY_CLOUD_NAME=...
+CLOUDINARY_API_KEY=...
+CLOUDINARY_API_SECRET=...
+```
+
+Dữ liệu demo đã được seed trong quá trình phát triển đồ án.
+
+Khi dùng database của đồ án, không cần chạy lại migrate hoặc seed.
+
+## 4. Chạy website trên localhost
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Mở trình duyệt tại:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 5. Build kiểm tra production
 
-## Learn More
+```bash
+npm run build
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Giới thiệu dự án
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+PhoneShop là website thương mại điện tử bán điện thoại và thiết bị công nghệ.
 
-## Deploy on Vercel
+Dự án được xây dựng cho học phần **111100 - Lập trình Front-End**.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Mục tiêu của dự án là xây dựng website bằng **Next.js**, **TypeScript**, routing rõ ràng, dữ liệu động và giao diện hoàn chỉnh.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Thông tin sinh viên
+
+| Nội dung | Thông tin |
+|---|---|
+| Sinh viên | Nguyễn Ngọc Nhật |
+| MSSV | 124000449 |
+| Học phần | 111100 - Lập trình Front-End |
+| Tên đề tài | PhoneShop - Website thương mại điện tử bán điện thoại |
+
+## Chức năng chính
+
+### Người dùng
+
+- Xem trang chủ.
+- Xem danh sách sản phẩm.
+- Tìm kiếm sản phẩm.
+- Lọc sản phẩm theo danh mục, thương hiệu và khoảng giá.
+- Xem chi tiết sản phẩm theo dynamic route `/products/[slug]`.
+- Chọn biến thể sản phẩm.
+- Thêm sản phẩm vào giỏ hàng.
+- Thanh toán đơn hàng.
+- Đăng ký và đăng nhập.
+- Xem thông tin tài khoản.
+- Xem lịch sử đơn hàng.
+- Gửi liên hệ.
+
+### Quản trị
+
+- Xem dashboard quản trị.
+- Quản lý sản phẩm.
+- Quản lý danh mục.
+- Quản lý thương hiệu.
+- Quản lý đơn hàng.
+- Quản lý người dùng.
+- Quản lý mã giảm giá.
+- Upload ảnh sản phẩm qua Cloudinary.
+
+## Các route chính
+
+| Route | Chức năng |
+|---|---|
+| `/` | Trang chủ |
+| `/products` | Danh sách sản phẩm |
+| `/products/[slug]` | Chi tiết sản phẩm |
+| `/cart` | Giỏ hàng |
+| `/checkout` | Thanh toán |
+| `/contact` | Liên hệ |
+| `/about` | Giới thiệu |
+| `/login` | Đăng nhập |
+| `/register` | Đăng ký |
+| `/account` | Tài khoản người dùng |
+| `/admin` | Trang quản trị |
+| `/api/products` | API danh sách sản phẩm |
+| `/api/products/[slug]` | API chi tiết sản phẩm |
+
+## Công nghệ sử dụng
+
+| Thành phần | Công nghệ |
+|---|---|
+| Framework | Next.js 16.2.4 - App Router |
+| Ngôn ngữ | TypeScript 5 |
+| UI | React 19.2.4 |
+| Styling | SCSS Modules, Sass |
+| Database | PostgreSQL |
+| ORM | Prisma 7.8.0 |
+| Auth | NextAuth v5 beta |
+| Upload ảnh | Cloudinary |
+| Package manager | npm |
+
+## Cấu trúc thư mục
+
+```txt
+my-myapp/
+├── prisma/
+│   ├── schema.prisma
+│   └── migrations/
+├── public/
+├── src/
+│   ├── app/
+│   │   ├── page.tsx
+│   │   ├── products/
+│   │   ├── cart/
+│   │   ├── checkout/
+│   │   ├── contact/
+│   │   ├── account/
+│   │   ├── admin/
+│   │   └── api/
+│   ├── components/
+│   ├── lib/
+│   └── styles/
+├── package.json
+└── next.config.ts
+```
+
+## Script chính
+
+| Lệnh | Mục đích |
+|---|---|
+| `npm run dev` | Chạy project trên localhost |
+| `npm run build` | Build production |
+| `npm run start` | Chạy bản production sau khi build |
+| `npm run lint` | Kiểm tra lint |
+| `npm run seed` | Seed dữ liệu khi tự tạo database mới |
+
+## Ghi chú dữ liệu
+
+Database dùng cho demo đã có dữ liệu sản phẩm, danh mục, thương hiệu và tài khoản trong quá trình phát triển.
+
+Chỉ chạy `npm run seed` khi tạo database mới.
+
+## Video demo
+
+Video demo cá nhân sẽ trình bày:
+
+- Cách tải source từ GitHub.
+- Cách cài package.
+- Cách tạo file môi trường.
+- Cách chạy website trên localhost.
+- Demo tối thiểu 3 trang.
+- Phần việc cá nhân đã thực hiện.
+
+Link video: cập nhật sau khi quay.
