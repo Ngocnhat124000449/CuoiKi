@@ -15,7 +15,7 @@ npm install
 
 ## 3. Tạo file môi trường
 
-Tạo file `.env.local` trong thư mục `my-myapp`.
+Tạo file `.env.local` trong thư mục `CuoiKi`.
 
 ```env
 DATABASE_URL="postgresql://neondb_owner:npg_xgDF63oPRXVj@ep-divine-flower-aoyryaf3-pooler.c-2.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
