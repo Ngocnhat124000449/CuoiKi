@@ -1,5 +1,6 @@
 ﻿import { db } from "@/lib/db";
 import { Prisma } from "@prisma/client";
+import { unstable_cache } from "next/cache";
 
 // ─── Types ────────────────────────────────────────────────
 
@@ -190,6 +191,22 @@ export async function getProducts(params: ProductListParams = {}) {
     },
   };
 }
+
+// ─── Cached home sections ─────────────────────────────────
+// Truy vấn cố định của trang chủ — cache 60s để không hit DB mỗi lần tải.
+// Refresh tự động khi admin sửa sản phẩm (revalidateTag('products')).
+
+export const getFlashSaleProducts = unstable_cache(
+  async () => (await getProducts({ limit: 5, sortBy: "price_asc" })).data,
+  ["home-flash-sale"],
+  { revalidate: 60, tags: ["products"] },
+);
+
+export const getFeaturedProducts = unstable_cache(
+  async () => (await getProducts({ limit: 8, sortBy: "newest" })).data,
+  ["home-featured"],
+  { revalidate: 60, tags: ["products"] },
+);
 
 // ─────────────────────────────────────────────────────────
 

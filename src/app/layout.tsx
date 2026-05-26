@@ -4,9 +4,10 @@ import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import TopBar from '@/components/layout/TopBar'
 import CategoryNav from '@/components/layout/CategoryNav'
+import AuthProvider from '@/components/layout/AuthProvider'
 import ThemeProvider from '@/components/ui/ThemeProvider'
 import RevealObserver from '@/components/ui/RevealObserver'
-import { CartProvider } from '@/lib/cart-context'
+import CartDrawer from '@/components/cart/CartDrawer'
 import './globals.scss'
 
 export const metadata: Metadata = {
@@ -28,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="vi" suppressHydrationWarning>
       <body>
         <Script id="theme-init" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: themeScript }} />
-        <CartProvider>
+        <AuthProvider>
           <ThemeProvider>
             <TopBar />
             <Header />
@@ -36,8 +37,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <RevealObserver />
             <main className="site-main">{children}</main>
             <Footer />
+            <CartDrawer />
           </ThemeProvider>
-        </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   )

@@ -1,17 +1,12 @@
 import Link from 'next/link'
-import { auth } from '@/lib/auth'
 import SearchBar from './SearchBar'
 import MobileMenu from './MobileMenu'
-import UserMenu from './UserMenu'
+import AccountMenu from './AccountMenu'
 import CartBtn from './CartBtn'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import styles from './Header.module.scss'
 
-export default async function Header() {
-  const session = await auth()
-  const user = session?.user
-  const isAdmin = (user as { isAdmin?: boolean } | undefined)?.isAdmin ?? false
-
+export default function Header() {
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
@@ -37,22 +32,8 @@ export default async function Header() {
             <small>Miễn phí · 8–22h</small>
           </div>
 
-          {/* Account — logged in vs guest */}
-          {user ? (
-            <UserMenu
-              name={user.name ?? null}
-              email={user.email ?? ''}
-              isAdmin={isAdmin}
-            />
-          ) : (
-            <Link href="/login" className={styles.actionBtn} aria-label="Đăng nhập">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
-              <span>Đăng nhập</span>
-            </Link>
-          )}
+          {/* Account — logged in vs guest (resolved client-side via useSession) */}
+          <AccountMenu />
 
           {/* Cart */}
           <CartBtn />

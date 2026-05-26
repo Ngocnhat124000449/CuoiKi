@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import type { ProductListItem } from '@/lib/queries/product'
-import { useCart } from '@/lib/cart-context'
+import { useCartStore } from '@/lib/useCartStore'
 import styles from './ProductCard.module.scss'
 
 const SPEC_EMOJI: Record<string, string> = {
@@ -28,7 +28,7 @@ const SPEC_EMOJI: Record<string, string> = {
 
 export default function ProductCard({ product }: { product: ProductListItem }) {
   const groups = Object.entries(product.variantGroups)
-  const { addItem } = useCart()
+  const addItem = useCartStore(s => s.addItem)
   const router = useRouter()
 
   const [selected, setSelected] = useState<Record<string, string>>(() => {
@@ -59,7 +59,6 @@ export default function ProductCard({ product }: { product: ProductListItem }) {
       image: product.image?.url ?? null,
       options: variant.options.map(o => ({ attribute: o.attribute, value: o.value, displayValue: o.displayValue ?? o.value })),
     })
-    router.push('/cart')
   }
 
   return (

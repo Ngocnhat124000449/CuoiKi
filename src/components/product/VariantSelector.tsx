@@ -1,8 +1,7 @@
 'use client'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import type { ProductDetail } from '@/lib/queries/product'
-import { useCart } from '@/lib/cart-context'
+import { useCartStore } from '@/lib/useCartStore'
 import styles from './VariantSelector.module.scss'
 
 type Variant = ProductDetail['variants'][number]
@@ -20,8 +19,7 @@ export default function VariantSelector({
   productSlug:   string
   productImage:  string | null
 }) {
-  const { addItem } = useCart()
-  const router = useRouter()
+  const addItem = useCartStore(s => s.addItem)
 
   const [selected, setSelected] = useState<Record<string, string>>(() => {
     const d: Record<string, string> = {}
@@ -51,7 +49,6 @@ export default function VariantSelector({
         displayValue: o.displayValue,
       })),
     })
-    router.push('/cart')
   }
 
   return (

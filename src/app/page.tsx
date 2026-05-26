@@ -5,7 +5,7 @@ import { ProductGridSkeleton } from '@/components/ui/Skeleton'
 import SectionHeader from '@/components/ui/SectionHeader'
 import FlashTimer from '@/components/ui/FlashTimer'
 import NewsletterForm from '@/components/home/NewsletterForm'
-import { getProducts } from '@/lib/queries/product'
+import { getFlashSaleProducts, getFeaturedProducts } from '@/lib/queries/product'
 import { getCategories } from '@/lib/queries/category'
 import styles from './page.module.scss'
 
@@ -121,7 +121,7 @@ function HeroSection() {
 }
 
 async function FlashSaleSection() {
-  const { data } = await getProducts({ limit: 5, sortBy: 'price_asc' })
+  const data = await getFlashSaleProducts()
   if (!data.length) return null
   return (
     <section className={styles.flashSale}>
@@ -144,7 +144,7 @@ async function FlashSaleSection() {
 }
 
 async function FeaturedSection() {
-  const { data } = await getProducts({ limit: 8, sortBy: 'newest' })
+  const data = await getFeaturedProducts()
   if (!data.length) return null
   return (
     <section className={styles.section}>

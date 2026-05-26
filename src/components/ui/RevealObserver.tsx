@@ -59,9 +59,14 @@ export default function RevealObserver() {
     )
 
     // ── MutationObserver: catch async SSR-streamed elements ─────────────────
+    // Theo dõi phần tử đã observe bằng WeakSet thay vì ghi attribute vào DOM.
+    // Ghi `data-observed` lên DOM gây hydration mismatch khi trang được prerender
+    // static (effect chạy lúc các section trong <Suspense> đang hydrate).
+    const observed = new WeakSet<Element>()
     function observeNew() {
-      document.querySelectorAll('[data-stagger]:not([data-observed])').forEach(el => {
-        el.setAttribute('data-observed', '')
+      document.querySelectorAll('[data-stagger]').forEach(el => {
+        if (observed.has(el)) return
+        observed.add(el)
         triggerIO.observe(el)
         resetIO.observe(el)
       })
@@ -76,10 +81,6 @@ export default function RevealObserver() {
       triggerIO.disconnect()
       resetIO.disconnect()
       mo.disconnect()
-      // Remove data-observed so React StrictMode re-mount can re-observe
-      document.querySelectorAll('[data-stagger][data-observed]').forEach(el => {
-        el.removeAttribute('data-observed')
-      })
     }
   }, [])
 

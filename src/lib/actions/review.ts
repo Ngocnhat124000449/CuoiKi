@@ -1,7 +1,7 @@
 'use server'
 import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 export type SubmitReviewInput = {
@@ -52,6 +52,7 @@ export async function submitReviewAction(
     },
   })
 
+  revalidateTag('products', 'max')
   revalidatePath(`/products/${input.productSlug}`)
   return { success: true }
 }

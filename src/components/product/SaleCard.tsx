@@ -1,14 +1,12 @@
 'use client'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useCart } from '@/lib/cart-context'
+import { useCartStore } from '@/lib/useCartStore'
 import type { SaleProduct } from '@/lib/queries/sale'
 import styles from './SaleCard.module.scss'
 
 export default function SaleCard({ product }: { product: SaleProduct }) {
-  const { addItem } = useCart()
-  const router = useRouter()
+  const addItem = useCartStore(s => s.addItem)
 
   function handleBuy(e: React.MouseEvent) {
     e.preventDefault()
@@ -25,7 +23,6 @@ export default function SaleCard({ product }: { product: SaleProduct }) {
         displayValue: o.displayValue,
       })),
     })
-    router.push('/cart')
   }
 
   return (

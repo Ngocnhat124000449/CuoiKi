@@ -2,7 +2,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useCart } from '@/lib/cart-context'
+import { useCartStore, selectTotalItems, selectTotalPrice } from '@/lib/useCartStore'
 import styles from './page.module.scss'
 
 function fmt(n: number) {
@@ -10,7 +10,11 @@ function fmt(n: number) {
 }
 
 export default function CartView() {
-  const { items, removeItem, updateQty, totalItems, totalPrice } = useCart()
+  const items      = useCartStore(s => s.items)
+  const removeItem = useCartStore(s => s.removeItem)
+  const updateQty  = useCartStore(s => s.updateQty)
+  const totalItems = useCartStore(selectTotalItems)
+  const totalPrice = useCartStore(selectTotalPrice)
   const router = useRouter()
 
   if (items.length === 0) {

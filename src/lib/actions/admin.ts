@@ -3,7 +3,7 @@ import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { hasPermission } from '@/lib/permissions';
 import { OrderStatus, DiscountType, ApplicableTo } from '@prisma/client';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 async function requirePermission(module: string, action: string) {
@@ -38,6 +38,8 @@ export async function toggleProductActiveAction(formData: FormData) {
   const productId = BigInt(formData.get('productId') as string);
   const isActive = formData.get('isActive') === 'true';
   await db.product.update({ where: { id: productId }, data: { isActive: !isActive } });
+  revalidateTag('products', 'max');
+  revalidateTag('categories', 'max');
   revalidatePath('/admin/products');
 }
 
@@ -134,6 +136,8 @@ export async function createProductAction(
     if ((e as { code?: string }).code === 'P2002') return 'Slug hoặc SKU đã tồn tại, hãy kiểm tra lại';
     return 'Có lỗi xảy ra, thử lại sau';
   }
+  revalidateTag('products', 'max');
+  revalidateTag('categories', 'max');
   redirect('/admin/products');
 }
 
@@ -229,6 +233,8 @@ export async function updateProductAction(
     if ((e as { code?: string }).code === 'P2002') return 'Slug hoặc SKU đã tồn tại, hãy kiểm tra lại';
     return 'Có lỗi xảy ra';
   }
+  revalidateTag('products', 'max');
+  revalidateTag('categories', 'max');
   redirect('/admin/products');
 }
 
@@ -242,6 +248,8 @@ export async function deleteProductAction(formData: FormData) {
       throw new Error('Không thể xóa: Sản phẩm đang được tham chiếu bởi đơn hàng hoặc dữ liệu khác');
     throw e;
   }
+  revalidateTag('products', 'max');
+  revalidateTag('categories', 'max');
   revalidatePath('/admin/products');
 }
 
@@ -295,6 +303,8 @@ export async function createCategoryAction(
     if ((e as { code?: string }).code === 'P2002') return 'Slug đã tồn tại, hãy dùng slug khác';
     return 'Có lỗi xảy ra';
   }
+  revalidateTag('categories', 'max');
+  revalidateTag('products', 'max');
   redirect('/admin/categories');
 }
 
@@ -335,6 +345,8 @@ export async function updateCategoryAction(
     if ((e as { code?: string }).code === 'P2002') return 'Slug đã tồn tại, hãy dùng slug khác';
     return 'Có lỗi xảy ra';
   }
+  revalidateTag('categories', 'max');
+  revalidateTag('products', 'max');
   redirect('/admin/categories');
 }
 
@@ -348,6 +360,8 @@ export async function deleteCategoryAction(formData: FormData) {
       throw new Error('Không thể xóa: Danh mục đang được sử dụng bởi sản phẩm');
     throw e;
   }
+  revalidateTag('categories', 'max');
+  revalidateTag('products', 'max');
   revalidatePath('/admin/categories');
 }
 
@@ -415,6 +429,8 @@ export async function createBrandAction(
     if ((e as { code?: string }).code === 'P2002') return 'Slug đã tồn tại, hãy dùng slug khác';
     return 'Có lỗi xảy ra';
   }
+  revalidateTag('brands', 'max');
+  revalidateTag('products', 'max');
   redirect('/admin/brands');
 }
 
@@ -446,6 +462,8 @@ export async function updateBrandAction(
     if ((e as { code?: string }).code === 'P2002') return 'Slug đã tồn tại, hãy dùng slug khác';
     return 'Có lỗi xảy ra';
   }
+  revalidateTag('brands', 'max');
+  revalidateTag('products', 'max');
   redirect('/admin/brands');
 }
 
@@ -459,6 +477,8 @@ export async function deleteBrandAction(formData: FormData) {
       throw new Error('Không thể xóa: Nhãn hàng đang được sử dụng bởi sản phẩm');
     throw e;
   }
+  revalidateTag('brands', 'max');
+  revalidateTag('products', 'max');
   revalidatePath('/admin/brands');
 }
 

@@ -113,6 +113,14 @@
   }
 }
 
+// Giữ chỗ trong lúc AccountMenu chờ session phía client (tránh layout shift)
+.accountPlaceholder {
+  width: 84px;
+  height: 44px;
+  border-radius: v.$radius-md;
+  flex-shrink: 0;
+}
+
 .cartBtn {
   @extend .actionBtn;
   position: relative;

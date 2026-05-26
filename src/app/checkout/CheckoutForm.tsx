@@ -3,7 +3,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useCart } from '@/lib/cart-context'
+import { useCartStore, selectTotalPrice } from '@/lib/useCartStore'
 import { createOrderAction, applyCouponAction, type AppliedCoupon } from '@/lib/actions/order'
 import styles from './page.module.scss'
 
@@ -62,7 +62,9 @@ const PAYMENT_METHODS: PaymentMethod[] = [
 const ONLINE_METHODS = ['MOMO', 'ZALOPAY', 'VNPAY', 'BANKING', 'CARD']
 
 export default function CheckoutForm() {
-  const { items, totalPrice, clearCart } = useCart()
+  const items      = useCartStore(s => s.items)
+  const totalPrice = useCartStore(selectTotalPrice)
+  const clearCart  = useCartStore(s => s.clearCart)
   const router = useRouter()
 
   const [loading,       setLoading]       = useState(false)

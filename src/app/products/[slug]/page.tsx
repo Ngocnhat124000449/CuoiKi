@@ -2,11 +2,23 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { auth } from '@/lib/auth'
+import { db } from '@/lib/db'
 import { getProductBySlug } from '@/lib/queries/product'
 import VariantSelector from '@/components/product/VariantSelector'
-import ReviewForm from '@/components/product/ReviewForm'
+import ReviewGate from './ReviewGate'
 import styles from './page.module.scss'
+
+// ISR: tái tạo trang tối đa mỗi 5 phút (dữ liệu sản phẩm/đánh giá đổi chậm).
+export const revalidate = 300
+
+// Prerender sẵn các sản phẩm đang bán tại build; slug mới render on-demand rồi cache.
+export async function generateStaticParams() {
+  const products = await db.product.findMany({
+    where: { isActive: true },
+    select: { slug: true },
+  })
+  return products.map((p) => ({ slug: p.slug }))
+}
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -24,7 +36,6 @@ export default async function ProductDetailPage({ params }: Props) {
   const { slug } = await params
   const product = await getProductBySlug(slug)
   if (!product) notFound()
-  const session = await auth()
 
   const primaryImage = product.images[0]
 
@@ -175,13 +186,7 @@ export default async function ProductDetailPage({ params }: Props) {
         {/* Write a review */}
         <div className={styles.writeReview}>
           <h3 className={styles.writeReviewTitle}>Viết đánh giá của bạn</h3>
-          {session?.user ? (
-            <ReviewForm productId={product.id} productSlug={product.slug} />
-          ) : (
-            <p className={styles.loginHint}>
-              <Link href="/login">Đăng nhập</Link> để gửi đánh giá của bạn.
-            </p>
-          )}
+          <ReviewGate productId={product.id} productSlug={product.slug} />
         </div>
       </section>
     </div>
