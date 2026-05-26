@@ -1,158 +1,651 @@
 @use '../../styles/abstracts/variables' as v;
 @use '../../styles/abstracts/mixins' as m;
 
-.page {
-  @include m.container;
-  padding-block: v.$space-10;
+// ==========================================================================
+// About page — editorial / technology aesthetic
+// Scroll animations via RevealObserver (data-stagger / data-revealed pattern)
+// ==========================================================================
+
+.page { overflow: hidden; }
+
+// ── Shared utilities ──────────────────────────────────────────────────────────
+
+.eyebrow {
+  display: inline-block;
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-bold;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: v.$color-brand;
+  margin-bottom: v.$space-3;
 }
+
+.sectionHead {
+  text-align: center;
+  margin-bottom: v.$space-10;
+}
+
+.sectionTitle {
+  font-size: v.$font-size-2xl;
+  font-weight: v.$font-weight-extrabold;
+  color: v.$color-dark;
+  line-height: v.$line-height-snug;
+
+  @include m.md { font-size: v.$font-size-3xl; }
+}
+
+.sectionDesc {
+  margin-top: v.$space-3;
+  font-size: v.$font-size-base;
+  color: v.$color-muted;
+  max-width: 500px;
+  margin-inline: auto;
+}
+
+// ── Hero (above fold — fire on load, not scroll) ──────────────────────────────
 
 .hero {
-  text-align: center;
-  margin-bottom: v.$space-10;
+  position: relative;
+  background: hsl(0, 0%, 8%);
+  min-height: 580px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
 
-  h1 {
-    color: v.$color-dark;
-    font-size: v.$font-size-3xl;
-    font-weight: v.$font-weight-bold;
-    margin-bottom: v.$space-3;
+  // Subtle grid pattern
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(hsla(0, 0%, 100%, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, hsla(0, 0%, 100%, 0.035) 1px, transparent 1px);
+    background-size: 52px 52px;
+    pointer-events: none;
   }
 
-  p {
-    max-width: 560px;
-    margin-inline: auto;
-    color: v.$color-muted;
-    font-size: v.$font-size-md;
+  // Bottom accent line
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, v.$color-brand 40%, transparent 100%);
   }
 }
 
-.heroIcon {
+.heroBg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+%blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(72px);
+}
+
+.blob1 {
+  @extend %blob;
+  width: 500px;
+  height: 500px;
+  background: hsla(353, 90%, 43%, 0.16);
+  right: -120px;
+  top: -120px;
+  animation: floatA 9s ease-in-out infinite;
+}
+
+.blob2 {
+  @extend %blob;
+  width: 300px;
+  height: 300px;
+  background: hsla(210, 90%, 60%, 0.10);
+  right: 240px;
+  bottom: -80px;
+  animation: floatB 12s 2s ease-in-out infinite;
+}
+
+.blob3 {
+  @extend %blob;
+  width: 200px;
+  height: 200px;
+  background: hsla(280, 70%, 60%, 0.08);
+  right: 60px;
+  top: 40%;
+  animation: floatA 15s 1s ease-in-out infinite;
+}
+
+.heroInner {
+  @include m.container;
+  position: relative;
+  z-index: 1;
+  padding-block: v.$space-16;
+  max-width: 700px;
+}
+
+.heroPill {
+  display: inline-block;
+  padding: 5px 16px;
+  border: 1px solid hsla(353, 90%, 43%, 0.45);
+  border-radius: v.$radius-full;
   color: v.$color-brand;
-  font-size: 56px;
-  line-height: 1;
-  margin-bottom: v.$space-4;
-}
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: v.$space-4;
-  margin-bottom: v.$space-10;
-
-  @include m.md { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-}
-
-.statCard,
-.story,
-.valueCard,
-.contact {
-  @include m.card;
-}
-
-.statCard {
-  padding: v.$space-5;
-  text-align: center;
-}
-
-.statNumber {
-  color: v.$color-brand;
-  font-size: v.$font-size-2xl;
+  font-size: v.$font-size-xs;
   font-weight: v.$font-weight-bold;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background: hsla(353, 90%, 43%, 0.08);
+  margin-bottom: v.$space-5;
+  animation: fadeDown 0.6s ease both;
+}
+
+.heroTitle {
+  color: #fff;
+  font-size: v.$font-size-3xl;
+  font-weight: v.$font-weight-extrabold;
+  line-height: 1.15;
+  margin-bottom: v.$space-5;
+  animation: fadeDown 0.65s 0.08s ease both;
+
+  @include m.md { font-size: v.$fs-hero; }
+}
+
+.heroEm {
+  font-style: normal;
+  color: v.$color-brand;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: v.$color-brand;
+    border-radius: v.$radius-full;
+    opacity: 0.60;
+  }
+}
+
+.heroDesc {
+  color: hsla(0, 0%, 100%, 0.58);
+  font-size: v.$font-size-md;
+  line-height: v.$line-height-relaxed;
+  margin-bottom: v.$space-8;
+  animation: fadeDown 0.65s 0.16s ease both;
+}
+
+.heroCta {
+  display: flex;
+  gap: v.$space-3;
+  flex-wrap: wrap;
+  animation: fadeDown 0.65s 0.24s ease both;
+}
+
+.heroBtnPrimary {
+  display: inline-flex;
+  align-items: center;
+  background: v.$color-brand;
+  color: #fff;
+  padding: 12px v.$space-6;
+  border-radius: v.$radius-full;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-bold;
+  text-decoration: none;
+  transition: v.$transition-bounce;
+
+  &:hover {
+    background: hsl(353, 90%, 36%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px hsla(353, 90%, 43%, 0.40);
+  }
+}
+
+.heroBtnOutline {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  color: hsla(0, 0%, 100%, 0.72);
+  border: 1px solid hsla(0, 0%, 100%, 0.22);
+  padding: 12px v.$space-6;
+  border-radius: v.$radius-full;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-medium;
+  text-decoration: none;
+  transition: v.$transition-bounce;
+
+  &:hover {
+    border-color: hsla(0, 0%, 100%, 0.50);
+    color: #fff;
+    background: hsla(0, 0%, 100%, 0.06);
+    transform: translateY(-2px);
+  }
+}
+
+// ── Stats ─────────────────────────────────────────────────────────────────────
+
+.statsSection {
+  background: v.$color-bg-card;
+  border-bottom: 1px solid v.$color-border;
+}
+
+.statsGrid {
+  @include m.container;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+
+  @include m.md { grid-template-columns: repeat(4, 1fr); }
+}
+
+// Initial hidden state — revealed by RevealObserver
+.statItem {
+  padding: v.$space-8 v.$space-5;
+  text-align: center;
+  border-right: 1px solid v.$color-border;
+  opacity: 0;
+
+  &:last-child { border-right: none; }
+
+  @include m.max-md {
+    &:nth-child(2n)  { border-right: none; }
+    &:nth-child(n+3) { border-top: 1px solid v.$color-border; }
+  }
+}
+
+// Trigger animation when RevealObserver sets data-revealed
+.statsGrid[data-stagger][data-revealed] > .statItem {
+  animation: slideUp 0.55s var(--delay, 0s) ease both;
+}
+
+.statNum {
+  display: block;
+  font-size: v.$font-size-2xl;
+  font-weight: v.$font-weight-extrabold;
+  color: v.$color-brand;
+  line-height: 1;
+  margin-bottom: v.$space-2;
+
+  @include m.md { font-size: v.$font-size-3xl; }
 }
 
 .statLabel {
-  color: v.$color-muted;
+  display: block;
   font-size: v.$font-size-sm;
-  margin-top: v.$space-1;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-dark;
+  margin-bottom: 3px;
 }
 
-.story {
-  padding: v.$space-6;
-  margin-bottom: v.$space-8;
+.statSub {
+  display: block;
+  font-size: v.$font-size-xs;
+  color: v.$color-muted;
+}
 
-  h2 {
-    color: v.$color-dark;
-    font-size: v.$font-size-xl;
-    font-weight: v.$font-weight-semibold;
-    margin-bottom: v.$space-4;
-    padding-bottom: v.$space-3;
-    border-bottom: 1px solid v.$color-border;
+// ── Story ─────────────────────────────────────────────────────────────────────
+
+.storySection {
+  padding-block: v.$space-16;
+  background: v.$color-bg;
+}
+
+.storyInner {
+  @include m.container;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: v.$space-10;
+
+  @include m.lg { grid-template-columns: 1fr 1fr; gap: v.$space-16; align-items: start; }
+}
+
+// Left + right columns hidden until RevealObserver triggers
+.storyLeft,
+.storyRight {
+  opacity: 0;
+}
+
+.storyInner[data-stagger][data-revealed] > .storyLeft,
+.storyInner[data-stagger][data-revealed] > .storyRight {
+  animation: fadeInUp 0.6s var(--delay, 0s) ease both;
+}
+
+.storyTitle {
+  font-size: v.$font-size-2xl;
+  font-weight: v.$font-weight-extrabold;
+  color: v.$color-dark;
+  line-height: v.$line-height-snug;
+  margin-bottom: v.$space-5;
+
+  @include m.md { font-size: v.$font-size-3xl; }
+}
+
+.storyPara {
+  font-size: v.$font-size-base;
+  color: v.$color-muted;
+  line-height: v.$line-height-relaxed;
+  margin-bottom: v.$space-4;
+
+  &:last-child { margin-bottom: 0; }
+}
+
+// Timeline
+.timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 75px;       // year-col(56px) + gap(12px) + dot-radius(7px)
+    top: 22px;
+    bottom: 22px;
+    width: 2px;
+    background: v.$color-border;
+    border-radius: v.$radius-full;
   }
 }
 
-.storyText {
-  display: flex;
-  flex-direction: column;
+.tlItem {
+  display: grid;
+  grid-template-columns: 56px 16px 1fr;
+  align-items: start;
   gap: v.$space-3;
+  padding-block: v.$space-4;
+  opacity: 0;
+}
+
+// Each milestone staggered when timeline scrolls into view
+.timeline[data-stagger][data-revealed] > .tlItem {
+  animation: fadeInUp 0.5s var(--delay, 0s) ease both;
+}
+
+.tlYear {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-brand;
+  text-align: right;
+  line-height: 1.6;
+}
+
+.tlDot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: v.$color-brand;
+  border: 3px solid v.$color-bg;
+  box-shadow: 0 0 0 2px v.$color-brand;
+  margin-top: 3px;
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.tlText {
+  font-size: v.$font-size-sm;
   color: v.$color-muted;
   line-height: v.$line-height-relaxed;
 }
 
-.values {
+// ── Values ────────────────────────────────────────────────────────────────────
+
+.valuesSection {
+  padding-block: v.$space-16;
+  background: v.$color-bg-card;
+}
+
+.valuesInner { @include m.container; }
+
+.valuesGrid {
   display: grid;
   grid-template-columns: 1fr;
   gap: v.$space-4;
-  margin-bottom: v.$space-8;
 
-  @include m.md { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  @include m.md { grid-template-columns: repeat(2, 1fr); }
+  @include m.lg { grid-template-columns: repeat(3, 1fr); }
 }
 
 .valueCard {
-  padding: v.$space-5;
-
-  h3 {
-    color: v.$color-dark;
-    font-size: v.$font-size-md;
-    font-weight: v.$font-weight-semibold;
-    margin-bottom: v.$space-2;
-  }
-
-  p {
-    color: v.$color-muted;
-    font-size: v.$font-size-sm;
-    line-height: v.$line-height-relaxed;
-  }
-}
-
-.valueIcon {
-  color: v.$color-brand;
-  font-size: 30px;
-  line-height: 1;
-  margin-bottom: v.$space-3;
-}
-
-.contact {
+  position: relative;
   padding: v.$space-6;
-  text-align: center;
-  background: v.$color-brand-soft;
-  border-color: v.$color-primary-border;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-lg;
+  background: v.$color-bg;
+  overflow: hidden;
+  transition: border-color v.$transition-normal, box-shadow v.$transition-normal, transform v.$transition-normal;
+  opacity: 0;
 
-  h2 {
-    color: v.$color-dark;
-    font-size: v.$font-size-xl;
-    font-weight: v.$font-weight-semibold;
-    margin-bottom: v.$space-2;
+  // Animated top bar on hover
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: v.$color-brand;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.35s ease;
   }
 
-  p {
-    color: v.$color-muted;
-    margin-bottom: v.$space-4;
+  &:hover {
+    border-color: transparent;
+    box-shadow: v.$shadow-hover;
+    transform: translateY(-4px);
+
+    &::before { transform: scaleX(1); }
+    .valueNo  { color: v.$color-brand-soft; }
   }
 }
 
-.contactList {
+// Cards slide up when section scrolls into view
+.valuesGrid[data-stagger][data-revealed] > .valueCard {
+  animation: slideUp 0.5s var(--delay, 0s) ease both;
+}
+
+.valueNo {
+  display: block;
+  font-size: v.$font-size-3xl;
+  font-weight: v.$font-weight-extrabold;
+  color: v.$color-border;
+  line-height: 1;
+  margin-bottom: v.$space-4;
+  transition: color v.$transition-fast;
+}
+
+.valueTitle {
+  font-size: v.$font-size-md;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-dark;
+  margin-bottom: v.$space-2;
+}
+
+.valueDesc {
+  font-size: v.$font-size-sm;
+  color: v.$color-muted;
+  line-height: v.$line-height-relaxed;
+}
+
+// ── Team ─────────────────────────────────────────────────────────────────────
+
+.teamSection {
+  padding-block: v.$space-16;
+  background: v.$color-bg;
+}
+
+.teamInner { @include m.container; }
+
+.teamGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: v.$space-4;
+
+  @include m.md { grid-template-columns: repeat(4, 1fr); }
+}
+
+.teamCard {
+  text-align: center;
+  padding: v.$space-7 v.$space-4;
+  border-radius: v.$radius-xl;
+  background: v.$color-bg-card;
+  border: 1px solid v.$color-border;
+  transition: border-color v.$transition-normal, box-shadow v.$transition-normal, transform v.$transition-normal;
+  opacity: 0;
+
+  &:hover {
+    border-color: transparent;
+    box-shadow: v.$shadow-hover;
+    transform: translateY(-4px);
+
+    .teamAvatar { transform: scale(1.06); }
+  }
+}
+
+// Cards slide up when team section scrolls into view
+.teamGrid[data-stagger][data-revealed] > .teamCard {
+  animation: slideUp 0.5s var(--delay, 0s) ease both;
+}
+
+.teamAvatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--avatar-color, v.$color-brand);
+  margin: 0 auto v.$space-4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px hsla(0, 0%, 0%, 0.16);
+  transition: v.$transition-bounce;
+}
+
+.teamInitial {
+  font-size: v.$font-size-2xl;
+  font-weight: v.$font-weight-extrabold;
+  color: #fff;
+}
+
+.teamName {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-dark;
+  margin-bottom: v.$space-1;
+}
+
+.teamRole {
+  font-size: v.$font-size-xs;
+  color: v.$color-muted;
+}
+
+// ── CTA ──────────────────────────────────────────────────────────────────────
+
+.ctaSection {
+  background: v.$color-brand;
+  position: relative;
+  overflow: hidden;
+
+  // Grid texture on brand red
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(hsla(0, 0%, 0%, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, hsla(0, 0%, 0%, 0.07) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+}
+
+.ctaInner {
+  @include m.container;
+  position: relative;
+  z-index: 1;
+  padding-block: v.$space-16;
+  text-align: center;
+}
+
+.ctaTitle {
+  font-size: v.$font-size-2xl;
+  font-weight: v.$font-weight-extrabold;
+  color: #fff;
+  margin-bottom: v.$space-3;
+
+  @include m.md { font-size: v.$font-size-3xl; }
+}
+
+.ctaDesc {
+  color: hsla(0, 0%, 100%, 0.72);
+  font-size: v.$font-size-md;
+  margin-bottom: v.$space-6;
+}
+
+.ctaContact {
+  list-style: none;
+  padding: 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: v.$space-3;
+  gap: v.$space-2 v.$space-5;
+  margin-bottom: v.$space-8;
+  color: hsla(0, 0%, 100%, 0.68);
+  font-size: v.$font-size-sm;
+}
 
-  span {
-    display: inline-flex;
-    align-items: center;
-    border: 1px solid v.$color-border;
-    border-radius: v.$radius-sm;
-    background: v.$color-bg-card;
-    color: v.$color-text;
-    font-size: v.$font-size-sm;
-    padding: v.$space-2 v.$space-4;
+.ctaBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: v.$space-2;
+  background: #fff;
+  color: v.$color-brand;
+  padding: v.$space-4 v.$space-8;
+  border-radius: v.$radius-full;
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-bold;
+  text-decoration: none;
+  transition: v.$transition-bounce;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 32px hsla(0, 0%, 0%, 0.22);
+  }
+
+  &:active { transform: translateY(-1px); }
+}
+
+// ── Keyframes ─────────────────────────────────────────────────────────────────
+
+// Hero load animations (local, above-fold)
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// Blob float (infinite, decorative)
+@keyframes floatA {
+  0%, 100% { transform: translateY(0)    scale(1); }
+  50%       { transform: translateY(-24px) scale(1.04); }
+}
+
+@keyframes floatB {
+  0%, 100% { transform: translateY(0)    scale(1); }
+  50%       { transform: translateY(-16px) scale(1.02); }
+}
+
+// ── Reduced motion ────────────────────────────────────────────────────────────
+
+@media (prefers-reduced-motion: reduce) {
+  .heroPill, .heroTitle, .heroDesc, .heroCta { animation: none; }
+  .blob1, .blob2, .blob3 { animation: none; }
+
+  // Show hidden elements immediately (no scroll animation)
+  .statItem, .storyLeft, .storyRight, .tlItem, .valueCard, .teamCard {
+    opacity: 1;
+    animation: none !important;
   }
 }

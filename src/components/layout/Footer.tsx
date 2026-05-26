@@ -11,12 +11,12 @@ const PRODUCT_LINKS = [
 ]
 
 const SERVICE_LINKS = [
-  { label: 'Tra cứu đơn hàng',  href: '#' },
-  { label: 'Chính sách bảo hành', href: '#' },
-  { label: 'Đổi trả trong 30 ngày', href: '#' },
-  { label: 'Trả góp 0% lãi suất', href: '#' },
-  { label: 'Thu cũ đổi mới',    href: '#' },
-  { label: 'Hệ thống cửa hàng', href: '#' },
+  { label: 'Tra cứu đơn hàng',    href: '/account/orders' },
+  { label: 'Chính sách bảo hành', href: '/about' },
+  { label: 'Đổi trả trong 30 ngày', href: '/about' },
+  { label: 'Trả góp 0% lãi suất', href: '/contact' },
+  { label: 'Thu cũ đổi mới',      href: '/about' },
+  { label: 'Hệ thống cửa hàng',   href: '/contact' },
 ]
 
 export default function Footer() {
@@ -83,12 +83,12 @@ export default function Footer() {
           </div>
           <div className={styles.socialRow}>
             {[
-              { icon: '📘', label: 'Facebook', href: '#' },
-              { icon: '📸', label: 'Instagram', href: '#' },
-              { icon: '▶️', label: 'YouTube', href: '#' },
-              { icon: '🐦', label: 'TikTok', href: '#' },
+              { icon: '📘', label: 'Facebook',  href: 'https://facebook.com/phoneshop' },
+              { icon: '📸', label: 'Instagram', href: 'https://instagram.com/phoneshop' },
+              { icon: '▶️', label: 'YouTube',   href: 'https://youtube.com/@phoneshop' },
+              { icon: '🎵', label: 'TikTok',    href: 'https://tiktok.com/@phoneshop' },
             ].map(s => (
-              <a key={s.label} href={s.href} className={styles.socialBtn} aria-label={s.label} title={s.label}>
+              <a key={s.label} href={s.href} className={styles.socialBtn} aria-label={s.label} title={s.label} target="_blank" rel="noopener noreferrer">
                 {s.icon}
               </a>
             ))}
@@ -102,9 +102,9 @@ export default function Footer() {
             © 2025 PhoneShop. All rights reserved. Thiết kế bởi PhoneShop Team.
           </p>
           <div className={styles.policies}>
-            <Link href="#">Điều khoản sử dụng</Link>
-            <Link href="#">Chính sách bảo mật</Link>
-            <Link href="#">Chính sách cookie</Link>
+            <Link href="/about">Điều khoản sử dụng</Link>
+            <Link href="/about">Chính sách bảo mật</Link>
+            <Link href="/contact">Liên hệ hỗ trợ</Link>
           </div>
         </div>
       </div>

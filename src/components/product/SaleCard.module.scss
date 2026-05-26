@@ -147,13 +147,17 @@
   padding: v.$space-2 v.$space-4;
   background: v.$color-primary;
   color: #fff;
-  border-radius: v.$radius-sm;
+  border-radius: v.$radius-full;
   font-size: v.$font-size-sm;
   font-weight: v.$font-weight-semibold;
   cursor: pointer;
   text-align: center;
-  transition: opacity v.$transition-fast;
+  transition: background 0.18s, transform 0.15s, box-shadow 0.18s;
   width: 100%;
 
-  &:hover { opacity: 0.88; }
+  &:hover {
+    background: v.$color-brand-hover;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px v.$color-primary-shadow;
+  }
 }

@@ -1,11 +1,12 @@
 @use '../styles/main';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
 // ==========================================================================
 // Theme tokens - Anon ecommerce palette
 // ==========================================================================
 
 :root {
-  --color-brand:       hsl(353, 100%, 78%);
+  --color-brand:       hsl(353, 90%, 43%);
   --color-dark:        hsl(0, 0%, 13%);
   --color-text:        hsl(0, 0%, 33%);
   --color-muted:       hsl(0, 0%, 47%);
@@ -32,10 +33,10 @@
   --color-topbar-text: hsl(0, 100%, 100%);
   --color-flash-bg:    hsl(0, 0%, 13%);
 
-  --color-brand-soft:   hsla(353, 100%, 78%, 0.12);
-  --color-brand-ring:   hsla(353, 100%, 78%, 0.24);
-  --color-brand-border: hsla(353, 100%, 78%, 0.35);
-  --color-brand-shadow: hsla(353, 100%, 78%, 0.28);
+  --color-brand-soft:   hsla(353, 90%, 43%, 0.10);
+  --color-brand-ring:   hsla(353, 90%, 43%, 0.22);
+  --color-brand-border: hsla(353, 90%, 43%, 0.32);
+  --color-brand-shadow: hsla(353, 90%, 43%, 0.25);
   --color-dot-border:   hsla(0, 0%, 0%, 0.15);
 
   --color-danger-soft:  hsla(0, 100%, 70%, 0.12);
@@ -84,10 +85,10 @@
   --color-topbar-text: hsl(0, 0%, 90%);
   --color-flash-bg:    hsl(0, 0%, 8%);
 
-  --color-brand-soft:   hsla(353, 100%, 78%, 0.16);
-  --color-brand-ring:   hsla(353, 100%, 78%, 0.22);
-  --color-brand-border: hsla(353, 100%, 78%, 0.28);
-  --color-brand-shadow: hsla(353, 100%, 78%, 0.18);
+  --color-brand-soft:   hsla(353, 90%, 43%, 0.14);
+  --color-brand-ring:   hsla(353, 90%, 43%, 0.20);
+  --color-brand-border: hsla(353, 90%, 43%, 0.26);
+  --color-brand-shadow: hsla(353, 90%, 43%, 0.16);
   --color-dot-border:   hsla(0, 0%, 100%, 0.22);
 
   --color-danger-soft:  hsla(0, 100%, 70%, 0.16);
@@ -114,9 +115,46 @@
 // Global utility classes
 // ==========================================================================
 
+// ── Scroll snap ────────────────────────────────────────────────────────────────
+html {
+  scroll-snap-type: y proximity;
+  scroll-padding-top: calc(var(--topbar-height) + var(--header-height) + var(--category-height));
+}
+
 .site-main {
   min-height: calc(100vh - var(--topbar-height) - var(--header-height) - var(--category-height));
   background: var(--color-bg);
+}
+
+// ── Bidirectional staggered reveal ─────────────────────────────────────────────
+// Scroll down  → elements slide UP into place
+@keyframes revealFromBelow {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// Scroll up → elements slide DOWN into place
+@keyframes revealFromAbove {
+  from { opacity: 0; transform: translateY(-24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// All children start invisible
+[data-stagger] > * {
+  opacity: 0;
+}
+
+// JS sets data-revealed="down"|"up" + --delay per child
+[data-stagger][data-revealed="down"] > * {
+  animation: revealFromBelow 0.48s var(--delay, 0.04s) ease both;
+}
+
+[data-stagger][data-revealed="up"] > * {
+  animation: revealFromAbove 0.48s var(--delay, 0.04s) ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-stagger] > * { opacity: 1 !important; animation: none !important; }
 }
 
 .line-clamp-1,

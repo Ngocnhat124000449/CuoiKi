@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import type { ProductListItem } from '@/lib/queries/product'
-import { useCart } from '@/lib/cart-context'
+import { useCartStore } from '@/lib/useCartStore'
 import styles from './ProductCard.module.scss'
 
 const SPEC_EMOJI: Record<string, string> = {
@@ -28,12 +28,14 @@ const SPEC_EMOJI: Record<string, string> = {
 
 export default function ProductCard({ product }: { product: ProductListItem }) {
   const groups = Object.entries(product.variantGroups)
-  const { addItem } = useCart()
+  const addItem = useCartStore(s => s.addItem)
   const router = useRouter()
 
-  const [selected, setSelected] = useState<Record<string, string>>(() =>
-    Object.fromEntries(groups.map(([key, g]) => [key, g.values[0]?.value ?? '']))
-  )
+  const [selected, setSelected] = useState<Record<string, string>>(() => {
+    const first = product.variants[0]
+    if (!first) return Object.fromEntries(groups.map(([key, g]) => [key, g.values[0]?.value ?? '']))
+    return Object.fromEntries(first.options.map(o => [o.attribute, o.value]))
+  })
 
   const activeVariant = useMemo(() =>
     product.variants.find((v) =>
@@ -55,9 +57,8 @@ export default function ProductCard({ product }: { product: ProductListItem }) {
       price: variant.price,
       priceText: variant.priceText,
       image: product.image?.url ?? null,
-      options: variant.options.map(o => ({ attribute: o.attribute, value: o.value, displayValue: o.value })),
+      options: variant.options.map(o => ({ attribute: o.attribute, value: o.value, displayValue: o.displayValue ?? o.value })),
     })
-    router.push('/cart')
   }
 
   return (

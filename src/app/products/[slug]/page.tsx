@@ -2,9 +2,23 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import { db } from '@/lib/db'
 import { getProductBySlug } from '@/lib/queries/product'
 import VariantSelector from '@/components/product/VariantSelector'
+import ReviewGate from './ReviewGate'
 import styles from './page.module.scss'
+
+// ISR: tái tạo trang tối đa mỗi 5 phút (dữ liệu sản phẩm/đánh giá đổi chậm).
+export const revalidate = 300
+
+// Prerender sẵn các sản phẩm đang bán tại build; slug mới render on-demand rồi cache.
+export async function generateStaticParams() {
+  const products = await db.product.findMany({
+    where: { isActive: true },
+    select: { slug: true },
+  })
+  return products.map((p) => ({ slug: p.slug }))
+}
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -36,7 +50,7 @@ export default async function ProductDetailPage({ params }: Props) {
         {product.category && (
           <>
             <span className={styles.sep}>/</span>
-            <Link href={`/products?categoryId=${product.category.slug}`}>
+            <Link href={`/products?categoryId=${product.category.id}`}>
               {product.category.name}
             </Link>
           </>
@@ -133,11 +147,12 @@ export default async function ProductDetailPage({ params }: Props) {
       )}
 
       {/* Reviews */}
-      {product.reviews.items.length > 0 && (
-        <section className={styles.reviewsSection}>
-          <h2 className={styles.reviewsTitle}>
-            Đánh giá ({product.reviews.count})
-          </h2>
+      <section className={styles.reviewsSection}>
+        <h2 className={styles.reviewsTitle}>
+          Đánh giá ({product.reviews.count})
+        </h2>
+
+        {product.reviews.items.length > 0 && (
           <div className={styles.reviewList}>
             {product.reviews.items.map(review => (
               <div key={review.id} className={styles.reviewCard}>
@@ -166,8 +181,14 @@ export default async function ProductDetailPage({ params }: Props) {
               </div>
             ))}
           </div>
-        </section>
-      )}
+        )}
+
+        {/* Write a review */}
+        <div className={styles.writeReview}>
+          <h3 className={styles.writeReviewTitle}>Viết đánh giá của bạn</h3>
+          <ReviewGate productId={product.id} productSlug={product.slug} />
+        </div>
+      </section>
     </div>
   )
 }

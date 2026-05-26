@@ -124,7 +124,7 @@
   justify-content: center;
   padding: v.$space-3 + 2 v.$space-4;
   font-size: v.$font-size-md;
-  border-radius: v.$radius-sm;
+  border-radius: v.$radius-full;
 }
 
 .cartBtn {
@@ -133,7 +133,7 @@
   justify-content: center;
   padding: v.$space-3 v.$space-4;
   font-size: v.$font-size-md;
-  border-radius: v.$radius-sm;
+  border-radius: v.$radius-full;
 }
 
 // Promotions

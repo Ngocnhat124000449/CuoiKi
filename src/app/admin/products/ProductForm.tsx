@@ -433,6 +433,7 @@ function SpecField({ ca, defaultValue }: { ca: CatAttr; defaultValue: string }) 
     return (
       <div className={base.field}>
         <label className={base.checkRow}>
+          <input type="hidden" name={fieldName} value="false" />
           <input
             type="checkbox" name={fieldName} value="true"
             defaultChecked={defaultValue === 'true' || defaultValue === '1'}

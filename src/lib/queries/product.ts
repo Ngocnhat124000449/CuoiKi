@@ -1,5 +1,6 @@
 ﻿import { db } from "@/lib/db";
 import { Prisma } from "@prisma/client";
+import { unstable_cache } from "next/cache";
 
 // ─── Types ────────────────────────────────────────────────
 
@@ -11,7 +12,7 @@ export type ProductListParams = {
   brandId?: number;
   minPrice?: number;
   maxPrice?: number;
-  sortBy?: "price_asc" | "price_desc" | "newest" | "popular";
+  sortBy?: "price_asc" | "price_desc" | "newest";
 };
 
 // ─── Helpers ──────────────────────────────────────────────
@@ -172,6 +173,7 @@ export async function getProducts(params: ProductListParams = {}) {
         options: v.variantOptions.map((o) => ({
           attribute: o.attribute.name,
           value: o.value.value,
+          displayValue: o.value.displayValue,
         })),
       })),
     };
@@ -190,6 +192,22 @@ export async function getProducts(params: ProductListParams = {}) {
   };
 }
 
+// ─── Cached home sections ─────────────────────────────────
+// Truy vấn cố định của trang chủ — cache 60s để không hit DB mỗi lần tải.
+// Refresh tự động khi admin sửa sản phẩm (revalidateTag('products')).
+
+export const getFlashSaleProducts = unstable_cache(
+  async () => (await getProducts({ limit: 5, sortBy: "price_asc" })).data,
+  ["home-flash-sale"],
+  { revalidate: 60, tags: ["products"] },
+);
+
+export const getFeaturedProducts = unstable_cache(
+  async () => (await getProducts({ limit: 8, sortBy: "newest" })).data,
+  ["home-featured"],
+  { revalidate: 60, tags: ["products"] },
+);
+
 // ─────────────────────────────────────────────────────────
 
 // Chi tiết 1 sản phẩm theo slug
@@ -199,7 +217,7 @@ export async function getProductBySlug(slug: string) {
     where: { slug, isActive: true }, // ← giờ hoạt động bình thường
     include: {
       brand: { select: { name: true, logoUrl: true } },
-      category: { select: { name: true, slug: true } },
+      category: { select: { id: true, name: true, slug: true } },
 
       images: { orderBy: { displayOrder: "asc" } },
 
@@ -250,11 +268,16 @@ export async function getProductBySlug(slug: string) {
 
   if (!product) return null;
 
-  // Tính rating tổng hợp
-  const allRatings = product.reviews.map((r) => r.rating);
-  const avgRating = allRatings.length
-    ? +(allRatings.reduce((a, b) => a + b, 0) / allRatings.length).toFixed(1)
+  const ratingAgg = await db.review.aggregate({
+    where: { productId: product.id, isApproved: true },
+    _avg: { rating: true },
+    _count: { rating: true },
+  })
+
+  const avgRating = ratingAgg._avg.rating
+    ? +ratingAgg._avg.rating.toFixed(1)
     : null;
+  const totalReviewCount = ratingAgg._count.rating;
 
   // Gom nhóm variant options (storage, color…)
   const variantGroups: Record<
@@ -325,7 +348,7 @@ export async function getProductBySlug(slug: string) {
     })),
     reviews: {
       avg: avgRating,
-      count: allRatings.length,
+      count: totalReviewCount,
       items: product.reviews.map((r) => ({
         id: Number(r.id),
         rating: r.rating,

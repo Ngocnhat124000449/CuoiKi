@@ -7,10 +7,15 @@ const createPrismaClient = () => {
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) throw new Error("DATABASE_URL chưa được set!");
 
+  // Strip `sslmode` from URL — pg v8 cảnh báo về sslmode=require trong URL khi
+  // SSL đã được cấu hình qua option ssl:{}. Neon yêu cầu rejectUnauthorized:false.
+  const url = new URL(connectionString);
+  url.searchParams.delete('sslmode');
+
   const pool = new Pool({
-    connectionString,
-    ssl: { rejectUnauthorized: false }, // bắt buộc với Neon
-    max: 1, // giới hạn connection cho serverless
+    connectionString: url.toString(),
+    ssl: { rejectUnauthorized: false },
+    max: 1,
   });
   const adapter = new PrismaPg(pool);
   return new PrismaClient({ adapter });

@@ -1,6 +1,13 @@
 @use '../../styles/abstracts/variables' as v;
 @use '../../styles/abstracts/mixins' as m;
 
+// ── Root (position anchor for dropdown) ───────────────────────────────────────
+.root {
+  position: relative;
+  width: 100%;
+}
+
+// ── Input row ─────────────────────────────────────────────────────────────────
 .wrap {
   display: flex;
   align-items: stretch;
@@ -28,6 +35,9 @@
   min-width: 0;
 
   &::placeholder { color: v.$color-text-muted; }
+
+  // Remove native search cancel button
+  &::-webkit-search-cancel-button { display: none; }
 }
 
 .btn {
@@ -37,20 +47,230 @@
   gap: v.$space-2;
   padding: 0 v.$space-5;
   background: v.$color-brand;
-  color: v.$color-footer-text;
+  color: #fff;
   border: none;
   font-size: v.$font-size-sm;
   font-weight: v.$font-weight-semibold;
   cursor: pointer;
-  transition: v.$transition-fast;
+  transition: background 0.18s ease;
   white-space: nowrap;
+  flex-shrink: 0;
 
-  &:hover { background: v.$color-footer-bg; }
+  &:hover { background: v.$color-brand-hover; }
 
   svg { flex-shrink: 0; }
 }
 
-// Mobile
+// ── Dropdown ──────────────────────────────────────────────────────────────────
+.dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: v.$color-bg-card;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-lg;
+  box-shadow: 0 8px 32px hsla(0, 0%, 0%, 0.12), 0 2px 8px hsla(0, 0%, 0%, 0.06);
+  z-index: v.$z-dropdown;
+  overflow: hidden;
+  animation: dropdownOpen 0.18s ease both;
+}
+
+@keyframes dropdownOpen {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ── Suggestion list ───────────────────────────────────────────────────────────
+.list {
+  list-style: none;
+  margin: 0;
+  padding: v.$space-1 0;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  padding: v.$space-2 v.$space-4;
+  cursor: pointer;
+  transition: background 0.12s ease;
+
+  // Trailing search icon (hidden by default)
+  > svg {
+    flex-shrink: 0;
+    color: v.$color-muted;
+    opacity: 0;
+    transition: opacity 0.12s ease;
+    margin-left: auto;
+  }
+
+  &:hover,
+  &.active {
+    background: v.$color-brand-soft;
+
+    > svg { opacity: 1; }
+    .itemName { color: v.$color-brand; }
+  }
+}
+
+// Product thumbnail
+.itemImg {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: v.$radius-sm;
+  border: 1px solid v.$color-border;
+  background: v.$color-bg-hover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.itemImgFallback { font-size: 22px; line-height: 1; }
+
+.itemInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.itemName {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-dark;
+  @include m.truncate;
+  transition: color 0.12s ease;
+}
+
+.mark {
+  background: transparent;
+  color: v.$color-brand;
+  font-weight: v.$font-weight-bold;
+}
+
+.itemMeta {
+  display: flex;
+  align-items: center;
+  gap: v.$space-2;
+}
+
+.itemCat {
+  font-size: v.$font-size-xs;
+  color: v.$color-muted;
+  background: v.$color-bg-hover;
+  border-radius: v.$radius-sm;
+  padding: 1px v.$space-2;
+  white-space: nowrap;
+}
+
+.itemPrice {
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-brand;
+}
+
+// ── "Xem tất cả" footer ───────────────────────────────────────────────────────
+.viewAll {
+  display: flex;
+  align-items: center;
+  gap: v.$space-1;
+  padding: v.$space-3 v.$space-4;
+  border-top: 1px solid v.$color-border;
+  font-size: v.$font-size-sm;
+  color: v.$color-text;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+
+  strong { color: v.$color-dark; }
+
+  &:hover {
+    background: v.$color-brand-soft;
+    color: v.$color-brand;
+    strong { color: v.$color-brand; }
+  }
+}
+
+.viewAllArrow {
+  margin-left: auto;
+  font-size: v.$font-size-base;
+}
+
+// ── Skeleton loading ──────────────────────────────────────────────────────────
+.skeleton {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  padding: v.$space-2 v.$space-4;
+}
+
+.skeletonImg {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: v.$radius-sm;
+  background: linear-gradient(
+    90deg,
+    v.$color-bg-hover 25%,
+    v.$color-border   50%,
+    v.$color-bg-hover 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+.skeletonLines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-2;
+}
+
+.skeletonLine {
+  height: 12px;
+  border-radius: v.$radius-sm;
+  background: linear-gradient(
+    90deg,
+    v.$color-bg-hover 25%,
+    v.$color-border   50%,
+    v.$color-bg-hover 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+// ── Empty state ───────────────────────────────────────────────────────────────
+.empty {
+  padding: v.$space-6 v.$space-4;
+  text-align: center;
+
+  p {
+    font-size: v.$font-size-sm;
+    color: v.$color-muted;
+    margin: 0;
+    line-height: 1.5;
+
+    strong { color: v.$color-dark; }
+  }
+}
+
+.emptyIcon {
+  font-size: 32px;
+  display: block;
+  margin-bottom: v.$space-2;
+  opacity: 0.5;
+}
+
+// ── Mobile ────────────────────────────────────────────────────────────────────
 .mobileWrap {
   padding: 0 v.$container-pad v.$space-3;
 }

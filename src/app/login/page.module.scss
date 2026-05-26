@@ -2,26 +2,112 @@
 @use '../../styles/abstracts/mixins' as m;
 
 .page {
-  min-height: calc(100vh - v.$topbar-height - v.$header-height - v.$category-height - 80px);
+  min-height: calc(100vh - v.$topbar-height - v.$header-height - v.$category-height);
+  display: grid;
+  grid-template-columns: 1fr;
+
+  @include m.lg { grid-template-columns: 1fr 1fr; }
+}
+
+// ── Decorative left panel ─────────────────────────────────────────────────────
+.panel {
+  display: none;
+  background: hsl(0, 0%, 10%);
+  position: relative;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: v.$space-6;
+  padding: v.$space-12;
+
+  @include m.lg { display: flex; }
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 60% at 30% 40%, hsla(353, 90%, 43%, 0.22) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 80% 80%, hsla(353, 90%, 43%, 0.10) 0%, transparent 50%);
+    pointer-events: none;
+  }
+}
+
+.panelContent {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: #fff;
+}
+
+.panelEmoji {
+  font-size: 72px;
+  line-height: 1;
+  margin-bottom: v.$space-5;
+  display: block;
+}
+
+.panelTitle {
+  font-size: v.$font-size-3xl;
+  font-weight: v.$font-weight-extrabold;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: v.$space-3;
+
+  em {
+    color: hsl(353, 90%, 60%);
+    font-style: normal;
+  }
+}
+
+.panelSub {
+  color: hsla(0, 0%, 100%, 0.60);
+  font-size: v.$font-size-base;
+  line-height: v.$line-height-relaxed;
+  max-width: 320px;
+  margin-inline: auto;
+}
+
+.panelFeatures {
+  margin-top: v.$space-8;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-3;
+  text-align: left;
+}
+
+.panelFeature {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  color: hsla(0, 0%, 100%, 0.75);
+  font-size: v.$font-size-sm;
+
+  span:first-child {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+}
+
+// ── Form side ─────────────────────────────────────────────────────────────────
+.formSide {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: v.$space-8 v.$space-6;
   background: v.$color-bg;
-  padding: v.$space-6 v.$space-4;
 }
 
 .card {
-  @include m.card;
   width: 100%;
-  max-width: 440px;
-  padding: v.$space-10;
+  max-width: 420px;
 }
 
 .logo {
   display: flex;
   align-items: center;
   gap: v.$space-2;
-  justify-content: center;
   margin-bottom: v.$space-6;
 }
 
@@ -36,15 +122,13 @@
 .title {
   font-size: v.$font-size-2xl;
   font-weight: v.$font-weight-bold;
-  color: v.$color-text;
-  text-align: center;
+  color: v.$color-dark;
   margin: 0 0 v.$space-1;
 }
 
 .subtitle {
-  color: v.$color-text-muted;
-  text-align: center;
-  margin: 0 0 v.$space-6;
+  color: v.$color-muted;
+  margin: 0 0 v.$space-8;
   font-size: v.$font-size-base;
 }
 
@@ -77,31 +161,47 @@
 
 .input {
   @include m.input-base;
+  padding: 12px v.$space-4;
+  font-size: v.$font-size-base;
 }
 
 .btn {
-  @include m.button-primary;
+  @include m.button-reset;
+  display: block;
   width: 100%;
-  padding: v.$space-3 v.$space-4;
+  text-align: center;
+  background: v.$color-brand;
+  color: #fff;
   font-size: v.$font-size-md;
+  font-weight: v.$font-weight-bold;
+  padding: 14px v.$space-4;
+  border-radius: v.$radius-full;
   margin-top: v.$space-2;
   cursor: pointer;
+  transition: background 0.18s, transform 0.15s, box-shadow 0.18s;
+
+  &:hover {
+    background: v.$color-brand-hover;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px v.$color-primary-shadow;
+  }
 
   &:disabled {
     opacity: 0.65;
     cursor: not-allowed;
+    transform: none;
   }
 }
 
 .footer {
   text-align: center;
-  margin-top: v.$space-5;
+  margin-top: v.$space-6;
   font-size: v.$font-size-sm;
-  color: v.$color-text-muted;
+  color: v.$color-muted;
 }
 
 .link {
-  color: v.$color-primary;
+  color: v.$color-brand;
   font-weight: v.$font-weight-semibold;
   text-decoration: none;
 

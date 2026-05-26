@@ -1,9 +1,17 @@
 import { db } from '@/lib/db'
+import { unstable_cache } from 'next/cache'
 import { formatVND } from './product'
 
 export type SaleProductSort = 'discount_desc' | 'price_asc' | 'price_desc' | 'newest'
 
-export async function getSaleProducts(sort: SaleProductSort = 'discount_desc') {
+// Cache theo từng kiểu sort (5 phút) — refresh khi admin sửa sản phẩm/giá.
+export const getSaleProducts = unstable_cache(
+  _getSaleProducts,
+  ['sale-products'],
+  { revalidate: 300, tags: ['products'] },
+)
+
+async function _getSaleProducts(sort: SaleProductSort = 'discount_desc') {
   const rows = await db.product.findMany({
     where: {
       isActive: true,

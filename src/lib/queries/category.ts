@@ -1,6 +1,15 @@
 import { db } from "@/lib/db";
+import { unstable_cache } from "next/cache";
 
-export async function getCategories() {
+// Cache danh mục (dữ liệu tĩnh ít đổi) — tránh hit DB mỗi request.
+// Refresh sau 1h hoặc khi admin thay đổi danh mục/sản phẩm (revalidateTag).
+export const getCategories = unstable_cache(
+  _getCategories,
+  ["categories-nav"],
+  { revalidate: 3600, tags: ["categories"] },
+);
+
+async function _getCategories() {
   const categories = await db.category.findMany({
     where: { isActive: true },
     orderBy: { displayOrder: "asc" },

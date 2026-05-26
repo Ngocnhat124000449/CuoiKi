@@ -237,3 +237,30 @@
   color: v.$color-muted;
   line-height: v.$line-height-relaxed;
 }
+
+// ── Write a review ────────────────────────────────────────────────────────────
+
+.writeReview {
+  margin-top: v.$space-8;
+  padding-top: v.$space-6;
+  border-top: 1px solid v.$color-border;
+}
+
+.writeReviewTitle {
+  font-size: v.$font-size-md;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-dark;
+}
+
+.loginHint {
+  margin-top: v.$space-4;
+  font-size: v.$font-size-sm;
+  color: v.$color-muted;
+
+  a {
+    color: v.$color-brand;
+    font-weight: v.$font-weight-semibold;
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+  }
+}

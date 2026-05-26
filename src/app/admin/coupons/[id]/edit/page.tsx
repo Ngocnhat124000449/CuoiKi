@@ -9,6 +9,11 @@ import styles from '../../../_form.module.scss';
 
 export const metadata: Metadata = { title: 'Admin — Sửa mã giảm giá' };
 
+function toLocalInput(d: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+}
+
 export default async function EditCouponPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!(session?.user as { isAdmin?: boolean })?.isAdmin) redirect('/');
@@ -29,8 +34,8 @@ export default async function EditCouponPage({ params }: { params: Promise<{ id:
     usageLimit: coupon.usageLimit,
     perUserLimit: coupon.perUserLimit,
     applicableTo: coupon.applicableTo as 'ALL' | 'CATEGORY' | 'PRODUCT',
-    startDate: coupon.startDate.toISOString().slice(0, 16),
-    endDate: coupon.endDate.toISOString().slice(0, 16),
+    startDate: toLocalInput(coupon.startDate),
+    endDate: toLocalInput(coupon.endDate),
     isActive: coupon.isActive,
   };
 

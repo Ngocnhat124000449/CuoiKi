@@ -62,7 +62,13 @@ export async function registerAction(
     return 'Có lỗi xảy ra khi đăng ký. Vui lòng thử lại';
   }
 
-  await signIn('credentials', { email, password, redirectTo: '/account' });
+  try {
+    await signIn('credentials', { email, password, redirectTo: '/account' });
+  } catch (err) {
+    if (err instanceof AuthError)
+      return 'Đăng ký thành công! Vui lòng đăng nhập thủ công.';
+    throw err;
+  }
   return null;
 }
 
