@@ -1,8 +1,6 @@
 @use '../../styles/abstracts/variables' as v;
 @use '../../styles/abstracts/mixins' as m;
 
-$buy-yellow: #f5c100;
-
 // ── Card ─────────────────────────────────────────────────────────────────────
 
 .card {
@@ -201,25 +199,30 @@ $buy-yellow: #f5c100;
 // ── Buy button ───────────────────────────────────────────────────────────────
 
 .buyBtn {
+  @include m.button-reset;
   display: block;
+  width: 100%;
   text-align: center;
   text-decoration: none;
-  background: $buy-yellow;
-  color: #111;
-  font-size: v.$font-size-base;
+  background: v.$color-brand;
+  color: #fff;
+  font-size: v.$font-size-sm;
   font-weight: v.$font-weight-bold;
   padding: v.$space-3 v.$space-4;
   border-radius: v.$radius-full;
   margin-top: auto;
-  transition: filter 0.15s ease, transform 0.15s ease;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
 
   &:hover {
-    filter: brightness(0.95);
+    background: v.$color-brand-hover;
     transform: translateY(-1px);
+    box-shadow: 0 4px 14px v.$color-primary-shadow;
   }
 
   &:active {
-    filter: brightness(0.9);
     transform: none;
+    box-shadow: none;
   }
 }

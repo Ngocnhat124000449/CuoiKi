@@ -50,16 +50,16 @@ type VariantInput = {
 };
 
 function parseSpecEntries(formData: FormData): { attributeId: number; textValue: string }[] {
-  const entries: { attributeId: number; textValue: string }[] = [];
+  const specMap = new Map<number, string>();
   for (const [key, value] of formData.entries()) {
     if (key.startsWith('spec_') && (value as string).trim()) {
       const attributeId = parseInt(key.slice(5), 10);
       if (!isNaN(attributeId)) {
-        entries.push({ attributeId, textValue: (value as string).trim() });
+        specMap.set(attributeId, (value as string).trim());
       }
     }
   }
-  return entries;
+  return Array.from(specMap.entries()).map(([attributeId, textValue]) => ({ attributeId, textValue }));
 }
 
 function parseVariantsJson(formData: FormData): VariantInput[] | null {
@@ -235,7 +235,13 @@ export async function updateProductAction(
 export async function deleteProductAction(formData: FormData) {
   await requirePermission('products', 'delete');
   const productId = BigInt(formData.get('productId') as string);
-  await db.product.delete({ where: { id: productId } });
+  try {
+    await db.product.delete({ where: { id: productId } });
+  } catch (e) {
+    if ((e as { code?: string }).code === 'P2003')
+      throw new Error('Không thể xóa: Sản phẩm đang được tham chiếu bởi đơn hàng hoặc dữ liệu khác');
+    throw e;
+  }
   revalidatePath('/admin/products');
 }
 
@@ -333,9 +339,15 @@ export async function updateCategoryAction(
 }
 
 export async function deleteCategoryAction(formData: FormData) {
-  await requirePermission('categories', 'update');
+  await requirePermission('categories', 'delete');
   const id = Number(formData.get('categoryId'));
-  await db.category.delete({ where: { id } });
+  try {
+    await db.category.delete({ where: { id } });
+  } catch (e) {
+    if ((e as { code?: string }).code === 'P2003')
+      throw new Error('Không thể xóa: Danh mục đang được sử dụng bởi sản phẩm');
+    throw e;
+  }
   revalidatePath('/admin/categories');
 }
 
@@ -440,7 +452,13 @@ export async function updateBrandAction(
 export async function deleteBrandAction(formData: FormData) {
   await requirePermission('brands', 'delete');
   const id = Number(formData.get('brandId'));
-  await db.brand.delete({ where: { id } });
+  try {
+    await db.brand.delete({ where: { id } });
+  } catch (e) {
+    if ((e as { code?: string }).code === 'P2003')
+      throw new Error('Không thể xóa: Nhãn hàng đang được sử dụng bởi sản phẩm');
+    throw e;
+  }
   revalidatePath('/admin/brands');
 }
 
@@ -556,7 +574,13 @@ export async function updateCouponAction(
 export async function deleteCouponAction(formData: FormData) {
   await requirePermission('coupons', 'delete');
   const id = Number(formData.get('couponId'));
-  await db.coupon.delete({ where: { id } });
+  try {
+    await db.coupon.delete({ where: { id } });
+  } catch (e) {
+    if ((e as { code?: string }).code === 'P2003')
+      throw new Error('Không thể xóa: Mã giảm giá đang được tham chiếu bởi đơn hàng');
+    throw e;
+  }
   revalidatePath('/admin/coupons');
 }
 

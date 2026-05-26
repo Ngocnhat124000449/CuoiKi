@@ -31,9 +31,11 @@ export default function ProductCard({ product }: { product: ProductListItem }) {
   const { addItem } = useCart()
   const router = useRouter()
 
-  const [selected, setSelected] = useState<Record<string, string>>(() =>
-    Object.fromEntries(groups.map(([key, g]) => [key, g.values[0]?.value ?? '']))
-  )
+  const [selected, setSelected] = useState<Record<string, string>>(() => {
+    const first = product.variants[0]
+    if (!first) return Object.fromEntries(groups.map(([key, g]) => [key, g.values[0]?.value ?? '']))
+    return Object.fromEntries(first.options.map(o => [o.attribute, o.value]))
+  })
 
   const activeVariant = useMemo(() =>
     product.variants.find((v) =>
@@ -55,7 +57,7 @@ export default function ProductCard({ product }: { product: ProductListItem }) {
       price: variant.price,
       priceText: variant.priceText,
       image: product.image?.url ?? null,
-      options: variant.options.map(o => ({ attribute: o.attribute, value: o.value, displayValue: o.value })),
+      options: variant.options.map(o => ({ attribute: o.attribute, value: o.value, displayValue: o.displayValue ?? o.value })),
     })
     router.push('/cart')
   }

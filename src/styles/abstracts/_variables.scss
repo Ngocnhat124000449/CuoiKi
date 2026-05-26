@@ -3,10 +3,10 @@
 // ==========================================================================
 
 // Brand / accents from assets/css/style.css
-$color-brand:       hsl(353, 100%, 78%);
-$color-brand-dark:  hsl(0, 0%, 13%);
-$color-brand-hover: hsl(0, 0%, 13%);
-$color-brand-soft:  hsla(353, 100%, 78%, 0.12);
+$color-brand:       hsl(353, 90%, 43%);
+$color-brand-dark:  hsl(353, 90%, 32%);
+$color-brand-hover: hsl(353, 90%, 36%);
+$color-brand-soft:  hsla(353, 90%, 43%, 0.10);
 
 $color-dark:        hsl(0, 0%, 13%);
 $color-text:        hsl(0, 0%, 33%);
@@ -231,6 +231,7 @@ $color-info:    var(--color-info);
 $color-rating-star:        var(--color-warning);
 $color-primary-border:     var(--color-brand-border);
 $color-primary-shadow:     var(--color-brand-shadow);
+$color-brand-shadow:       var(--color-brand-shadow);
 $color-dot-border:         var(--color-dot-border);
 
 $color-badge-pending-bg:   var(--color-warning-soft);

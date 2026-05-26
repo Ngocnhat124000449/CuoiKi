@@ -2,8 +2,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import { auth } from '@/lib/auth'
 import { getProductBySlug } from '@/lib/queries/product'
 import VariantSelector from '@/components/product/VariantSelector'
+import ReviewForm from '@/components/product/ReviewForm'
 import styles from './page.module.scss'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -22,6 +24,7 @@ export default async function ProductDetailPage({ params }: Props) {
   const { slug } = await params
   const product = await getProductBySlug(slug)
   if (!product) notFound()
+  const session = await auth()
 
   const primaryImage = product.images[0]
 
@@ -36,7 +39,7 @@ export default async function ProductDetailPage({ params }: Props) {
         {product.category && (
           <>
             <span className={styles.sep}>/</span>
-            <Link href={`/products?categoryId=${product.category.slug}`}>
+            <Link href={`/products?categoryId=${product.category.id}`}>
               {product.category.name}
             </Link>
           </>
@@ -133,11 +136,12 @@ export default async function ProductDetailPage({ params }: Props) {
       )}
 
       {/* Reviews */}
-      {product.reviews.items.length > 0 && (
-        <section className={styles.reviewsSection}>
-          <h2 className={styles.reviewsTitle}>
-            Đánh giá ({product.reviews.count})
-          </h2>
+      <section className={styles.reviewsSection}>
+        <h2 className={styles.reviewsTitle}>
+          Đánh giá ({product.reviews.count})
+        </h2>
+
+        {product.reviews.items.length > 0 && (
           <div className={styles.reviewList}>
             {product.reviews.items.map(review => (
               <div key={review.id} className={styles.reviewCard}>
@@ -166,8 +170,20 @@ export default async function ProductDetailPage({ params }: Props) {
               </div>
             ))}
           </div>
-        </section>
-      )}
+        )}
+
+        {/* Write a review */}
+        <div className={styles.writeReview}>
+          <h3 className={styles.writeReviewTitle}>Viết đánh giá của bạn</h3>
+          {session?.user ? (
+            <ReviewForm productId={product.id} productSlug={product.slug} />
+          ) : (
+            <p className={styles.loginHint}>
+              <Link href="/login">Đăng nhập</Link> để gửi đánh giá của bạn.
+            </p>
+          )}
+        </div>
+      </section>
     </div>
   )
 }

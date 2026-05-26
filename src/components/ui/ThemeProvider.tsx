@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
 type Theme = 'light' | 'dark';
 type Ctx = { theme: Theme; toggle: () => void };
@@ -12,11 +12,11 @@ export function useTheme() {
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  // Initialise from what the inline script already set on <html>
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof document === 'undefined') return 'light';
-    return (document.documentElement.getAttribute('data-theme') ?? 'light') as Theme;
-  });
+  const [theme, setTheme] = useState<Theme>('light');
+
+  useEffect(() => {
+    setTheme((document.documentElement.getAttribute('data-theme') ?? 'light') as Theme);
+  }, []);
 
   function toggle() {
     const next: Theme = theme === 'light' ? 'dark' : 'light';

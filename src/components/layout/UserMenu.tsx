@@ -13,7 +13,7 @@ interface Props {
 export default function UserMenu({ name, email, isAdmin }: Props) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const initial = (name ?? email)[0].toUpperCase();
+  const initial = ((name ?? email) || '?')[0].toUpperCase();
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {

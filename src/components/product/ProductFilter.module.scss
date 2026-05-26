@@ -69,10 +69,20 @@
   }
 
   &.active {
-    background: v.$color-brand;
-    color: v.$color-footer-text;
+    background: v.$color-brand-soft;
+    color: v.$color-brand;
     font-weight: v.$font-weight-semibold;
     transform: translateX(2px);
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: v.$color-brand;
+      border-radius: v.$radius-full;
+      flex-shrink: 0;
+    }
   }
 }
 

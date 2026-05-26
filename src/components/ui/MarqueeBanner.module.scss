@@ -1,0 +1,65 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/mixins' as m;
+
+.root {
+  position: relative;
+  overflow: hidden;
+  background: v.$color-brand;
+  height: 38px;
+  display: flex;
+  align-items: center;
+}
+
+// Gradient fade edges
+.fadeLeft,
+.fadeRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.fadeLeft  { left: 0;  background: linear-gradient(to right, v.$color-brand 0%, transparent 100%); }
+.fadeRight { right: 0; background: linear-gradient(to left,  v.$color-brand 0%, transparent 100%); }
+
+.track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  white-space: nowrap;
+  animation: marquee 40s linear infinite;
+  will-change: transform;
+
+  &:hover { animation-play-state: paused; }
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: v.$space-2;
+  padding-inline: v.$space-6;
+  flex-shrink: 0;
+}
+
+.icon {
+  font-size: 15px;
+  line-height: 1;
+}
+
+.text {
+  color: #fff;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  letter-spacing: 0.2px;
+}
+
+.dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: hsla(0, 100%, 100%, 0.45);
+  margin-left: v.$space-6;
+  flex-shrink: 0;
+}

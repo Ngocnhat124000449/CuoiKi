@@ -4,11 +4,34 @@ import ProductCard from '@/components/product/ProductCard'
 import { ProductGridSkeleton } from '@/components/ui/Skeleton'
 import SectionHeader from '@/components/ui/SectionHeader'
 import FlashTimer from '@/components/ui/FlashTimer'
+import NewsletterForm from '@/components/home/NewsletterForm'
 import { getProducts } from '@/lib/queries/product'
 import { getCategories } from '@/lib/queries/category'
 import styles from './page.module.scss'
 
 // ─── Static data ──────────────────────────────────────────────────────────────
+
+const CATEGORY_ICON: Record<string, string> = {
+  'điện thoại': '📱', 'phone': '📱', 'smartphone': '📱',
+  'laptop': '💻', 'máy tính xách tay': '💻', 'notebook': '💻',
+  'âm thanh': '🎧', 'tai nghe': '🎧', 'loa': '🎧', 'audio': '🎧',
+  'đồng hồ': '⌚', 'watch': '⌚',
+  'máy ảnh': '📷', 'camera': '📷',
+  'pc': '🖥️', 'màn hình': '🖥️', 'pc & màn hình': '🖥️', 'desktop': '🖥️',
+  'tivi': '📺', 'tv': '📺', 'television': '📺',
+  'gia dụng': '🏠', 'household': '🏠', 'smart home': '🏠',
+  'phụ kiện': '🔌', 'accessory': '🔌', 'accessories': '🔌',
+  'gaming': '🎮', 'game': '🎮',
+  'máy tính bảng': '📟', 'tablet': '📟', 'ipad': '📟',
+}
+
+function getCatIcon(name: string): string {
+  const key = name.toLowerCase()
+  for (const [k, v] of Object.entries(CATEGORY_ICON)) {
+    if (key.includes(k)) return v
+  }
+  return '📦'
+}
 
 const BRANDS = [
   { emoji: '🍎', name: 'Apple',   href: '/products?search=iPhone'  },
@@ -85,7 +108,13 @@ function HeroSection() {
             </div>
           </div>
         </div>
-        <div className={styles.heroImage}>📱</div>
+        <div className={styles.heroImage}>
+          <div className={styles.heroImgMain}>📱</div>
+          <div className={`${styles.heroImgOrbit} ${styles.heroImgOrbit1}`}>💻</div>
+          <div className={`${styles.heroImgOrbit} ${styles.heroImgOrbit2}`}>⌚</div>
+          <div className={`${styles.heroImgOrbit} ${styles.heroImgOrbit3}`}>🎧</div>
+          <div className={`${styles.heroImgOrbit} ${styles.heroImgOrbit4}`}>📷</div>
+        </div>
       </div>
     </section>
   )
@@ -106,7 +135,7 @@ async function FlashSaleSection() {
             Xem tất cả →
           </Link>
         </div>
-        <div className={styles.flashGrid}>
+        <div className={styles.flashGrid} data-stagger>
           {data.map(p => <ProductCard key={p.id} product={p} />)}
         </div>
       </div>
@@ -120,7 +149,7 @@ async function FeaturedSection() {
   return (
     <section className={styles.section}>
       <SectionHeader title="Sản phẩm nổi bật" icon="🏆" href="/products" />
-      <div className={styles.featuredGrid}>
+      <div className={styles.featuredGrid} data-stagger>
         {data.map(p => <ProductCard key={p.id} product={p} />)}
       </div>
     </section>
@@ -133,14 +162,14 @@ async function CategorySection() {
   return (
     <section className={styles.sectionNoTop}>
       <SectionHeader title="Danh mục sản phẩm" icon="📂" href="/products" />
-      <div className={styles.catGrid}>
+      <div className={styles.catGrid} data-stagger>
         {categories.map(cat => (
           <Link
             key={cat.id}
             href={`/products?categoryId=${cat.id}`}
             className={styles.catCard}
           >
-            <span className={styles.catIcon}>📱</span>
+            <span className={styles.catIcon}>{getCatIcon(cat.name)}</span>
             <span className={styles.catLabel}>{cat.name}</span>
             <span className={styles.catCount}>{cat.productCount} sp</span>
           </Link>
@@ -154,7 +183,7 @@ function BrandSection() {
   return (
     <section className={styles.sectionNoTop}>
       <SectionHeader title="Thương hiệu nổi bật" icon="🌐" />
-      <div className={styles.brandRow}>
+      <div className={styles.brandRow} data-stagger>
         {BRANDS.map(b => (
           <Link key={b.name} href={b.href} className={styles.brandCard}>
             <span className={styles.brandEmoji}>{b.emoji}</span>
@@ -169,7 +198,7 @@ function BrandSection() {
 function PromoBanners() {
   return (
     <section className={styles.sectionNoTop}>
-      <div className={styles.promoBanners}>
+      <div className={styles.promoBanners} data-stagger>
         {PROMOS.map(p => (
           <Link
             key={p.title}
@@ -183,6 +212,35 @@ function PromoBanners() {
             </div>
           </Link>
         ))}
+      </div>
+    </section>
+  )
+}
+
+function NewsletterSection() {
+  return (
+    <section className={styles.newsletter}>
+      <div className={styles.newsletterInner}>
+        <div className={styles.newsletterText}>
+          <span className={styles.newsletterEyebrow}>Bản tin PhoneShop</span>
+          <h2 className={styles.newsletterTitle}>Nhận ưu đãi độc quyền mỗi tuần</h2>
+          <p className={styles.newsletterSub}>
+            Đăng ký để không bỏ lỡ flash sale, sản phẩm mới ra mắt và mã giảm giá đặc biệt.
+            Hơn <strong>10.000 thành viên</strong> đã tham gia.
+          </p>
+          <ul className={styles.newsletterPerks}>
+            <li>🎁 Mã giảm 5% cho đơn đầu tiên</li>
+            <li>⚡ Thông báo flash sale trước 1 giờ</li>
+            <li>📦 Cập nhật sản phẩm mới hàng tuần</li>
+          </ul>
+        </div>
+        <div className={styles.newsletterFormWrap}>
+          <p className={styles.newsletterFormLabel}>Nhập email để đăng ký miễn phí:</p>
+          <NewsletterForm />
+          <p className={styles.newsletterPrivacy}>
+            Chúng tôi tôn trọng quyền riêng tư của bạn. Hủy đăng ký bất cứ lúc nào.
+          </p>
+        </div>
       </div>
     </section>
   )
@@ -216,6 +274,7 @@ export default function HomePage() {
 
       <BrandSection />
       <PromoBanners />
+      <NewsletterSection />
     </div>
   )
 }

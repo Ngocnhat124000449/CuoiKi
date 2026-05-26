@@ -1,0 +1,181 @@
+@use '../../../styles/abstracts/variables' as v;
+@use '../../../styles/abstracts/mixins' as m;
+
+@keyframes shimmer {
+  from { background-position: -400px 0; }
+  to   { background-position:  400px 0; }
+}
+
+%sk {
+  border-radius: v.$radius-sm;
+  background: linear-gradient(
+    90deg,
+    v.$color-skeleton-base 25%,
+    v.$color-skeleton-hi   50%,
+    v.$color-skeleton-base 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.page {
+  @include m.container;
+  padding-block: v.$space-6;
+}
+
+// ── Breadcrumb ─────────────────────────────────────────────────────────────────
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: v.$space-2;
+  margin-bottom: v.$space-6;
+}
+
+.sep { color: v.$color-border; font-size: 12px; }
+
+.skBreadcrumb {
+  @extend %sk;
+  height: 14px;
+  width: 64px;
+}
+
+.skBreadcrumbLong {
+  @extend %sk;
+  height: 14px;
+  width: 160px;
+}
+
+// ── Main grid ─────────────────────────────────────────────────────────────────
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: v.$space-8;
+  margin-bottom: v.$space-12;
+
+  @include m.md { grid-template-columns: 1fr 1fr; }
+}
+
+// Gallery
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-3;
+}
+
+.skMainImg {
+  @extend %sk;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: v.$radius-lg;
+}
+
+.thumbRow {
+  display: flex;
+  gap: v.$space-2;
+}
+
+.skThumb {
+  @extend %sk;
+  width: 72px;
+  height: 72px;
+  border-radius: v.$radius-md;
+  flex-shrink: 0;
+}
+
+// Info
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-4;
+}
+
+.skBrand {
+  @extend %sk;
+  height: 14px;
+  width: 80px;
+}
+
+.skTitle {
+  @extend %sk;
+  height: 28px;
+  width: 90%;
+}
+
+.skTitleSm {
+  @extend %sk;
+  height: 22px;
+  width: 60%;
+}
+
+.skRating {
+  @extend %sk;
+  height: 18px;
+  width: 140px;
+}
+
+.skDivider {
+  height: 1px;
+  background: v.$color-border;
+}
+
+.skPrice {
+  @extend %sk;
+  height: 36px;
+  width: 180px;
+}
+
+.skVariantLabel {
+  @extend %sk;
+  height: 14px;
+  width: 100px;
+}
+
+.skVariants {
+  display: flex;
+  gap: v.$space-2;
+  flex-wrap: wrap;
+}
+
+.skVariantBtn {
+  @extend %sk;
+  height: 36px;
+  width: 80px;
+  border-radius: v.$radius-sm;
+}
+
+.skAddBtn {
+  @extend %sk;
+  height: 48px;
+  width: 100%;
+  border-radius: v.$radius-full;
+  margin-top: v.$space-2;
+}
+
+// ── Specs ──────────────────────────────────────────────────────────────────────
+.specsSection {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-4;
+}
+
+.skSpecsTitle {
+  @extend %sk;
+  height: 24px;
+  width: 220px;
+}
+
+.specsTable {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-3;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-lg;
+  padding: v.$space-4;
+}
+
+.skSpecRow {
+  @extend %sk;
+  height: 20px;
+  width: 100%;
+  border-radius: v.$radius-xs;
+}

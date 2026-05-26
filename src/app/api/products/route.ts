@@ -5,8 +5,16 @@ const SORT_VALUES = new Set<ProductListParams["sortBy"]>([
   "price_asc",
   "price_desc",
   "newest",
-  "popular",
 ]);
+
+function toNum(s: string | null, fallback: number): number {
+  const n = Number(s);
+  return !s || isNaN(n) ? fallback : n;
+}
+function toNumOpt(s: string | null): number | undefined {
+  const n = Number(s);
+  return !s || isNaN(n) ? undefined : n;
+}
 
 export async function GET(req: NextRequest) {
   try {
@@ -18,21 +26,13 @@ export async function GET(req: NextRequest) {
       : undefined;
 
     const params = {
-      page: Number(searchParams.get("page") ?? 1),
-      limit: Math.min(Number(searchParams.get("limit") ?? 12), 50),
+      page: toNum(searchParams.get("page"), 1),
+      limit: Math.min(toNum(searchParams.get("limit"), 12), 50),
       search: searchParams.get("search") ?? undefined,
-      categoryId: searchParams.get("categoryId")
-        ? Number(searchParams.get("categoryId"))
-        : undefined,
-      brandId: searchParams.get("brandId")
-        ? Number(searchParams.get("brandId"))
-        : undefined,
-      minPrice: searchParams.get("minPrice")
-        ? Number(searchParams.get("minPrice"))
-        : undefined,
-      maxPrice: searchParams.get("maxPrice")
-        ? Number(searchParams.get("maxPrice"))
-        : undefined,
+      categoryId: toNumOpt(searchParams.get("categoryId")),
+      brandId: toNumOpt(searchParams.get("brandId")),
+      minPrice: toNumOpt(searchParams.get("minPrice")),
+      maxPrice: toNumOpt(searchParams.get("maxPrice")),
       sortBy,
     };
 

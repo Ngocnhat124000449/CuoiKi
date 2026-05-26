@@ -1,0 +1,76 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/mixins' as m;
+
+.form {
+  display: flex;
+  gap: v.$space-2;
+  width: 100%;
+  max-width: 480px;
+
+  @media (max-width: 479px) {
+    flex-direction: column;
+  }
+}
+
+.input {
+  @include m.input-base;
+  flex: 1;
+  background: hsla(0, 0%, 100%, 0.12);
+  border-color: hsla(0, 0%, 100%, 0.25);
+  color: #fff;
+  min-width: 0;
+
+  &::placeholder { color: hsla(0, 0%, 100%, 0.55); }
+  &:focus {
+    outline: none;
+    border-color: hsla(0, 0%, 100%, 0.55);
+    background: hsla(0, 0%, 100%, 0.18);
+  }
+}
+
+.btn {
+  @include m.button-reset;
+  background: #fff;
+  color: hsl(353, 90%, 43%);
+  font-weight: v.$font-weight-bold;
+  font-size: v.$font-size-base;
+  padding: 0 v.$space-6;
+  border-radius: v.$radius-full;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: v.$transition-fast;
+  height: 44px;
+
+  &:hover:not(:disabled) { background: hsl(0, 0%, 92%); }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  @media (max-width: 479px) { width: 100%; }
+}
+
+.successWrap {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  max-width: 480px;
+  width: 100%;
+}
+
+.successIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: hsla(0, 0%, 100%, 0.18);
+  border: 1px solid hsla(0, 0%, 100%, 0.35);
+  border-radius: 50%;
+  font-size: 14px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.successText {
+  font-size: v.$font-size-base;
+  color: hsla(0, 0%, 100%, 0.90);
+  margin: 0;
+}

@@ -5,67 +5,86 @@
 // Hero / banner
 // ==========================================================================
 .hero {
-  background: v.$color-bg-card;
-  padding-block: v.$space-8;
+  background: hsl(0, 0%, 10%);
+  padding-block: 0;
+  overflow: hidden;
+  position: relative;
+  scroll-snap-align: start;
+
+  // Decorative background pattern
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 80% 50%, hsla(353, 90%, 43%, 0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, hsla(353, 90%, 43%, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+  }
 }
 
 .heroInner {
   @include m.container;
   display: grid;
   grid-template-columns: 1fr;
-  gap: v.$space-6;
+  gap: v.$space-8;
   align-items: center;
+  padding-block: v.$space-12;
+  position: relative;
+  z-index: 1;
 
   @include m.md {
-    grid-template-columns: minmax(0, 1fr) minmax(280px, 42%);
+    grid-template-columns: 1fr 1fr;
+    padding-block: v.$space-16;
+    gap: v.$space-12;
   }
 }
 
 .heroContent {
   display: flex;
   flex-direction: column;
-  gap: v.$space-4;
-  max-width: 540px;
-  padding: v.$space-6;
-  border: 1px solid v.$color-border;
-  border-radius: v.$radius-md;
-  background: color-mix(in srgb, v.$color-white 88%, transparent);
-  box-shadow: v.$shadow-card;
-
-  @include m.md {
-    margin-left: v.$space-6;
-  }
+  gap: v.$space-5;
 }
 
 .heroTag {
-  color: v.$color-brand;
-  font-size: v.$font-size-md;
-  font-weight: v.$font-weight-medium;
-  letter-spacing: 1px;
-  text-transform: capitalize;
+  display: inline-flex;
+  align-items: center;
+  gap: v.$space-2;
+  background: hsla(353, 90%, 43%, 0.15);
+  border: 1px solid hsla(353, 90%, 43%, 0.30);
+  color: hsl(353, 90%, 65%);
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  letter-spacing: 0.5px;
+  padding: 6px v.$space-4;
+  border-radius: v.$radius-full;
+  width: fit-content;
   animation: fadeInUp 0.5s ease both;
 }
 
 .heroTitle {
-  color: v.$color-dark;
-  font-size: v.$font-size-3xl;
-  font-weight: v.$font-weight-bold;
-  line-height: 1;
+  color: #fff;
+  font-size: 2.2rem;
+  font-weight: v.$font-weight-extrabold;
+  line-height: 1.1;
   text-transform: uppercase;
+  letter-spacing: -0.5px;
   animation: fadeInUp 0.55s 0.08s ease both;
 
-  @include m.md { font-size: v.$font-size-4xl; }
+  @include m.md { font-size: v.$fs-hero; }
 
   em {
-    color: v.$color-brand;
+    color: hsl(353, 90%, 60%);
     font-style: normal;
+    display: block;
   }
 }
 
 .heroSub {
-  color: v.$color-muted;
+  color: hsla(0, 0%, 100%, 0.65);
   font-size: v.$font-size-md;
   line-height: v.$line-height-relaxed;
+  max-width: 460px;
   animation: fadeInUp 0.55s 0.16s ease both;
 }
 
@@ -76,51 +95,144 @@
   animation: fadeInUp 0.55s 0.24s ease both;
 }
 
-.heroBtnPrimary { @include m.button-primary; }
-.heroBtnOutline { @include m.button-outline; }
+.heroBtnPrimary {
+  @include m.button-reset;
+  display: inline-flex;
+  align-items: center;
+  gap: v.$space-2;
+  background: v.$color-brand;
+  color: #fff;
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-bold;
+  padding: 14px v.$space-8;
+  border-radius: v.$radius-full;
+  text-decoration: none;
+  letter-spacing: 0.3px;
+  transition: background 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+
+  &:hover {
+    background: v.$color-brand-hover;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px v.$color-primary-shadow;
+  }
+}
+
+.heroBtnOutline {
+  @include m.button-reset;
+  display: inline-flex;
+  align-items: center;
+  gap: v.$space-2;
+  background: transparent;
+  color: hsla(0, 0%, 100%, 0.85);
+  border: 1px solid hsla(0, 0%, 100%, 0.25);
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-semibold;
+  padding: 14px v.$space-8;
+  border-radius: v.$radius-full;
+  text-decoration: none;
+  transition: border-color 0.18s, background 0.18s, color 0.18s, transform 0.15s;
+
+  &:hover {
+    background: hsla(0, 0%, 100%, 0.08);
+    border-color: hsla(0, 0%, 100%, 0.50);
+    color: #fff;
+    transform: translateY(-2px);
+  }
+}
 
 .heroStats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: v.$space-3;
-  padding-top: v.$space-2;
+  display: flex;
+  gap: v.$space-8;
+  padding-top: v.$space-4;
+  border-top: 1px solid hsla(0, 0%, 100%, 0.10);
   animation: fadeInUp 0.55s 0.32s ease both;
 }
 
 .heroStat {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 
   strong {
-    color: v.$color-dark;
+    color: #fff;
     font-size: v.$font-size-xl;
-    font-weight: v.$font-weight-bold;
+    font-weight: v.$font-weight-extrabold;
     line-height: 1;
   }
 
   span {
-    color: v.$color-light-muted;
+    color: hsla(0, 0%, 100%, 0.50);
     font-size: v.$font-size-xs;
+    letter-spacing: 0.3px;
   }
 }
 
 .heroImage {
-  min-height: 280px;
+  min-height: 340px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: v.$radius-md;
+  border-radius: v.$radius-2xl;
   animation: fadeIn 0.7s 0.1s ease both;
+  position: relative;
   background:
-    radial-gradient(circle at 70% 20%, v.$color-brand-soft 0 22%, transparent 23%),
-    linear-gradient(135deg, v.$color-bg-hover 0%, v.$color-bg-card 100%);
-  border: 1px solid v.$color-border;
-  color: v.$color-brand;
-  font-size: 104px;
-  box-shadow: v.$shadow-card;
+    radial-gradient(circle at 50% 50%, hsla(353, 90%, 43%, 0.20) 0%, transparent 65%),
+    hsla(0, 0%, 100%, 0.04);
+  border: 1px solid hsla(0, 0%, 100%, 0.10);
+  overflow: hidden;
 
-  @include m.max-md { min-height: 180px; font-size: 72px; }
+  // Inner glow
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 60px hsla(353, 90%, 43%, 0.12);
+    pointer-events: none;
+  }
+
+  @include m.max-md { min-height: 220px; }
+}
+
+.heroImgMain {
+  font-size: 112px;
+  animation: float 3s ease-in-out infinite;
+  line-height: 1;
+  filter: drop-shadow(0 8px 32px hsla(353, 90%, 43%, 0.30));
+  z-index: 1;
+
+  @include m.max-md { font-size: 72px; }
+}
+
+.heroImgOrbit {
+  position: absolute;
+  font-size: 36px;
+  background: hsla(0, 0%, 100%, 0.08);
+  border: 1px solid hsla(0, 0%, 100%, 0.14);
+  border-radius: v.$radius-xl;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+
+  @include m.max-md { font-size: 24px; width: 46px; height: 46px; }
+}
+
+.heroImgOrbit1 { top: 14%; left: 10%;  animation: floatAlt 3.5s 0.2s ease-in-out infinite; }
+.heroImgOrbit2 { top: 10%; right: 12%; animation: floatAlt 3.8s 0.6s ease-in-out infinite; }
+.heroImgOrbit3 { bottom: 14%; left: 12%; animation: floatAlt 3.2s 0.9s ease-in-out infinite; }
+.heroImgOrbit4 { bottom: 10%; right: 10%; animation: floatAlt 4s 0.3s ease-in-out infinite; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+
+@keyframes floatAlt {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-8px) rotate(3deg); }
 }
 
 // ==========================================================================
@@ -129,6 +241,7 @@
 .section {
   @include m.container;
   padding-block: v.$space-8;
+  scroll-snap-align: start;
 }
 
 .sectionNoTop {
@@ -144,6 +257,7 @@
   padding-block: v.$space-7;
   border-block: 1px solid v.$color-border;
   animation: slideUp 0.5s ease both;
+  scroll-snap-align: start;
 }
 
 .flashInner { @include m.container; }
@@ -349,4 +463,131 @@
     color: v.$color-muted;
     font-size: v.$font-size-sm;
   }
+}
+
+// ==========================================================================
+// Newsletter section
+// ==========================================================================
+.newsletter {
+  background: linear-gradient(135deg, hsl(353, 90%, 38%) 0%, hsl(353, 90%, 26%) 100%);
+  padding-block: v.$space-16;
+  scroll-snap-align: start;
+  position: relative;
+  overflow: hidden;
+
+  // Decorative blobs
+  &::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: hsla(0, 0%, 100%, 0.04);
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -8%;
+    width: 380px;
+    height: 380px;
+    border-radius: 50%;
+    background: hsla(0, 0%, 0%, 0.06);
+    pointer-events: none;
+  }
+}
+
+.newsletterInner {
+  @include m.container;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: v.$space-10;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+
+  @include m.lg {
+    grid-template-columns: 1fr 1fr;
+    gap: v.$space-16;
+  }
+}
+
+.newsletterText {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-4;
+}
+
+.newsletterEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: v.$space-2;
+  background: hsla(0, 0%, 100%, 0.12);
+  border: 1px solid hsla(0, 0%, 100%, 0.20);
+  color: hsla(0, 0%, 100%, 0.85);
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-bold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: v.$radius-full;
+  width: fit-content;
+}
+
+.newsletterTitle {
+  color: #fff;
+  font-size: clamp(1.5rem, 3.5vw, 2.125rem);
+  font-weight: v.$font-weight-extrabold;
+  line-height: v.$line-height-tight;
+  margin: 0;
+}
+
+.newsletterSub {
+  color: hsla(0, 0%, 100%, 0.72);
+  font-size: v.$font-size-base;
+  line-height: v.$line-height-relaxed;
+  margin: 0;
+  max-width: 420px;
+
+  strong { color: #fff; }
+}
+
+.newsletterPerks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-2;
+
+  li {
+    color: hsla(0, 0%, 100%, 0.80);
+    font-size: v.$font-size-sm;
+    display: flex;
+    align-items: center;
+    gap: v.$space-2;
+  }
+}
+
+.newsletterFormWrap {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-3;
+}
+
+.newsletterFormLabel {
+  color: hsla(0, 0%, 100%, 0.80);
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  margin: 0;
+}
+
+.newsletterPrivacy {
+  color: hsla(0, 0%, 100%, 0.45);
+  font-size: v.$font-size-xs;
+  margin: 0;
 }

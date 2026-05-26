@@ -5,6 +5,7 @@ import Footer from '@/components/layout/Footer'
 import TopBar from '@/components/layout/TopBar'
 import CategoryNav from '@/components/layout/CategoryNav'
 import ThemeProvider from '@/components/ui/ThemeProvider'
+import RevealObserver from '@/components/ui/RevealObserver'
 import { CartProvider } from '@/lib/cart-context'
 import './globals.scss'
 
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <TopBar />
             <Header />
             <CategoryNav />
+            <RevealObserver />
             <main className="site-main">{children}</main>
             <Footer />
           </ThemeProvider>

@@ -14,6 +14,7 @@
 
   @include m.sm { grid-template-columns: repeat(2, 1fr); }
   @include m.lg { grid-template-columns: repeat(3, 1fr); }
+  @include m.xl { grid-template-columns: repeat(4, 1fr); }
 
   > * { animation: slideUp 0.45s ease both; }
   > :nth-child(2) { animation-delay: 0.06s; }
@@ -49,9 +50,68 @@
   color: v.$color-muted;
 }
 
-.pagination {
-  text-align: center;
+.paginationWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: v.$space-3;
   margin-top: v.$space-8;
+  flex-wrap: wrap;
+}
+
+.pageBtn {
+  padding: v.$space-2 v.$space-4;
+  border-radius: v.$radius-full;
   font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-brand;
+  background: v.$color-brand-soft;
+  text-decoration: none;
+  transition: v.$transition-fast;
+  white-space: nowrap;
+
+  &:hover { background: v.$color-brand; color: #fff; }
+}
+
+.pageBtnDisabled {
   color: v.$color-muted;
+  background: v.$color-bg-hover;
+  cursor: default;
+  pointer-events: none;
+}
+
+.pageNumbers {
+  display: flex;
+  align-items: center;
+  gap: v.$space-1;
+}
+
+.pageNum {
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: v.$radius-md;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-text;
+  text-decoration: none;
+  transition: v.$transition-fast;
+
+  &:hover { background: v.$color-brand-soft; color: v.$color-brand; }
+}
+
+.pageNumActive {
+  background: v.$color-brand;
+  color: #fff;
+
+  &:hover { background: v.$color-brand; color: #fff; }
+}
+
+.pageEllipsis {
+  min-width: 20px;
+  text-align: center;
+  color: v.$color-muted;
+  font-size: v.$font-size-sm;
 }
