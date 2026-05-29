@@ -79,7 +79,7 @@ async function wipeProducts() {
 type AV = { id: bigint; value: string };
 type VariantDef = { color?: AV; storage?: AV; ram?: AV; priceDelta?: number; name?: string; qty?: number };
 type ProductDef = {
-  slug: string; name: string; categoryId: number; brandId: number | null;
+  slug: string; name: string; categoryId: number; brandId: number;
   basePrice: number; short: string; featured?: boolean;
   specs: Record<string, string>;
   variants: VariantDef[];
