@@ -169,6 +169,7 @@ export default function ProductForm({
               placeholder="VD: iPhone 15 Pro Max 256GB Titan Tự Nhiên"
               defaultValue={defaultValues?.name}
               onChange={handleNameChange}
+              maxLength={255}
               required
             />
           </div>
@@ -182,6 +183,9 @@ export default function ProductForm({
               className={base.input}
               placeholder="iphone-15-pro-max"
               defaultValue={defaultValues?.slug}
+              maxLength={270}
+              pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
+              title="Chỉ gồm chữ thường, số và dấu gạch ngang"
               required
             />
             <span className={base.hint}>Tự động từ tên, có thể chỉnh sửa</span>
@@ -243,6 +247,7 @@ export default function ProductForm({
               className={base.input}
               placeholder="Tóm tắt 1 dòng về sản phẩm"
               defaultValue={defaultValues?.shortDescription ?? ''}
+              maxLength={500}
             />
           </div>
 
@@ -325,6 +330,7 @@ export default function ProductForm({
                   className={`${base.input} ${styles.colSku}`}
                   placeholder="VD: IP15-256-BLK"
                   value={v.sku}
+                  maxLength={100}
                   onChange={(e) => updateVariantField(v.tempId, 'sku', e.target.value)}
                 />
                 <input

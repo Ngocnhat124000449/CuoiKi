@@ -188,6 +188,7 @@ export default function CategoryForm({
               placeholder="Ví dụ: Điện thoại Android"
               defaultValue={defaultValues?.name}
               onChange={handleNameChange}
+              maxLength={150}
               required
             />
           </div>
@@ -202,6 +203,9 @@ export default function CategoryForm({
               className={styles.input}
               placeholder="dien-thoai-android"
               defaultValue={defaultValues?.slug}
+              maxLength={160}
+              pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
+              title="Chỉ gồm chữ thường, số và dấu gạch ngang"
               required
             />
             <span className={styles.hint}>Tự động tạo từ tên, có thể chỉnh sửa</span>
@@ -378,6 +382,7 @@ export default function CategoryForm({
                     className={styles.input}
                     placeholder="VD: Kích thước màn hình"
                     onChange={handleDisplayNameChange}
+                    maxLength={100}
                     required
                   />
                 </div>
@@ -395,6 +400,7 @@ export default function CategoryForm({
                     onChange={() => {
                       if (keyInputRef.current) keyInputRef.current.dataset.edited = 'true';
                     }}
+                    maxLength={80}
                     required
                   />
                   <span className={styles.hint}>Tự động tạo từ tên, dùng để lưu DB</span>
@@ -421,6 +427,7 @@ export default function CategoryForm({
                     name="unit"
                     className={styles.input}
                     placeholder="VD: inch, GB, mAh..."
+                    maxLength={20}
                   />
                 </div>
               </div>

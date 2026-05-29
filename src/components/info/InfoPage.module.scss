@@ -1,0 +1,361 @@
+@use '../../styles/abstracts/variables' as v;
+@use '../../styles/abstracts/mixins' as m;
+
+// ==========================================================================
+// InfoPage — shared styling for footer info/policy pages
+// Loaded once, reused across /warranty /returns /installment /trade-in
+// /stores /terms /privacy. Animations via the global RevealObserver.
+// ==========================================================================
+
+.page { overflow: hidden; }
+
+// ── Shared heads ──────────────────────────────────────────────────────────────
+.eyebrow {
+  display: inline-block;
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-bold;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: v.$color-brand;
+  margin-bottom: v.$space-3;
+}
+
+.blockHead {
+  text-align: center;
+  margin-bottom: v.$space-10;
+}
+
+.blockTitle {
+  font-size: v.$font-size-2xl;
+  font-weight: v.$font-weight-extrabold;
+  color: v.$color-dark;
+  line-height: v.$line-height-snug;
+
+  @include m.md { font-size: v.$font-size-3xl; }
+}
+
+.blockDesc {
+  margin-top: v.$space-3;
+  font-size: v.$font-size-base;
+  color: v.$color-muted;
+  max-width: 560px;
+  margin-inline: auto;
+}
+
+// ── Hero ────────────────────────────────────────────────────────────────────
+.hero {
+  position: relative;
+  background: hsl(0, 0%, 8%);
+  padding: v.$space-20 0;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, v.$color-brand 40%, transparent 100%);
+  }
+}
+
+.heroBg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(hsla(0, 0%, 100%, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, hsla(0, 0%, 100%, 0.035) 1px, transparent 1px);
+  background-size: 52px 52px;
+  pointer-events: none;
+}
+
+.heroInner {
+  position: relative;
+  @include m.container;
+  text-align: center;
+  max-width: 760px;
+}
+
+.heroPill {
+  display: inline-block;
+  padding: 6px v.$space-4;
+  border: 1px solid hsla(0, 0%, 100%, 0.18);
+  border-radius: v.$radius-full;
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-semibold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: hsla(0, 0%, 100%, 0.7);
+  margin-bottom: v.$space-5;
+}
+
+.heroTitle {
+  font-size: v.$font-size-3xl;
+  font-weight: v.$font-weight-extrabold;
+  line-height: v.$line-height-tight;
+  color: v.$color-white;
+
+  @include m.md { font-size: v.$fs-hero; }
+}
+
+.heroDesc {
+  margin-top: v.$space-4;
+  font-size: v.$font-size-md;
+  line-height: v.$line-height-relaxed;
+  color: hsla(0, 0%, 100%, 0.65);
+}
+
+// ── Section shell ─────────────────────────────────────────────────────────────
+.section {
+  padding: v.$space-16 0;
+
+  &:nth-child(even) { background: v.$color-bg-section; }
+}
+
+.inner {
+  @include m.container;
+  max-width: 920px;
+}
+
+// ── Prose ─────────────────────────────────────────────────────────────────────
+.prose {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-4;
+}
+
+.para {
+  font-size: v.$font-size-base;
+  line-height: v.$line-height-relaxed;
+  color: v.$color-text;
+}
+
+// ── Cards grid ──────────────────────────────────────────────────────────────
+.cardsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: v.$space-5;
+
+  @include m.sm { grid-template-columns: repeat(2, 1fr); }
+  @include m.lg { grid-template-columns: repeat(3, 1fr); }
+}
+
+.card {
+  @include m.card(v.$radius-lg);
+  padding: v.$space-6;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: v.$shadow-hover;
+  }
+}
+
+.cardBadge {
+  @include m.badge(v.$color-brand-soft, v.$color-brand);
+  margin-bottom: v.$space-3;
+}
+
+.cardTitle {
+  font-size: v.$font-size-lg;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-dark;
+  margin-bottom: v.$space-2;
+}
+
+.cardDesc {
+  font-size: v.$font-size-base;
+  line-height: v.$line-height-base;
+  color: v.$color-muted;
+}
+
+// ── Steps ─────────────────────────────────────────────────────────────────────
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-5;
+  list-style: none;
+  counter-reset: none;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: v.$space-4;
+  padding: v.$space-5;
+  background: v.$color-bg-card;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-lg;
+}
+
+.stepNo {
+  flex: none;
+  @include m.flex-center;
+  width: 40px;
+  height: 40px;
+  border-radius: v.$radius-full;
+  background: v.$color-brand;
+  color: v.$color-white;
+  font-weight: v.$font-weight-bold;
+}
+
+.stepTitle {
+  font-size: v.$font-size-lg;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-dark;
+  margin-bottom: v.$space-1;
+}
+
+.stepDesc {
+  font-size: v.$font-size-base;
+  line-height: v.$line-height-base;
+  color: v.$color-muted;
+}
+
+// ── Checklist ───────────────────────────────────────────────────────────────
+.checklist {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: v.$space-3;
+  list-style: none;
+
+  @include m.sm { grid-template-columns: repeat(2, 1fr); }
+}
+
+.checkItem {
+  display: flex;
+  align-items: flex-start;
+  gap: v.$space-3;
+  padding: v.$space-4;
+  background: v.$color-bg-card;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-md;
+  font-size: v.$font-size-base;
+  line-height: v.$line-height-snug;
+  color: v.$color-text;
+}
+
+.checkIcon {
+  flex: none;
+  @include m.flex-center;
+  width: 22px;
+  height: 22px;
+  border-radius: v.$radius-full;
+  background: var(--color-success-soft);
+  color: v.$color-success;
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-bold;
+}
+
+// ── FAQ (native <details>, no JS) ───────────────────────────────────────────
+.faq {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-3;
+}
+
+.faqItem {
+  background: v.$color-bg-card;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-md;
+  padding: 0 v.$space-5;
+}
+
+.faqQ {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: v.$space-3;
+  padding: v.$space-4 0;
+  font-size: v.$font-size-md;
+  font-weight: v.$font-weight-semibold;
+  color: v.$color-dark;
+  cursor: pointer;
+  list-style: none;
+
+  &::-webkit-details-marker { display: none; }
+
+  &::after {
+    content: '+';
+    font-size: v.$font-size-xl;
+    color: v.$color-brand;
+    transition: v.$transition-fast;
+  }
+}
+
+.faqItem[open] .faqQ::after { transform: rotate(45deg); }
+
+.faqA {
+  padding: 0 0 v.$space-4;
+  font-size: v.$font-size-base;
+  line-height: v.$line-height-relaxed;
+  color: v.$color-muted;
+}
+
+// ── Stores ────────────────────────────────────────────────────────────────────
+.storesGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: v.$space-5;
+
+  @include m.sm { grid-template-columns: repeat(2, 1fr); }
+  @include m.lg { grid-template-columns: repeat(3, 1fr); }
+}
+
+.storeCard {
+  @include m.card(v.$radius-lg);
+  padding: v.$space-6;
+}
+
+.storeName {
+  font-size: v.$font-size-lg;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-dark;
+  margin-bottom: v.$space-3;
+  padding-bottom: v.$space-3;
+  border-bottom: 1px solid v.$color-border;
+}
+
+.storeRow {
+  display: flex;
+  align-items: flex-start;
+  gap: v.$space-2;
+  font-size: v.$font-size-base;
+  line-height: v.$line-height-snug;
+  color: v.$color-muted;
+
+  & + & { margin-top: v.$space-2; }
+
+  a { color: v.$color-brand; }
+}
+
+// ── CTA ─────────────────────────────────────────────────────────────────────
+.ctaSection {
+  background: hsl(0, 0%, 8%);
+  padding: v.$space-16 0;
+  text-align: center;
+}
+
+.ctaInner {
+  @include m.container;
+  max-width: 600px;
+}
+
+.ctaTitle {
+  font-size: v.$font-size-2xl;
+  font-weight: v.$font-weight-extrabold;
+  color: v.$color-white;
+
+  @include m.md { font-size: v.$font-size-3xl; }
+}
+
+.ctaDesc {
+  margin-top: v.$space-3;
+  font-size: v.$font-size-base;
+  color: hsla(0, 0%, 100%, 0.6);
+}
+
+.ctaBtn {
+  @include m.button-primary;
+  margin-top: v.$space-6;
+  padding: 12px v.$space-8;
+  font-size: v.$font-size-base;
+}

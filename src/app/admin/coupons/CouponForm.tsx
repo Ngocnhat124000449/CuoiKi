@@ -55,6 +55,7 @@ export default function CouponForm({
               placeholder="VD: SALE10, SUMMER20"
               defaultValue={defaultValues?.code}
               style={{ textTransform: 'uppercase' }}
+              maxLength={50}
               required
             />
             <span className={styles.hint}>Tự động chuyển thành chữ hoa khi lưu</span>
@@ -70,6 +71,7 @@ export default function CouponForm({
               className={styles.input}
               placeholder="VD: Giảm 10% cho đơn đầu tiên"
               defaultValue={defaultValues?.name}
+              maxLength={100}
               required
             />
           </div>
@@ -82,6 +84,7 @@ export default function CouponForm({
               className={styles.textarea}
               placeholder="Mô tả điều kiện áp dụng, ghi chú..."
               defaultValue={defaultValues?.description ?? ''}
+              maxLength={500}
             />
           </div>
         </div>

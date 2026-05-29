@@ -12,11 +12,11 @@ const PRODUCT_LINKS = [
 
 const SERVICE_LINKS = [
   { label: 'Tra cứu đơn hàng',    href: '/account/orders' },
-  { label: 'Chính sách bảo hành', href: '/about' },
-  { label: 'Đổi trả trong 30 ngày', href: '/about' },
-  { label: 'Trả góp 0% lãi suất', href: '/contact' },
-  { label: 'Thu cũ đổi mới',      href: '/about' },
-  { label: 'Hệ thống cửa hàng',   href: '/contact' },
+  { label: 'Chính sách bảo hành', href: '/warranty' },
+  { label: 'Đổi trả trong 30 ngày', href: '/returns' },
+  { label: 'Trả góp 0% lãi suất', href: '/installment' },
+  { label: 'Thu cũ đổi mới',      href: '/trade-in' },
+  { label: 'Hệ thống cửa hàng',   href: '/stores' },
 ]
 
 export default function Footer() {
@@ -102,8 +102,8 @@ export default function Footer() {
             © 2025 PhoneShop. All rights reserved. Thiết kế bởi PhoneShop Team.
           </p>
           <div className={styles.policies}>
-            <Link href="/about">Điều khoản sử dụng</Link>
-            <Link href="/about">Chính sách bảo mật</Link>
+            <Link href="/terms">Điều khoản sử dụng</Link>
+            <Link href="/privacy">Chính sách bảo mật</Link>
             <Link href="/contact">Liên hệ hỗ trợ</Link>
           </div>
         </div>

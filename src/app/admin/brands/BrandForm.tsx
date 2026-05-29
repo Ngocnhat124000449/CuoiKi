@@ -60,6 +60,7 @@ export default function BrandForm({
               placeholder="Ví dụ: Samsung"
               defaultValue={defaultValues?.name}
               onChange={handleNameChange}
+              maxLength={100}
               required
             />
           </div>
@@ -74,6 +75,9 @@ export default function BrandForm({
               className={styles.input}
               placeholder="samsung"
               defaultValue={defaultValues?.slug}
+              maxLength={110}
+              pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
+              title="Chỉ gồm chữ thường, số và dấu gạch ngang"
               required
             />
           </div>
@@ -86,6 +90,7 @@ export default function BrandForm({
               className={styles.input}
               placeholder="Ví dụ: Hàn Quốc"
               defaultValue={defaultValues?.countryOfOrigin ?? ''}
+              maxLength={80}
             />
           </div>
 
@@ -98,6 +103,7 @@ export default function BrandForm({
               className={styles.input}
               placeholder="https://samsung.com"
               defaultValue={defaultValues?.websiteUrl ?? ''}
+              maxLength={255}
             />
           </div>
 

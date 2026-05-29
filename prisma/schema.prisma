@@ -182,7 +182,7 @@ model Brand {
 model Product {
   id              BigInt   @id @default(autoincrement())
   categoryId      Int
-  brandId         Int?
+  brandId         Int
   name            String   @db.VarChar(255)
   slug            String   @unique @db.VarChar(270)
   shortDescription String? @db.VarChar(500)

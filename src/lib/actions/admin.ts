@@ -5,6 +5,10 @@ import { hasPermission } from '@/lib/permissions';
 import { OrderStatus, DiscountType, ApplicableTo } from '@prisma/client';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { LIMITS, isValidSlug, checkLengths, exceedsDecimal, mapPrismaError } from '@/lib/validation';
+
+const DISCOUNT_TYPES: DiscountType[] = ['PERCENT', 'FIXED_AMOUNT', 'FREE_SHIPPING'];
+const APPLICABLE_TO: ApplicableTo[] = ['ALL', 'CATEGORY', 'PRODUCT'];
 
 async function requirePermission(module: string, action: string) {
   const session = await auth();
@@ -72,6 +76,71 @@ function parseVariantsJson(formData: FormData): VariantInput[] | null {
   }
 }
 
+// Shared synchronous validation for product create/update (no DB access).
+function validateProductForm(
+  formData: FormData,
+  name: string,
+  slug: string,
+  basePrice: number,
+  categoryId: number,
+  brandId: number,
+  variantsData: VariantInput[]
+): string | null {
+  if (!name || !slug) return 'Tên và slug không được để trống';
+  if (!isValidSlug(slug)) return 'Slug chỉ gồm chữ thường, số và dấu gạch ngang (vd: iphone-15-pro)';
+  if (!categoryId) return 'Vui lòng chọn danh mục';
+  if (!brandId) return 'Vui lòng chọn nhà cung cấp';
+  if (isNaN(basePrice) || basePrice <= 0) return 'Giá phải lớn hơn 0';
+  if (exceedsDecimal(basePrice, 18, 2)) return 'Giá vượt quá giới hạn cho phép';
+
+  const lenErr = checkLengths([
+    { label: 'Tên sản phẩm', value: name, max: LIMITS.product.name },
+    { label: 'Slug', value: slug, max: LIMITS.product.slug },
+    { label: 'Mô tả ngắn', value: formData.get('shortDescription') as string, max: LIMITS.product.shortDescription },
+    { label: 'Meta title', value: formData.get('metaTitle') as string, max: LIMITS.product.metaTitle },
+    { label: 'Meta description', value: formData.get('metaDescription') as string, max: LIMITS.product.metaDescription },
+  ]);
+  if (lenErr) return lenErr;
+
+  if (variantsData.length === 0) return 'Sản phẩm phải có ít nhất một biến thể';
+  const seenSku = new Set<string>();
+  for (const v of variantsData) {
+    const sku = v.sku?.trim();
+    if (!sku) return 'Mỗi biến thể phải có SKU';
+    if (sku.length > LIMITS.variant.sku) return `SKU không được vượt quá ${LIMITS.variant.sku} ký tự`;
+    const skuKey = sku.toLowerCase();
+    if (seenSku.has(skuKey)) return `SKU "${sku}" bị trùng giữa các biến thể`;
+    seenSku.add(skuKey);
+    if (!v.price || Number(v.price) <= 0) return 'Giá biến thể phải lớn hơn 0';
+    if (exceedsDecimal(Number(v.price), 18, 2)) return 'Giá biến thể vượt quá giới hạn cho phép';
+  }
+  return null;
+}
+
+// DB-backed checks: FK targets exist + required category attributes are filled.
+async function validateProductRelations(
+  categoryId: number,
+  brandId: number,
+  specAttributeIds: Set<number>
+): Promise<string | null> {
+  const [category, brand] = await Promise.all([
+    db.category.findUnique({ where: { id: categoryId }, select: { id: true } }),
+    db.brand.findUnique({ where: { id: brandId }, select: { id: true } }),
+  ]);
+  if (!category) return 'Danh mục đã chọn không tồn tại';
+  if (!brand) return 'Nhà cung cấp đã chọn không tồn tại';
+
+  const requiredAttrs = await db.categoryAttribute.findMany({
+    where: { categoryId, isRequired: true },
+    select: { attributeId: true, attribute: { select: { displayName: true } } },
+  });
+  const missing = requiredAttrs.filter((r) => !specAttributeIds.has(r.attributeId));
+  if (missing.length > 0) {
+    return `Thiếu thông số bắt buộc của danh mục: ${missing.map((m) => m.attribute.displayName).join(', ')}`;
+  }
+  return null;
+}
+
 export async function createProductAction(
   _prevState: string | null,
   formData: FormData
@@ -85,18 +154,15 @@ export async function createProductAction(
   const categoryId = Number(formData.get('categoryId'));
   const brandId = Number(formData.get('brandId'));
 
-  if (!name || !slug) return 'Tên và slug không được để trống';
-  if (!categoryId) return 'Vui lòng chọn danh mục';
-  if (!brandId) return 'Vui lòng chọn nhà cung cấp';
-  if (isNaN(basePrice) || basePrice <= 0) return 'Giá phải lớn hơn 0';
-
   const specEntries = parseSpecEntries(formData);
   const variantsData = parseVariantsJson(formData);
   if (!variantsData) return 'Dữ liệu biến thể không hợp lệ';
-  for (const v of variantsData) {
-    if (!v.sku?.trim()) return 'Mỗi biến thể phải có SKU';
-    if (!v.price || Number(v.price) <= 0) return 'Giá biến thể phải lớn hơn 0';
-  }
+
+  const formErr = validateProductForm(formData, name, slug, basePrice, categoryId, brandId, variantsData);
+  if (formErr) return formErr;
+
+  const relErr = await validateProductRelations(categoryId, brandId, new Set(specEntries.map((s) => s.attributeId)));
+  if (relErr) return relErr;
 
   try {
     await db.$transaction(async (tx) => {
@@ -133,8 +199,10 @@ export async function createProductAction(
       }
     });
   } catch (e) {
-    if ((e as { code?: string }).code === 'P2002') return 'Slug hoặc SKU đã tồn tại, hãy kiểm tra lại';
-    return 'Có lỗi xảy ra, thử lại sau';
+    return mapPrismaError(e, {
+      unique: 'Slug hoặc SKU đã tồn tại, hãy kiểm tra lại',
+      fk: 'Danh mục, nhà cung cấp hoặc thuộc tính tham chiếu không tồn tại',
+    });
   }
   revalidateTag('products', 'max');
   revalidateTag('categories', 'max');
@@ -155,18 +223,15 @@ export async function updateProductAction(
   const categoryId = Number(formData.get('categoryId'));
   const brandId = Number(formData.get('brandId'));
 
-  if (!name || !slug) return 'Tên và slug không được để trống';
-  if (!categoryId) return 'Vui lòng chọn danh mục';
-  if (!brandId) return 'Vui lòng chọn nhà cung cấp';
-  if (isNaN(basePrice) || basePrice <= 0) return 'Giá phải lớn hơn 0';
-
   const specEntries = parseSpecEntries(formData);
   const variantsData = parseVariantsJson(formData);
   if (!variantsData) return 'Dữ liệu biến thể không hợp lệ';
-  for (const v of variantsData) {
-    if (!v.sku?.trim()) return 'Mỗi biến thể phải có SKU';
-    if (!v.price || Number(v.price) <= 0) return 'Giá biến thể phải lớn hơn 0';
-  }
+
+  const formErr = validateProductForm(formData, name, slug, basePrice, categoryId, brandId, variantsData);
+  if (formErr) return formErr;
+
+  const relErr = await validateProductRelations(categoryId, brandId, new Set(specEntries.map((s) => s.attributeId)));
+  if (relErr) return relErr;
 
   try {
     await db.$transaction(async (tx) => {
@@ -230,8 +295,10 @@ export async function updateProductAction(
       }
     });
   } catch (e) {
-    if ((e as { code?: string }).code === 'P2002') return 'Slug hoặc SKU đã tồn tại, hãy kiểm tra lại';
-    return 'Có lỗi xảy ra';
+    return mapPrismaError(e, {
+      unique: 'Slug hoặc SKU đã tồn tại, hãy kiểm tra lại',
+      fk: 'Danh mục, nhà cung cấp hoặc thuộc tính tham chiếu không tồn tại',
+    });
   }
   revalidateTag('products', 'max');
   revalidateTag('categories', 'max');
@@ -270,6 +337,33 @@ function parseCategoryAttrs(formData: FormData) {
   return result;
 }
 
+// Detects whether setting `parentId` as parent of `categoryId` creates a loop.
+async function categoryCycleExists(categoryId: number, parentId: number): Promise<boolean> {
+  let current: number | null = parentId;
+  const visited = new Set<number>();
+  while (current != null) {
+    if (current === categoryId) return true;
+    if (visited.has(current)) break; // pre-existing cycle in data — stop walking
+    visited.add(current);
+    const node: { parentId: number | null } | null = await db.category.findUnique({
+      where: { id: current },
+      select: { parentId: true },
+    });
+    if (!node) break;
+    current = node.parentId;
+  }
+  return false;
+}
+
+function validateCategoryForm(name: string, slug: string): string | null {
+  if (!name || !slug) return 'Tên và slug không được để trống';
+  if (!isValidSlug(slug)) return 'Slug chỉ gồm chữ thường, số và dấu gạch ngang';
+  return checkLengths([
+    { label: 'Tên danh mục', value: name, max: LIMITS.category.name },
+    { label: 'Slug', value: slug, max: LIMITS.category.slug },
+  ]);
+}
+
 export async function createCategoryAction(
   _prevState: string | null,
   formData: FormData
@@ -279,17 +373,25 @@ export async function createCategoryAction(
 
   const name = (formData.get('name') as string)?.trim();
   const slug = (formData.get('slug') as string)?.trim();
-  if (!name || !slug) return 'Tên và slug không được để trống';
+  const parentId = formData.get('parentId') ? Number(formData.get('parentId')) : null;
+
+  const formErr = validateCategoryForm(name, slug);
+  if (formErr) return formErr;
 
   const catAttrs = parseCategoryAttrs(formData);
   if (catAttrs.length === 0) return 'Vui lòng chọn ít nhất một thông số kỹ thuật cho danh mục';
+
+  if (parentId != null) {
+    const parent = await db.category.findUnique({ where: { id: parentId }, select: { id: true } });
+    if (!parent) return 'Danh mục cha đã chọn không tồn tại';
+  }
 
   try {
     await db.$transaction(async (tx) => {
       const category = await tx.category.create({
         data: {
           name, slug,
-          parentId: formData.get('parentId') ? Number(formData.get('parentId')) : null,
+          parentId,
           description: (formData.get('description') as string) || null,
           displayOrder: Number(formData.get('displayOrder')) || 0,
           isActive: formData.get('isActive') === 'on',
@@ -300,8 +402,7 @@ export async function createCategoryAction(
       });
     });
   } catch (e) {
-    if ((e as { code?: string }).code === 'P2002') return 'Slug đã tồn tại, hãy dùng slug khác';
-    return 'Có lỗi xảy ra';
+    return mapPrismaError(e, { unique: 'Slug đã tồn tại, hãy dùng slug khác', fk: 'Danh mục cha hoặc thuộc tính tham chiếu không tồn tại' });
   }
   revalidateTag('categories', 'max');
   revalidateTag('products', 'max');
@@ -318,9 +419,19 @@ export async function updateCategoryAction(
   const id = Number(formData.get('categoryId'));
   const name = (formData.get('name') as string)?.trim();
   const slug = (formData.get('slug') as string)?.trim();
-  if (!name || !slug) return 'Tên và slug không được để trống';
+  const parentId = formData.get('parentId') ? Number(formData.get('parentId')) : null;
+
+  const formErr = validateCategoryForm(name, slug);
+  if (formErr) return formErr;
 
   const catAttrs = parseCategoryAttrs(formData);
+
+  if (parentId != null) {
+    if (parentId === id) return 'Danh mục không thể là cha của chính nó';
+    const parent = await db.category.findUnique({ where: { id: parentId }, select: { id: true } });
+    if (!parent) return 'Danh mục cha đã chọn không tồn tại';
+    if (await categoryCycleExists(id, parentId)) return 'Không thể chọn danh mục con làm danh mục cha (gây vòng lặp)';
+  }
 
   try {
     await db.$transaction(async (tx) => {
@@ -328,7 +439,7 @@ export async function updateCategoryAction(
         where: { id },
         data: {
           name, slug,
-          parentId: formData.get('parentId') ? Number(formData.get('parentId')) : null,
+          parentId,
           description: (formData.get('description') as string) || null,
           displayOrder: Number(formData.get('displayOrder')) || 0,
           isActive: formData.get('isActive') === 'on',
@@ -342,8 +453,7 @@ export async function updateCategoryAction(
       }
     });
   } catch (e) {
-    if ((e as { code?: string }).code === 'P2002') return 'Slug đã tồn tại, hãy dùng slug khác';
-    return 'Có lỗi xảy ra';
+    return mapPrismaError(e, { unique: 'Slug đã tồn tại, hãy dùng slug khác', fk: 'Danh mục cha hoặc thuộc tính tham chiếu không tồn tại' });
   }
   revalidateTag('categories', 'max');
   revalidateTag('products', 'max');
@@ -387,6 +497,13 @@ export async function createAttributeQuickAction(formData: FormData): Promise<Qu
     return { ok: false, error: 'Kiểu nhập không hợp lệ' };
   }
 
+  const lenErr = checkLengths([
+    { label: 'Khóa', value: name, max: 80 },
+    { label: 'Tên hiển thị', value: displayName, max: 100 },
+    { label: 'Đơn vị', value: unit, max: 20 },
+  ]);
+  if (lenErr) return { ok: false, error: lenErr };
+
   try {
     const attr = await db.attribute.create({
       data: { name, displayName, inputType: inputType as 'TEXT' | 'NUMBER' | 'SELECT' | 'MULTI_SELECT' | 'BOOLEAN' | 'COLOR', unit },
@@ -403,6 +520,17 @@ export async function createAttributeQuickAction(formData: FormData): Promise<Qu
 }
 
 // ── BRANDS ──
+function validateBrandForm(formData: FormData, name: string, slug: string): string | null {
+  if (!name || !slug) return 'Tên và slug không được để trống';
+  if (!isValidSlug(slug)) return 'Slug chỉ gồm chữ thường, số và dấu gạch ngang';
+  return checkLengths([
+    { label: 'Tên nhãn hàng', value: name, max: LIMITS.brand.name },
+    { label: 'Slug', value: slug, max: LIMITS.brand.slug },
+    { label: 'Website', value: formData.get('websiteUrl') as string, max: LIMITS.brand.websiteUrl },
+    { label: 'Xuất xứ', value: formData.get('countryOfOrigin') as string, max: LIMITS.brand.countryOfOrigin },
+  ]);
+}
+
 export async function createBrandAction(
   _prevState: string | null,
   formData: FormData
@@ -412,7 +540,9 @@ export async function createBrandAction(
 
   const name = (formData.get('name') as string)?.trim();
   const slug = (formData.get('slug') as string)?.trim();
-  if (!name || !slug) return 'Tên và slug không được để trống';
+
+  const formErr = validateBrandForm(formData, name, slug);
+  if (formErr) return formErr;
 
   try {
     await db.brand.create({
@@ -426,8 +556,7 @@ export async function createBrandAction(
       },
     });
   } catch (e) {
-    if ((e as { code?: string }).code === 'P2002') return 'Slug đã tồn tại, hãy dùng slug khác';
-    return 'Có lỗi xảy ra';
+    return mapPrismaError(e, { unique: 'Slug đã tồn tại, hãy dùng slug khác' });
   }
   revalidateTag('brands', 'max');
   revalidateTag('products', 'max');
@@ -444,7 +573,9 @@ export async function updateBrandAction(
   const id = Number(formData.get('brandId'));
   const name = (formData.get('name') as string)?.trim();
   const slug = (formData.get('slug') as string)?.trim();
-  if (!name || !slug) return 'Tên và slug không được để trống';
+
+  const formErr = validateBrandForm(formData, name, slug);
+  if (formErr) return formErr;
 
   try {
     await db.brand.update({
@@ -459,8 +590,7 @@ export async function updateBrandAction(
       },
     });
   } catch (e) {
-    if ((e as { code?: string }).code === 'P2002') return 'Slug đã tồn tại, hãy dùng slug khác';
-    return 'Có lỗi xảy ra';
+    return mapPrismaError(e, { unique: 'Slug đã tồn tại, hãy dùng slug khác' });
   }
   revalidateTag('brands', 'max');
   revalidateTag('products', 'max');
@@ -483,6 +613,38 @@ export async function deleteBrandAction(formData: FormData) {
 }
 
 // ── COUPONS ──
+function validateCouponForm(formData: FormData): string | null {
+  const code = (formData.get('code') as string)?.trim().toUpperCase();
+  const name = (formData.get('name') as string)?.trim();
+  const discountType = formData.get('discountType') as DiscountType;
+  const applicableTo = ((formData.get('applicableTo') as string) || 'ALL') as ApplicableTo;
+  const startDate = new Date(formData.get('startDate') as string);
+  const endDate = new Date(formData.get('endDate') as string);
+
+  if (!code || !name) return 'Mã và tên không được để trống';
+  if (!discountType) return 'Vui lòng chọn loại giảm giá';
+  if (!DISCOUNT_TYPES.includes(discountType)) return 'Loại giảm giá không hợp lệ';
+  if (!APPLICABLE_TO.includes(applicableTo)) return 'Phạm vi áp dụng không hợp lệ';
+  if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) return 'Ngày không hợp lệ';
+  if (endDate <= startDate) return 'Ngày kết thúc phải sau ngày bắt đầu';
+
+  const discountValue = parseFloat(formData.get('discountValue') as string) || 0;
+  if (discountType !== 'FREE_SHIPPING' && discountValue <= 0) return 'Giá trị giảm phải lớn hơn 0';
+  if (discountType === 'PERCENT' && discountValue > 100) return 'Phần trăm giảm tối đa là 100%';
+  if (exceedsDecimal(discountValue, 10, 2)) return 'Giá trị giảm vượt quá giới hạn cho phép';
+
+  const minOrderAmount = parseFloat(formData.get('minOrderAmount') as string) || 0;
+  if (exceedsDecimal(minOrderAmount, 18, 2)) return 'Giá trị đơn tối thiểu vượt quá giới hạn';
+  const maxDiscStr = (formData.get('maxDiscountAmount') as string)?.trim();
+  if (maxDiscStr && exceedsDecimal(parseFloat(maxDiscStr), 18, 2)) return 'Mức giảm tối đa vượt quá giới hạn';
+
+  return checkLengths([
+    { label: 'Mã coupon', value: code, max: LIMITS.coupon.code },
+    { label: 'Tên', value: name, max: LIMITS.coupon.name },
+    { label: 'Mô tả', value: formData.get('description') as string, max: LIMITS.coupon.description },
+  ]);
+}
+
 export async function createCouponAction(
   _prevState: string | null,
   formData: FormData
@@ -490,21 +652,15 @@ export async function createCouponAction(
   const guard = await guardPermission('coupons', 'create');
   if (guard) return guard;
 
+  const formErr = validateCouponForm(formData);
+  if (formErr) return formErr;
+
   const code = (formData.get('code') as string)?.trim().toUpperCase();
   const name = (formData.get('name') as string)?.trim();
   const discountType = formData.get('discountType') as DiscountType;
   const startDate = new Date(formData.get('startDate') as string);
   const endDate = new Date(formData.get('endDate') as string);
-
-  if (!code || !name) return 'Mã và tên không được để trống';
-  if (!discountType) return 'Vui lòng chọn loại giảm giá';
-  if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) return 'Ngày không hợp lệ';
-  if (endDate <= startDate) return 'Ngày kết thúc phải sau ngày bắt đầu';
-
   const discountValue = parseFloat(formData.get('discountValue') as string) || 0;
-  if (discountType !== 'FREE_SHIPPING' && discountValue <= 0) return 'Giá trị giảm phải lớn hơn 0';
-  if (discountType === 'PERCENT' && discountValue > 100) return 'Phần trăm giảm tối đa là 100%';
-
   const minOrderAmount = parseFloat(formData.get('minOrderAmount') as string) || 0;
   const maxDiscStr = (formData.get('maxDiscountAmount') as string)?.trim();
   const usageLimitStr = (formData.get('usageLimit') as string)?.trim();
@@ -530,8 +686,7 @@ export async function createCouponAction(
       },
     });
   } catch (e) {
-    if ((e as { code?: string }).code === 'P2002') return 'Mã coupon đã tồn tại, hãy dùng mã khác';
-    return 'Có lỗi xảy ra, thử lại sau';
+    return mapPrismaError(e, { unique: 'Mã coupon đã tồn tại, hãy dùng mã khác' });
   }
   redirect('/admin/coupons');
 }
@@ -544,21 +699,16 @@ export async function updateCouponAction(
   if (guard) return guard;
 
   const id = Number(formData.get('couponId'));
+
+  const formErr = validateCouponForm(formData);
+  if (formErr) return formErr;
+
   const code = (formData.get('code') as string)?.trim().toUpperCase();
   const name = (formData.get('name') as string)?.trim();
   const discountType = formData.get('discountType') as DiscountType;
   const startDate = new Date(formData.get('startDate') as string);
   const endDate = new Date(formData.get('endDate') as string);
-
-  if (!code || !name) return 'Mã và tên không được để trống';
-  if (!discountType) return 'Vui lòng chọn loại giảm giá';
-  if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) return 'Ngày không hợp lệ';
-  if (endDate <= startDate) return 'Ngày kết thúc phải sau ngày bắt đầu';
-
   const discountValue = parseFloat(formData.get('discountValue') as string) || 0;
-  if (discountType !== 'FREE_SHIPPING' && discountValue <= 0) return 'Giá trị giảm phải lớn hơn 0';
-  if (discountType === 'PERCENT' && discountValue > 100) return 'Phần trăm giảm tối đa là 100%';
-
   const minOrderAmount = parseFloat(formData.get('minOrderAmount') as string) || 0;
   const maxDiscStr = (formData.get('maxDiscountAmount') as string)?.trim();
   const usageLimitStr = (formData.get('usageLimit') as string)?.trim();
@@ -585,8 +735,7 @@ export async function updateCouponAction(
       },
     });
   } catch (e) {
-    if ((e as { code?: string }).code === 'P2002') return 'Mã coupon đã tồn tại, hãy dùng mã khác';
-    return 'Có lỗi xảy ra';
+    return mapPrismaError(e, { unique: 'Mã coupon đã tồn tại, hãy dùng mã khác' });
   }
   redirect('/admin/coupons');
 }
