@@ -23,6 +23,10 @@
 # misc
 .DS_Store
 *.pem
+.claude/
+docs/superpowers/
+report-assets/
+*.docx
 
 # debug
 npm-debug.log*
